@@ -6,12 +6,8 @@ import { Drawer } from "../../shared/components/Drawer";
 import {
   IconSearch,
   IconSparkles,
-  IconPlus,
   IconUpload,
   IconEye,
-  IconFileText,
-  IconCheck,
-  IconEdit,
   IconPower,
 } from "../../shared/components/Icons";
 

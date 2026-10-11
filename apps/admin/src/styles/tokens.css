@@ -1,51 +1,51 @@
 :root {
   /* =========================================================================
-     1. Brand Titanium Spruce Tokens (WCAG AAA 7.2:1 对比度)
+     1. Minimalist Mist Blue Tokens (极简微雾云灰蓝 · Apple Enterprise 体系)
      ========================================================================= */
-  --brand-50: #F0FDF4;
-  --brand-100: #DCFCE7;
-  --brand-200: #BBF7D0;
-  --brand-300: #86EFAC;
-  --brand-400: #4ADE80;
-  --brand-500: #147A66;
-  --brand-600: #0D5C4D;
-  --brand-700: #09473B;
-  --brand-800: #07382F;
-  --brand-900: #052922;
-  --brand-950: #090D0C;
+  --brand-50: #F4F7FA;
+  --brand-100: #E6EDF4;
+  --brand-200: #D0DCE8;
+  --brand-300: #A8BFD6;
+  --brand-400: #5D8DBE;
+  --brand-500: #2B6CB0;
+  --brand-600: #1B4F8A;
+  --brand-700: #153E6D;
+  --brand-800: #102E52;
+  --brand-900: #0C213B;
+  --brand-950: #081526;
 
   /* =========================================================================
-     2. Precision Zinc & Titanium Neutrals (精工钛锌中性灰)
+     2. Precision Cool Slate Neutrals (95% 极简纯净冷钛骨架)
      ========================================================================= */
-  --zinc-50: #FAFAFA;
-  --zinc-100: #F4F4F5;
-  --zinc-200: #E4E4E7;
-  --zinc-300: #D4D4D8;
-  --zinc-400: #A1A1AA;
-  --zinc-500: #71717A;
-  --zinc-600: #52525B;
-  --zinc-700: #3F3F46;
-  --zinc-800: #27272A;
-  --zinc-900: #18181B;
-  --zinc-950: #09090B;
+  --zinc-50: #F8FAFC;
+  --zinc-100: #F1F5F9;
+  --zinc-200: #E2E8F0;
+  --zinc-300: #CBD5E1;
+  --zinc-400: #94A3B8;
+  --zinc-500: #64748B;
+  --zinc-600: #475569;
+  --zinc-700: #334155;
+  --zinc-800: #1E293B;
+  --zinc-900: #0F172A;
+  --zinc-950: #020617;
 
   /* 语义化映射 */
-  --canvas-bg: #FAFAFA;
+  --canvas-bg: #F8FAFC;
   --surface-card: #FFFFFF;
-  --border-subtle: rgba(228, 228, 231, 0.9);
-  --border-strong: #D4D4D8;
-  --border-hairline: #E4E4E7;
+  --border-subtle: rgba(226, 232, 240, 0.85);
+  --border-strong: #CBD5E1;
+  --border-hairline: #E2E8F0;
 
-  --text-primary: #09090B;
-  --text-heading: #18181B;
-  --text-regular: #3F3F46;
-  --text-muted: #71717A;
-  --text-placeholder: #A1A1AA;
+  --text-primary: #0F172A;
+  --text-heading: #0F172A;
+  --text-regular: #334155;
+  --text-muted: #64748B;
+  --text-placeholder: #94A3B8;
 
   /* =========================================================================
-     3. Anti-Glare Semantic Tokens (防眩光精密工程语义)
+     3. Anti-Glare Semantic Tokens (严谨工程语义)
      ========================================================================= */
-  --semantic-success-fg: #0D5C4D;
+  --semantic-success-fg: #15803D;
   --semantic-success-bg: #F0FDF4;
   --semantic-success-border: #BBF7D0;
 
@@ -57,73 +57,76 @@
   --semantic-danger-bg: #FFF1F2;
   --semantic-danger-border: #FECDD3;
 
-  --semantic-info-fg: #0369A1;
-  --semantic-info-bg: #F0F9FF;
-  --semantic-info-border: #BAE6FD;
+  --semantic-info-fg: #1B4F8A;
+  --semantic-info-bg: #F4F7FA;
+  --semantic-info-border: #D0DCE8;
 
   /* =========================================================================
-     4. Surface Elevations (物理双层环境漫射光投影)
+     4. Surface Elevations (苹果级微透漫射微影)
      ========================================================================= */
-  --shadow-elevation-1: 0 1px 3px 0 rgba(9, 9, 11, 0.03), 0 1px 2px -1px rgba(9, 9, 11, 0.02);
-  --shadow-elevation-2: 0 4px 6px -1px rgba(9, 9, 11, 0.05), 0 2px 4px -2px rgba(9, 9, 11, 0.03);
-  --shadow-elevation-3: 0 20px 25px -5px rgba(9, 9, 11, 0.08), 0 8px 10px -6px rgba(9, 9, 11, 0.04);
+  --shadow-elevation-1: 0 1px 2px 0 rgba(15, 23, 42, 0.03), 0 1px 3px 0 rgba(15, 23, 42, 0.02);
+  --shadow-elevation-2: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
+  --shadow-elevation-3: 0 16px 24px -4px rgba(15, 23, 42, 0.06), 0 6px 10px -4px rgba(15, 23, 42, 0.03);
 
   /* =========================================================================
-     5. Translucent Liquid Glass Tokens (精工微透液态玻璃体系)
+     5. Translucent Liquid Glass Tokens (超纯净微雾白玻璃体系)
      ========================================================================= */
-  --glass-bg-subtle: rgba(255, 255, 255, 0.48);
-  --glass-bg-base: rgba(255, 255, 255, 0.70);
-  --glass-bg-heavy: rgba(255, 255, 255, 0.84);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.65);
+  --glass-bg-base: rgba(255, 255, 255, 0.82);
+  --glass-bg-heavy: rgba(255, 255, 255, 0.92);
 
-  --glass-border-subtle: rgba(255, 255, 255, 0.65);
-  --glass-border-base: rgba(228, 228, 231, 0.60);
-  --glass-border-heavy: rgba(228, 228, 231, 0.85);
+  --glass-border-subtle: rgba(255, 255, 255, 0.80);
+  --glass-border-base: rgba(226, 232, 240, 0.70);
+  --glass-border-heavy: rgba(226, 232, 240, 0.90);
 
-  --glass-specular-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.90);
-  --glass-blur-subtle: blur(8px) saturate(150%);
-  --glass-blur-base: blur(14px) saturate(180%);
-  --glass-blur-heavy: blur(20px) saturate(200%);
+  --glass-specular-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+  --glass-blur-subtle: blur(8px) saturate(140%);
+  --glass-blur-base: blur(12px) saturate(160%);
+  --glass-blur-heavy: blur(18px) saturate(180%);
 
-  /* 微透冷杉流光卡片 */
-  --glass-spruce-glow-bg: rgba(20, 122, 102, 0.04);
-  --glass-spruce-glow-border: rgba(20, 122, 102, 0.18);
+  /* 微透云雾蓝微光流线 (同时兼容 glass-spruce 与 glass-brand) */
+  --glass-brand-glow-bg: rgba(27, 79, 138, 0.025);
+  --glass-brand-glow-border: rgba(27, 79, 138, 0.12);
+  --glass-spruce-glow-bg: rgba(27, 79, 138, 0.025);
+  --glass-spruce-glow-border: rgba(27, 79, 138, 0.12);
 
   /* =========================================================================
-     6. Luminous Gradients & Shimmers (纯白高光与微光漫射)
+     6. Luminous Gradients & Shimmers (极简光影)
      ========================================================================= */
-  --gradient-white-ambient: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 1.0) 0%, rgba(250, 250, 250, 0.85) 60%, rgba(244, 244, 245, 0.45) 100%);
-  --gradient-morning-spruce: radial-gradient(ellipse 70% 35% at 50% -10%, rgba(20, 122, 102, 0.035) 0%, rgba(255, 255, 255, 0) 75%);
-  --shimmer-border-white: linear-gradient(90deg, rgba(228, 228, 231, 0.6) 0%, rgba(20, 122, 102, 0.35) 50%, rgba(228, 228, 231, 0.6) 100%);
+  --gradient-white-ambient: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 1.0) 0%, rgba(248, 250, 252, 0.9) 60%, rgba(241, 245, 249, 0.5) 100%);
+  --gradient-morning-spruce: radial-gradient(ellipse 70% 35% at 50% -10%, rgba(27, 79, 138, 0.02) 0%, rgba(255, 255, 255, 0) 75%);
+  --gradient-enterprise-blue: radial-gradient(ellipse 70% 35% at 50% -10%, rgba(27, 79, 138, 0.02) 0%, rgba(255, 255, 255, 0) 75%);
+  --shimmer-border-white: linear-gradient(90deg, rgba(226, 232, 240, 0.6) 0%, rgba(27, 79, 138, 0.20) 50%, rgba(226, 232, 240, 0.6) 100%);
 
-  /* Primary Button Gradient */
-  --btn-primary-bg: linear-gradient(180deg, #0D5C4D 0%, #09473B 100%);
-  --btn-primary-hover-bg: linear-gradient(180deg, #09473B 0%, #07382F 100%);
+  /* Primary Button Gradient - 极简精练烟波蓝哑光质感 */
+  --btn-primary-bg: linear-gradient(180deg, #1D5494 0%, #174275 100%);
+  --btn-primary-hover-bg: linear-gradient(180deg, #174275 0%, #12355E 100%);
 
   /* 粒子光晕 */
-  --particle-glow: rgba(20, 122, 102, 0.20);
+  --particle-glow: rgba(27, 79, 138, 0.12);
 
   /* =========================================================================
      7. shadcn/ui Standard Theme Variables
      ========================================================================= */
-  --background: #FAFAFA;
-  --foreground: #09090B;
+  --background: #F8FAFC;
+  --foreground: #0F172A;
   --card: #FFFFFF;
-  --card-foreground: #09090B;
+  --card-foreground: #0F172A;
   --popover: #FFFFFF;
-  --popover-foreground: #09090B;
-  --primary: #0D5C4D;
+  --popover-foreground: #0F172A;
+  --primary: #1B4F8A;
   --primary-foreground: #FFFFFF;
-  --secondary: #F4F4F5;
-  --secondary-foreground: #18181B;
-  --muted: #F4F4F5;
-  --muted-foreground: #71717A;
-  --accent: #F4F4F5;
-  --accent-foreground: #18181B;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #1E293B;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #F1F5F9;
+  --accent-foreground: #0F172A;
   --destructive: #BE123C;
   --destructive-foreground: #FFFFFF;
-  --border: #E4E4E7;
-  --input: #E4E4E7;
-  --ring: #147A66;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #1B4F8A;
   --radius: 0.5rem;
 }
 

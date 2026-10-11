@@ -49,9 +49,9 @@ export function ParticleCanvas({
     // 初始化微尘粒子
     const particles: Particle[] = [];
     const colors = [
-      "rgba(20, 122, 102, ", // 钛墨冷杉微翠
-      "rgba(161, 161, 170, ", // 精工钛锌微灰
-      "rgba(134, 239, 172, ", // 晨露微光
+      "rgba(27, 79, 138, ", // 极简烟波微蓝
+      "rgba(148, 163, 184, ", // 冷钛微灰
+      "rgba(203, 213, 225, ", // 霜白微光
     ];
 
     for (let i = 0; i < particleCount; i++) {
@@ -123,7 +123,7 @@ export function ParticleCanvas({
               ctx.beginPath();
               ctx.moveTo(p.x, p.y);
               ctx.lineTo(p2.x, p2.y);
-              ctx.strokeStyle = `rgba(20, 122, 102, ${linkAlpha})`;
+              ctx.strokeStyle = `rgba(27, 79, 138, ${linkAlpha})`;
               ctx.lineWidth = 0.5;
               ctx.stroke();
             }

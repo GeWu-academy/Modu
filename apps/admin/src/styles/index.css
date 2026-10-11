@@ -2,29 +2,29 @@
 @import "./tokens.css";
 
 @theme {
-  --color-brand-50: #F0FDF4;
-  --color-brand-100: #DCFCE7;
-  --color-brand-200: #BBF7D0;
-  --color-brand-300: #86EFAC;
-  --color-brand-400: #4ADE80;
-  --color-brand-500: #147A66;
-  --color-brand-600: #0D5C4D;
-  --color-brand-700: #09473B;
-  --color-brand-800: #07382F;
-  --color-brand-900: #052922;
-  --color-brand-950: #090D0C;
+  --color-brand-50: #F4F7FA;
+  --color-brand-100: #E6EDF4;
+  --color-brand-200: #D0DCE8;
+  --color-brand-300: #A8BFD6;
+  --color-brand-400: #5D8DBE;
+  --color-brand-500: #2B6CB0;
+  --color-brand-600: #1B4F8A;
+  --color-brand-700: #153E6D;
+  --color-brand-800: #102E52;
+  --color-brand-900: #0C213B;
+  --color-brand-950: #081526;
 
-  --color-zinc-50: #FAFAFA;
-  --color-zinc-100: #F4F4F5;
-  --color-zinc-200: #E4E4E7;
-  --color-zinc-300: #D4D4D8;
-  --color-zinc-400: #A1A1AA;
-  --color-zinc-500: #71717A;
-  --color-zinc-600: #52525B;
-  --color-zinc-700: #3F3F46;
-  --color-zinc-800: #27272A;
-  --color-zinc-900: #18181B;
-  --color-zinc-950: #09090B;
+  --color-zinc-50: #F8FAFC;
+  --color-zinc-100: #F1F5F9;
+  --color-zinc-200: #E2E8F0;
+  --color-zinc-300: #CBD5E1;
+  --color-zinc-400: #94A3B8;
+  --color-zinc-500: #64748B;
+  --color-zinc-600: #475569;
+  --color-zinc-700: #334155;
+  --color-zinc-800: #1E293B;
+  --color-zinc-900: #0F172A;
+  --color-zinc-950: #020617;
 
   --color-glass-subtle: rgba(255, 255, 255, 0.48);
   --color-glass-base: rgba(255, 255, 255, 0.70);
@@ -133,12 +133,12 @@ html, body {
   box-shadow: var(--glass-specular-highlight), var(--shadow-elevation-2);
 }
 
-.glass-spruce {
-  background: var(--glass-spruce-glow-bg);
+.glass-spruce, .glass-brand {
+  background: var(--glass-brand-glow-bg);
   backdrop-filter: var(--glass-blur-base);
   -webkit-backdrop-filter: var(--glass-blur-base);
-  border: 1px solid var(--glass-spruce-glow-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 2px 8px rgba(20, 122, 102, 0.04);
+  border: 1px solid var(--glass-brand-glow-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.90), 0 2px 8px rgba(15, 23, 42, 0.03);
 }
 
 /* =========================================================================
@@ -174,12 +174,12 @@ html, body {
 .btn-primary {
   background: var(--btn-primary-bg);
   color: #FFFFFF;
-  border-color: #0D5C4D;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 1px 2px 0 rgba(9, 9, 11, 0.08);
+  border-color: #174275;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 1px 2px 0 rgba(15, 23, 42, 0.08);
 }
 .btn-primary:hover:not(:disabled) {
   background: var(--btn-primary-hover-bg);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 4px 0 rgba(9, 9, 11, 0.12);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 4px 0 rgba(15, 23, 42, 0.12);
 }
 
 .btn-secondary {
@@ -245,7 +245,7 @@ html, body {
 }
 .input-control:focus {
   border-color: var(--brand-500);
-  box-shadow: 0 0 0 3px rgba(20, 122, 102, 0.12);
+  box-shadow: 0 0 0 3px rgba(27, 79, 138, 0.10);
 }
 .input-control::placeholder {
   color: var(--zinc-400);
@@ -345,15 +345,15 @@ html, body {
 @keyframes pulseDot {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(20, 122, 102, 0.7);
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
   }
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 5px rgba(20, 122, 102, 0);
+    box-shadow: 0 0 0 5px rgba(22, 163, 74, 0);
   }
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(20, 122, 102, 0);
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
   }
 }
 
@@ -361,7 +361,7 @@ html, body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--brand-500);
+  background-color: #16A34A;
   animation: pulseDot 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
   display: inline-block;
 }
@@ -377,7 +377,7 @@ html, body {
 
 .shimmer-border {
   position: relative;
-  background: linear-gradient(90deg, rgba(228, 228, 231, 0.8) 0%, rgba(20, 122, 102, 0.4) 50%, rgba(228, 228, 231, 0.8) 100%);
+  background: linear-gradient(90deg, rgba(226, 232, 240, 0.8) 0%, rgba(27, 79, 138, 0.25) 50%, rgba(226, 232, 240, 0.8) 100%);
   background-size: 200% 200%;
   animation: shimmerBorder 8s ease infinite;
 }
@@ -399,7 +399,53 @@ html, body {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: var(--brand-500);
+  background-color: var(--brand-600);
   pointer-events: none;
   animation: burstFade 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* =========================================================================
+   Skeleton Screen & Shimmer Wave (极简冷钛微光骨架屏动效)
+   ========================================================================= */
+@keyframes skeletonWave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--zinc-100) 0%,
+    var(--zinc-200) 35%,
+    var(--zinc-50) 50%,
+    var(--zinc-200) 65%,
+    var(--zinc-100) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonWave 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+    background: var(--zinc-100);
+  }
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-page-fade-in {
+  animation: pageFadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

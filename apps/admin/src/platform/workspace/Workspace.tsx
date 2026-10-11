@@ -10,11 +10,10 @@ import {
   IconAlertTriangle,
   IconCheck,
   IconArrowRight,
-  IconPlus,
+  IconUserPlus,
   IconActivity,
-  IconShield,
-  IconFileText,
-  IconBuilding,
+  IconUpload,
+  IconLayers,
   IconZap,
 } from "../../shared/components/Icons";
 
@@ -100,15 +99,15 @@ export function Workspace() {
           className="card"
           style={{
             marginBottom: "1.75rem",
-            border: "1px solid rgba(20, 122, 102, 0.2)",
+            border: "1px solid rgba(27, 79, 138, 0.12)",
             backgroundColor: "#FFFFFF",
           }}
         >
           <div
             style={{
               padding: "1rem 1.5rem",
-              backgroundColor: "rgba(240, 253, 244, 0.4)",
-              borderBottom: "1px solid rgba(187, 247, 208, 0.4)",
+              backgroundColor: "rgba(244, 247, 250, 0.7)",
+              borderBottom: "1px solid rgba(208, 220, 232, 0.7)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -225,7 +224,7 @@ export function Workspace() {
                 border: "1px solid var(--brand-300)",
                 backgroundColor: "#FFFFFF",
                 cursor: "pointer",
-                boxShadow: "0 1px 3px rgba(13, 92, 77, 0.08)",
+                boxShadow: "0 1px 3px rgba(15, 23, 42, 0.04)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.375rem" }}>
@@ -454,7 +453,7 @@ export function Workspace() {
             className="btn btn-secondary"
             style={{ justifyContent: "flex-start", padding: "0.875rem 1rem", height: "auto" }}
           >
-            <IconFileText size={18} className="text-brand-600" />
+            <IconUpload size={18} className="text-brand-600" />
             <div style={{ textAlign: "left", lineHeight: 1.2 }}>
               <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--zinc-900)" }}>
                 受控导入 Skill
@@ -470,7 +469,7 @@ export function Workspace() {
             className="btn btn-secondary"
             style={{ justifyContent: "flex-start", padding: "0.875rem 1rem", height: "auto" }}
           >
-            <IconPlus size={18} className="text-brand-600" />
+            <IconUserPlus size={18} className="text-brand-600" />
             <div style={{ textAlign: "left", lineHeight: 1.2 }}>
               <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--zinc-900)" }}>
                 邀请新成员加入
@@ -525,7 +524,7 @@ export function Workspace() {
             marginBottom: "1rem",
           }}
         >
-          <IconBuilding size={24} />
+          <IconLayers size={24} />
         </div>
         <h3 style={{ fontSize: "1rem", fontWeight: 600, color: "var(--zinc-900)", margin: 0 }}>
           通用管理底座已就绪 · 未安装行业业务表单

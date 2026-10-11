@@ -5,11 +5,9 @@ import { Badge } from "../../shared/components/Badge";
 import { Modal } from "../../shared/components/Modal";
 import {
   IconSearch,
-  IconShield,
   IconAlertTriangle,
   IconBookOpen,
   IconPower,
-  IconCheck,
 } from "../../shared/components/Icons";
 
 export function PlatformPluginsView() {

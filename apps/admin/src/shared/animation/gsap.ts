@@ -44,7 +44,7 @@ export function isPrefersReducedMotion(): boolean {
  * 创建带安全生命周期清理的 GSAP 上下文
  * 保证在 React 组件销毁时 100% 回收动画句柄，杜绝内存泄漏
  */
-export function createSafeContext(scope: React.RefObject<any>, callback: () => void): () => void {
+export function createSafeContext(scope: React.RefObject<Element | null>, callback: () => void): () => void {
   if (!scope.current) return () => {};
   const ctx = gsap.context(callback, scope);
   return () => ctx.revert();

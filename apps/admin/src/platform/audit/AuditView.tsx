@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { useApp, AuditLog } from "../../app/providers/AppContext";
+import { useApp } from "../../app/providers/AppContext";
 import { Badge } from "../../shared/components/Badge";
 import {
   IconSearch,
   IconActivity,
   IconShield,
-  IconUser,
   IconUsers,
   IconLayers,
-  IconPuzzle,
-  IconAlertTriangle,
 } from "../../shared/components/Icons";
 
 export function AuditView() {

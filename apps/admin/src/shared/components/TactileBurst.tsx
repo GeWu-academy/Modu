@@ -22,7 +22,7 @@ export function TactileBurst({ active, onComplete, x, y }: TactileBurstProps) {
       return;
     }
 
-    // 14 颗精工冷杉晨露微粒 (色值 #147A66, 半径 36px, 600ms)
+    // 14 颗极简烟波微粒 (色值 #1B4F8A, 半径 32px, 600ms)
     const newDots: BurstDot[] = [];
     for (let i = 0; i < 14; i++) {
       const angle = (i / 14) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;

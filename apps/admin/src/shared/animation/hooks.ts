@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { gsap, GSAP_EASINGS, GSAP_DURATIONS, isPrefersReducedMotion } from "./gsap";
 
 /**
@@ -7,7 +7,7 @@ import { gsap, GSAP_EASINGS, GSAP_DURATIONS, isPrefersReducedMotion } from "./gs
  */
 export function usePageEntrance(
   containerRef: React.RefObject<HTMLElement | null>,
-  dependencies: any[] = []
+  dependencies: unknown[] = []
 ) {
   useEffect(() => {
     const el = containerRef.current;
@@ -23,33 +23,32 @@ export function usePageEntrance(
       const targets = el.querySelectorAll("[data-animate]");
 
       if (targets.length > 0) {
-        // 设置初始静止状态
+        // 设置初始静止状态（仅极轻微微位移 4px，彻底消除原 14px 造成的剧烈抖动与跳帧）
         gsap.set(targets, {
           opacity: 0,
-          y: 14,
+          y: 4,
           willChange: "transform, opacity",
           force3D: true,
         });
 
-        // 统一阶梯缓动入场 (平滑滚动视差)
+        // 统一阶梯缓动淡入入场
         gsap.to(targets, {
           opacity: 1,
           y: 0,
-          duration: GSAP_DURATIONS.medium,
-          stagger: 0.045,
-          ease: GSAP_EASINGS.outExpo,
-          clearProps: "willChange",
+          duration: GSAP_DURATIONS.fast,
+          stagger: 0.03,
+          ease: GSAP_EASINGS.smooth,
+          clearProps: "willChange,transform",
         });
       } else {
-        // 全容器平滑滚动入场
+        // 全容器平滑淡入（纯透明度，无纵向位移突跳）
         gsap.fromTo(
           el,
-          { opacity: 0, y: 14, willChange: "transform, opacity", force3D: true },
+          { opacity: 0, willChange: "opacity" },
           {
             opacity: 1,
-            y: 0,
-            duration: GSAP_DURATIONS.normal,
-            ease: GSAP_EASINGS.outExpo,
+            duration: GSAP_DURATIONS.fast,
+            ease: GSAP_EASINGS.smooth,
             clearProps: "willChange",
           }
         );
@@ -57,7 +56,7 @@ export function usePageEntrance(
     }, el);
 
     return () => ctx.revert();
-  }, dependencies); // eslint-disable-line react-hooks/exhaustive-deps
+  }, dependencies);
 }
 
 /**

@@ -5,9 +5,7 @@ import {
   IconShield,
   IconShieldCheck,
   IconLayers,
-  IconAlertTriangle,
   IconArrowLeft,
-  IconCheck,
 } from "../../shared/components/Icons";
 
 export function PluginInstallGuide() {

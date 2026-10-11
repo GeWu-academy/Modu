@@ -4,9 +4,7 @@ import { useToast } from "../../shared/components/Toast";
 import {
   IconArrowLeft,
   IconUpload,
-  IconCheck,
   IconAlertTriangle,
-  IconFileText,
   IconSparkles,
 } from "../../shared/components/Icons";
 

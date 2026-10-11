@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useApp } from "../providers/AppContext";
 import {
   IconDashboard,
@@ -14,7 +14,7 @@ import {
 } from "../../shared/components/Icons";
 import { gsap, GSAP_EASINGS, GSAP_DURATIONS, isPrefersReducedMotion } from "../../shared/animation/gsap";
 
-interface NavItem {
+export interface NavItem {
   id: string;
   label: string;
   path: string;
@@ -24,44 +24,154 @@ interface NavItem {
   disabled?: boolean;
 }
 
-interface NavGroupProps {
-  title: string;
-  items: NavItem[];
-  currentRoute: string;
-  navigate: (path: string) => void;
-  isCollapsed: boolean;
-}
+const MAIN_NAV: NavItem[] = [
+  {
+    id: "workspace",
+    label: "工作台",
+    path: "/workspace",
+    icon: <IconDashboard size={16} />,
+  },
+  {
+    id: "users",
+    label: "用户管理",
+    path: "/system/users",
+    icon: <IconUsers size={16} />,
+  },
+  {
+    id: "my-plugins",
+    label: "我的插件",
+    path: "/my/plugins",
+    icon: <IconPuzzle size={16} />,
+  },
+  {
+    id: "skills",
+    label: "Skill 管理",
+    path: "/skills",
+    icon: <IconSparkles size={16} />,
+  },
+];
+
+const PLATFORM_NAV: NavItem[] = [
+  {
+    id: "platform-plugins",
+    label: "平台插件管理",
+    path: "/platform/plugins",
+    icon: <IconShield size={16} />,
+    platformOnly: true,
+  },
+  {
+    id: "plugins-install",
+    label: "插件引入说明",
+    path: "/platform/plugins/install",
+    icon: <IconBookOpen size={16} />,
+    platformOnly: true,
+  },
+];
+
+const SYSTEM_NAV: NavItem[] = [
+  {
+    id: "audit",
+    label: "分域操作审计",
+    path: "/system/audit",
+    icon: <IconActivity size={16} />,
+  },
+  {
+    id: "settings",
+    label: "系统与企业设置",
+    path: "/settings",
+    icon: <IconSettings size={16} />,
+  },
+];
 
 /**
- * 带有平滑滚动与滑动高亮胶囊（Sliding Indicator Pill）的导航组组件
- * 点击或切换路由时，活动指示器以 Apple/Linear 级物理缓动平滑滑动至目标项，
- * 并在需要时将选中项平滑滚动进入视野。
+ * 精确计算全局唯一的激活项 ID
+ * 避免前缀包含关系（如 /platform/plugins 与 /platform/plugins/install）导致多个激活项无法卸载
  */
-function NavGroup({ title, items, currentRoute, navigate, isCollapsed }: NavGroupProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+function getActiveItemId(route: string, items: NavItem[]): string | null {
+  if (!route) return "workspace";
+
+  // 1. 优先完全一致匹配
+  const exact = items.find((item) => item.path === route);
+  if (exact) return exact.id;
+
+  // 2. 特殊子路由定向映射
+  if (route.startsWith("/system/users") || route.startsWith("/system/invites")) {
+    return "users";
+  }
+  if (route.startsWith("/skills")) {
+    return "skills";
+  }
+  if (route.startsWith("/my/plugins")) {
+    return "my-plugins";
+  }
+  if (route === "/platform/plugins/install") {
+    return "plugins-install";
+  }
+  if (route.startsWith("/platform/plugins")) {
+    return "platform-plugins";
+  }
+  if (route.startsWith("/system/audit")) {
+    return "audit";
+  }
+  if (route.startsWith("/settings")) {
+    return "settings";
+  }
+  if (route === "/workspace" || route === "/" || route === "") {
+    return "workspace";
+  }
+
+  // 3. 兜底最长前缀匹配
+  const prefixMatches = items
+    .filter((item) => item.path !== "/workspace" && route.startsWith(item.path + "/"))
+    .sort((a, b) => b.path.length - a.path.length);
+
+  if (prefixMatches.length > 0) {
+    return prefixMatches[0].id;
+  }
+
+  return null;
+}
+
+export function Sidebar() {
+  const { currentRoute, navigate, activeView, user } = useApp();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const navContainerRef = useRef<HTMLDivElement | null>(null);
   const indicatorRef = useRef<HTMLDivElement | null>(null);
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
-  const isItemActive = (item: NavItem) =>
-    currentRoute === item.path ||
-    (item.path !== "/workspace" && currentRoute.startsWith(item.path));
+  // 汇总所有当前可视的导航项
+  const showPlatform = activeView === "platform" || Boolean(user?.role.includes("管理员"));
+  const allNavItems = useMemo(() => {
+    return [...MAIN_NAV, ...(showPlatform ? PLATFORM_NAV : []), ...SYSTEM_NAV];
+  }, [showPlatform]);
 
+  // 全局唯一激活项 ID（严格单一映射，彻底杜绝激活状态未卸载）
+  const activeItemId = useMemo(() => {
+    return getActiveItemId(currentRoute, allNavItems);
+  }, [currentRoute, allNavItems]);
+
+  // 全局单一指示器 GSAP 平滑滑动动画与生命周期清理
   useEffect(() => {
-    const activeItem = items.find((item) => isItemActive(item));
+    const indicator = indicatorRef.current;
+    const navContainer = navContainerRef.current;
+    if (!indicator || !navContainer) return;
 
-    if (activeItem && buttonRefs.current[activeItem.id] && indicatorRef.current) {
-      const btn = buttonRefs.current[activeItem.id]!;
-      const targetTop = btn.offsetTop;
-      const targetHeight = btn.offsetHeight;
+    if (activeItemId && buttonRefs.current[activeItemId]) {
+      const activeBtn = buttonRefs.current[activeItemId]!;
+      const btnRect = activeBtn.getBoundingClientRect();
+      const containerRect = navContainer.getBoundingClientRect();
+      const targetTop = btnRect.top - containerRect.top;
+      const targetHeight = btnRect.height;
 
       if (isPrefersReducedMotion()) {
-        gsap.set(indicatorRef.current, {
+        gsap.set(indicator, {
           y: targetTop,
           height: targetHeight,
           opacity: 1,
         });
       } else {
-        gsap.to(indicatorRef.current, {
+        gsap.to(indicator, {
           y: targetTop,
           height: targetHeight,
           opacity: 1,
@@ -72,111 +182,144 @@ function NavGroup({ title, items, currentRoute, navigate, isCollapsed }: NavGrou
         });
       }
 
-      // 平滑滚动至视口内（容器出现纵向滚动条时触发）
-      btn.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    } else if (indicatorRef.current) {
-      gsap.to(indicatorRef.current, {
+      // 平滑滚动至视口内（侧边栏出现垂直滚动条时）
+      activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      // 当离开侧边栏路由或无激活项时，完全卸载/淡出指示器
+      gsap.to(indicator, {
         opacity: 0,
         duration: GSAP_DURATIONS.fast,
         ease: GSAP_EASINGS.smooth,
         overwrite: "auto",
       });
     }
-  }, [currentRoute, isCollapsed, items]);
 
-  return (
-    <div style={{ marginBottom: "1.25rem" }}>
-      {/* 分组标题（折叠状态下平滑收起） */}
-      <div
-        style={{
-          fontSize: "0.6875rem",
-          fontWeight: 600,
-          color: "var(--zinc-400)",
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          padding: isCollapsed ? "0 0.25rem 0.375rem 0.25rem" : "0 0.75rem 0.375rem 0.75rem",
-          textAlign: isCollapsed ? "center" : "left",
-          maxHeight: isCollapsed ? "0" : "24px",
-          opacity: isCollapsed ? 0 : 1,
-          overflow: "hidden",
-          transition: "max-height 200ms ease, opacity 180ms ease, padding 200ms ease",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {title}
-      </div>
+    return () => {
+      if (indicator) {
+        gsap.killTweensOf(indicator);
+      }
+    };
+  }, [activeItemId, isCollapsed]);
 
-      {/* 相对定位导航列表容器与平滑移动高亮背景胶囊 */}
-      <div
-        ref={containerRef}
-        style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          gap: "2px",
-        }}
-      >
-        {/* GSAP 硬件加速平滑滑动指示器 (Sliding Indicator Pill) */}
+  const renderNavGroup = (title: string, items: NavItem[]) => {
+    return (
+      <div style={{ marginBottom: "1.25rem" }}>
+        {/* 分组标题（折叠状态下平滑收起） */}
         <div
-          ref={indicatorRef}
-          aria-hidden="true"
           style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            height: "34px",
-            borderRadius: "6px",
-            backgroundColor: "var(--brand-50)",
-            border: "1px solid rgba(20, 122, 102, 0.18)",
-            boxShadow: "0 1px 3px rgba(13, 92, 77, 0.05)",
-            pointerEvents: "none",
-            opacity: 0,
-            zIndex: 0,
-            willChange: "transform, height, opacity",
-            display: "flex",
-            alignItems: "center",
+            fontSize: "0.6875rem",
+            fontWeight: 600,
+            color: "var(--zinc-400)",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            padding: isCollapsed ? "0 0.25rem 0.375rem 0.25rem" : "0 0.75rem 0.375rem 0.75rem",
+            textAlign: isCollapsed ? "center" : "left",
+            maxHeight: isCollapsed ? "0" : "24px",
+            opacity: isCollapsed ? 0 : 1,
+            overflow: "hidden",
+            transition: "max-height 200ms ease, opacity 180ms ease, padding 200ms ease",
+            whiteSpace: "nowrap",
           }}
         >
-          {/* 左侧翡翠冷杉微导轨高亮指示条 */}
-          {!isCollapsed && (
-            <div
-              style={{
-                width: "3px",
-                height: "16px",
-                backgroundColor: "var(--brand-600)",
-                borderRadius: "2px",
-                marginLeft: "3px",
-              }}
-            />
-          )}
+          {title}
         </div>
 
-        {items.map((item) => {
-          const isActive = isItemActive(item);
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+          {items.map((item) => {
+            const isActive = item.id === activeItemId;
 
-          if (item.disabled) {
+            if (item.disabled) {
+              return (
+                <div
+                  key={item.id}
+                  title={isCollapsed ? `${item.label} (暂不可用)` : undefined}
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: isCollapsed ? "center" : "space-between",
+                    padding: isCollapsed ? "0.4375rem 0.25rem" : "0.4375rem 0.75rem",
+                    borderRadius: "6px",
+                    color: "var(--zinc-400)",
+                    fontSize: "0.8125rem",
+                    cursor: "not-allowed",
+                    transition: "padding 200ms ease",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                    <span>{item.icon}</span>
+                    {!isCollapsed && <span>{item.label}</span>}
+                  </div>
+                  {!isCollapsed && item.badge && (
+                    <span
+                      style={{
+                        fontSize: "0.6875rem",
+                        padding: "0.0625rem 0.375rem",
+                        borderRadius: "9999px",
+                        backgroundColor: "var(--zinc-100)",
+                        color: "var(--zinc-400)",
+                      }}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+              );
+            }
+
             return (
-              <div
+              <button
                 key={item.id}
-                title={isCollapsed ? `${item.label} (暂不可用)` : undefined}
+                ref={(el) => {
+                  buttonRefs.current[item.id] = el;
+                }}
+                onClick={() => navigate(item.path)}
+                title={isCollapsed ? item.label : undefined}
+                className={`group relative z-[1] w-full flex items-center ${
+                  isCollapsed ? "justify-center px-1 py-1.5" : "justify-between px-3 py-1.5"
+                } rounded-md text-[0.8125rem] text-left border-0 cursor-pointer transition-colors duration-150 ${
+                  isActive
+                    ? "font-semibold text-brand-700 bg-transparent"
+                    : "font-medium text-zinc-700 bg-transparent hover:bg-zinc-100 hover:text-zinc-900"
+                }`}
                 style={{
-                  position: "relative",
-                  zIndex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: isCollapsed ? "center" : "space-between",
-                  padding: isCollapsed ? "0.4375rem 0.25rem" : "0.4375rem 0.75rem",
-                  borderRadius: "6px",
-                  color: "var(--zinc-400)",
-                  fontSize: "0.8125rem",
-                  cursor: "not-allowed",
-                  transition: "padding 200ms ease",
+                  backgroundColor: "transparent",
+                  color: isActive ? "var(--brand-700)" : undefined,
+                  fontWeight: isActive ? 600 : 500,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                  <span>{item.icon}</span>
-                  {!isCollapsed && <span>{item.label}</span>}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: isCollapsed ? 0 : "0.625rem",
+                    minWidth: 0,
+                  }}
+                >
+                  <span
+                    style={{
+                      color: isActive ? "var(--brand-600)" : "var(--zinc-500)",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      transition: "color 150ms ease",
+                    }}
+                  >
+                    {item.icon}
+                  </span>
+                  <span
+                    style={{
+                      opacity: isCollapsed ? 0 : 1,
+                      maxWidth: isCollapsed ? 0 : "140px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      transition: "opacity 180ms ease, max-width 240ms ease",
+                    }}
+                  >
+                    {item.label}
+                  </span>
                 </div>
                 {!isCollapsed && item.badge && (
                   <span
@@ -185,169 +328,20 @@ function NavGroup({ title, items, currentRoute, navigate, isCollapsed }: NavGrou
                       padding: "0.0625rem 0.375rem",
                       borderRadius: "9999px",
                       backgroundColor: "var(--zinc-100)",
-                      color: "var(--zinc-400)",
+                      color: "var(--zinc-600)",
+                      flexShrink: 0,
                     }}
                   >
                     {item.badge}
                   </span>
                 )}
-              </div>
+              </button>
             );
-          }
-
-          return (
-            <button
-              key={item.id}
-              ref={(el) => {
-                buttonRefs.current[item.id] = el;
-              }}
-              onClick={() => navigate(item.path)}
-              title={isCollapsed ? item.label : undefined}
-              style={{
-                position: "relative",
-                zIndex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: isCollapsed ? "center" : "space-between",
-                padding: isCollapsed ? "0.4375rem 0.25rem" : "0.4375rem 0.75rem",
-                borderRadius: "6px",
-                fontSize: "0.8125rem",
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? "var(--brand-700)" : "var(--zinc-700)",
-                backgroundColor: "transparent",
-                border: "none",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "color 150ms ease, padding 200ms ease",
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = "var(--zinc-100)";
-                  e.currentTarget.style.color = "var(--zinc-900)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--zinc-700)";
-                }
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: isCollapsed ? 0 : "0.625rem",
-                  minWidth: 0,
-                }}
-              >
-                <span
-                  style={{
-                    color: isActive ? "var(--brand-600)" : "var(--zinc-500)",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {item.icon}
-                </span>
-                <span
-                  style={{
-                    opacity: isCollapsed ? 0 : 1,
-                    maxWidth: isCollapsed ? 0 : "140px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    transition: "opacity 180ms ease, max-width 240ms ease",
-                  }}
-                >
-                  {item.label}
-                </span>
-              </div>
-              {!isCollapsed && item.badge && (
-                <span
-                  style={{
-                    fontSize: "0.6875rem",
-                    padding: "0.0625rem 0.375rem",
-                    borderRadius: "9999px",
-                    backgroundColor: "var(--zinc-100)",
-                    color: "var(--zinc-600)",
-                    flexShrink: 0,
-                  }}
-                >
-                  {item.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
+          })}
+        </div>
       </div>
-    </div>
-  );
-}
-
-export function Sidebar() {
-  const { currentRoute, navigate, activeView, user } = useApp();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const mainNav: NavItem[] = [
-    {
-      id: "workspace",
-      label: "工作台",
-      path: "/workspace",
-      icon: <IconDashboard size={16} />,
-    },
-    {
-      id: "users",
-      label: "用户管理",
-      path: "/system/users",
-      icon: <IconUsers size={16} />,
-    },
-    {
-      id: "my-plugins",
-      label: "我的插件",
-      path: "/my/plugins",
-      icon: <IconPuzzle size={16} />,
-    },
-    {
-      id: "skills",
-      label: "Skill 管理",
-      path: "/skills",
-      icon: <IconSparkles size={16} />,
-    },
-  ];
-
-  const platformNav: NavItem[] = [
-    {
-      id: "platform-plugins",
-      label: "平台插件管理",
-      path: "/platform/plugins",
-      icon: <IconShield size={16} />,
-      platformOnly: true,
-    },
-    {
-      id: "plugins-install",
-      label: "插件引入说明",
-      path: "/platform/plugins/install",
-      icon: <IconBookOpen size={16} />,
-      platformOnly: true,
-    },
-  ];
-
-  const systemNav: NavItem[] = [
-    {
-      id: "audit",
-      label: "分域操作审计",
-      path: "/system/audit",
-      icon: <IconActivity size={16} />,
-    },
-    {
-      id: "settings",
-      label: "系统与企业设置",
-      path: "/settings",
-      icon: <IconSettings size={16} />,
-    },
-  ];
+    );
+  };
 
   return (
     <aside
@@ -370,25 +364,54 @@ export function Sidebar() {
         transition: "width 280ms cubic-bezier(0.16, 1, 0.3, 1), padding 240ms ease",
       }}
     >
-      <div>
-        <NavGroup
-          title="管理底座"
-          items={mainNav}
-          currentRoute={currentRoute}
-          navigate={navigate}
-          isCollapsed={isCollapsed}
-        />
+      {/* 相对定位的导航主容器：承载全局唯一的 GSAP 平滑滑动高亮胶囊 */}
+      <div
+        ref={navContainerRef}
+        style={{
+          position: "relative",
+          minHeight: "100%",
+        }}
+      >
+        {/* 全侧边栏唯一 GSAP 平滑滑动指示器 (Single Global Sliding Indicator) */}
+        <div
+          ref={indicatorRef}
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            height: "34px",
+            borderRadius: "6px",
+            backgroundColor: "rgba(27, 79, 138, 0.045)",
+            border: "1px solid rgba(27, 79, 138, 0.12)",
+            boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
+            pointerEvents: "none",
+            opacity: 0,
+            zIndex: 0,
+            willChange: "transform, height, opacity",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {/* 左侧极简烟波蓝微导轨高亮指示条 */}
+          {!isCollapsed && (
+            <div
+              style={{
+                width: "2.5px",
+                height: "16px",
+                backgroundColor: "var(--brand-600)",
+                borderRadius: "2px",
+                marginLeft: "3px",
+              }}
+            />
+          )}
+        </div>
+
+        {renderNavGroup("管理底座", MAIN_NAV)}
 
         {/* 平台管理专属组（仅在平台视图展示，或管理员可见） */}
-        {(activeView === "platform" || user?.role.includes("管理员")) && (
-          <NavGroup
-            title="平台中心"
-            items={platformNav}
-            currentRoute={currentRoute}
-            navigate={navigate}
-            isCollapsed={isCollapsed}
-          />
-        )}
+        {showPlatform && renderNavGroup("平台中心", PLATFORM_NAV)}
 
         {/* 业务扩展（真实空态原则） */}
         <div style={{ marginBottom: "1.25rem" }}>
@@ -452,13 +475,7 @@ export function Sidebar() {
           </div>
         </div>
 
-        <NavGroup
-          title="偏好与安全"
-          items={systemNav}
-          currentRoute={currentRoute}
-          navigate={navigate}
-          isCollapsed={isCollapsed}
-        />
+        {renderNavGroup("偏好与安全", SYSTEM_NAV)}
       </div>
 
       {/* 底部：自部署实例说明与折叠切换按钮 */}

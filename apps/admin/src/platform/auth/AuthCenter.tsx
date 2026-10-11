@@ -24,7 +24,7 @@ interface AuthCenterProps {
 }
 
 export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
-  const { login, currentCompany, invitations, navigate } = useApp();
+  const { login, currentCompany, invitations } = useApp();
   const toast = useToast();
 
   const [mode, setMode] = useState<"login" | "register">(
@@ -146,23 +146,16 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
         {/* 顶部：品牌 Logo 与标语 */}
         <div style={{ position: "relative", zIndex: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.25rem" }}>
-            <div
+            <img
+              src="/logo.webp"
+              alt="Modu Logo"
               style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "10px",
-                backgroundColor: "var(--brand-600)",
-                color: "#FFFFFF",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "1.25rem",
-                boxShadow: "0 2px 6px rgba(13, 92, 77, 0.25)",
+                width: "44px",
+                height: "44px",
+                objectFit: "contain",
+                display: "block",
               }}
-            >
-              M
-            </div>
+            />
             <div>
               <div style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--zinc-950)" }}>
                 Modu

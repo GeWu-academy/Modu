@@ -12,15 +12,12 @@ import {
   IconCopy,
   IconQrCode,
   IconFileText,
-  IconUser,
   IconUsers,
   IconMail,
   IconPhone,
   IconShield,
-  IconLock,
   IconAlertTriangle,
   IconCheck,
-  IconTrash,
   IconEdit,
 } from "../../shared/components/Icons";
 

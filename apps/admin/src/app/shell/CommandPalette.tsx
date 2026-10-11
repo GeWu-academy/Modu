@@ -50,7 +50,7 @@ export function CommandPalette() {
               setCmdKOpen(false);
             }}
           >
-            <IconDashboard className="mr-2 h-4 w-4 text-[#0D5C4D]" />
+            <IconDashboard className="mr-2 h-4 w-4 text-brand-600" />
             <div className="flex flex-col">
               <span className="font-medium text-zinc-900">前往工作台</span>
               <span className="text-xs text-zinc-500">查看底座状态、向导 Checklist 与核心 HUD 浮岛指标</span>

@@ -2,13 +2,10 @@ import React, { useState } from "react";
 import { useApp } from "../../app/providers/AppContext";
 import { useToast } from "../../shared/components/Toast";
 import {
-  IconSettings,
   IconBuilding,
   IconUser,
-  IconShield,
   IconShieldCheck,
   IconLock,
-  IconCheck,
 } from "../../shared/components/Icons";
 
 export function SettingsView() {

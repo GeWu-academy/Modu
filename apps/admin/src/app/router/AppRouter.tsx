@@ -22,10 +22,10 @@ export function AppRouter() {
   const { user, currentRoute } = useApp();
   const mainScrollRef = React.useRef<HTMLElement | null>(null);
 
-  // 侧边栏/路由切换时，主内容视口平滑滚动回顶部
+  // 侧边栏/模块切换时，主内容视口立即重置回顶部，消除与切页动效并发的滚动抖动
   React.useEffect(() => {
     if (mainScrollRef.current) {
-      mainScrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      mainScrollRef.current.scrollTop = 0;
     }
   }, [currentRoute]);
 
@@ -65,7 +65,7 @@ export function AppRouter() {
         <Sidebar />
         <main
           ref={mainScrollRef}
-          className="flex-1 overflow-y-auto min-w-0 bg-zinc-50 scroll-smooth"
+          className="flex-1 overflow-y-auto min-w-0 bg-zinc-50"
         >
           {renderCurrentPage()}
         </main>

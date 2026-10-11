@@ -174,13 +174,13 @@ html, body {
 .btn-primary, .btn-dark, .btn-amber {
   background: var(--btn-primary-bg);
   color: #FFFFFF;
-  border-color: #0F172A;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 1px 2px 0 rgba(15, 23, 42, 0.08);
+  border-color: #1677ff;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18), 0 1px 2px 0 rgba(22, 119, 255, 0.16);
 }
 .btn-primary:hover:not(:disabled), .btn-dark:hover:not(:disabled), .btn-amber:hover:not(:disabled) {
   background: var(--btn-primary-hover-bg);
-  border-color: #1E293B;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 4px 0 rgba(15, 23, 42, 0.12);
+  border-color: #0958d9;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 5px 0 rgba(22, 119, 255, 0.24);
 }
 
 .btn-secondary {

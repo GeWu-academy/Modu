@@ -98,9 +98,9 @@
   --gradient-enterprise-blue: radial-gradient(ellipse 70% 35% at 50% -10%, rgba(27, 79, 138, 0.02) 0%, rgba(255, 255, 255, 0) 75%);
   --shimmer-border-white: linear-gradient(90deg, rgba(226, 232, 240, 0.6) 0%, rgba(27, 79, 138, 0.20) 50%, rgba(226, 232, 240, 0.6) 100%);
 
-  /* Primary Button Gradient - 曜黑雅墨极简质感 (Linear / Vercel 风格，纯粹黑白高质感) */
-  --btn-primary-bg: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-  --btn-primary-hover-bg: linear-gradient(180deg, #334155 0%, #1E293B 100%);
+  /* Primary Button - 统一亮蓝品牌操作色 */
+  --btn-primary-bg: #1677ff;
+  --btn-primary-hover-bg: #0958d9;
 
   /* 粒子光晕 */
   --particle-glow: rgba(15, 23, 42, 0.08);

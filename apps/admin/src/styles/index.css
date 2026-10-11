@@ -1,15 +1,379 @@
-:root {
-  font-family: Inter, system-ui, sans-serif;
-  color: #1f2937;
-  background: #f8fafc;
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme {
+  --color-brand-50: #F0FDF4;
+  --color-brand-100: #DCFCE7;
+  --color-brand-200: #BBF7D0;
+  --color-brand-300: #86EFAC;
+  --color-brand-400: #4ADE80;
+  --color-brand-500: #147A66;
+  --color-brand-600: #0D5C4D;
+  --color-brand-700: #09473B;
+  --color-brand-800: #07382F;
+  --color-brand-900: #052922;
+  --color-brand-950: #090D0C;
+
+  --color-zinc-50: #FAFAFA;
+  --color-zinc-100: #F4F4F5;
+  --color-zinc-200: #E4E4E7;
+  --color-zinc-300: #D4D4D8;
+  --color-zinc-400: #A1A1AA;
+  --color-zinc-500: #71717A;
+  --color-zinc-600: #52525B;
+  --color-zinc-700: #3F3F46;
+  --color-zinc-800: #27272A;
+  --color-zinc-900: #18181B;
+  --color-zinc-950: #09090B;
+
+  --color-glass-subtle: rgba(255, 255, 255, 0.48);
+  --color-glass-base: rgba(255, 255, 255, 0.70);
+  --color-glass-heavy: rgba(255, 255, 255, 0.84);
+
+  --shadow-elevation-1: 0 1px 3px 0 rgba(9, 9, 11, 0.03), 0 1px 2px -1px rgba(9, 11, 0.02);
+  --shadow-elevation-2: 0 4px 6px -1px rgba(9, 9, 11, 0.05), 0 2px 4px -2px rgba(9, 9, 11, 0.03);
+  --shadow-elevation-3: 0 20px 25px -5px rgba(9, 9, 11, 0.08), 0 8px 10px -6px rgba(9, 9, 11, 0.04);
 }
 
-body {
+/* =========================================================================
+   Base & Reset
+   ========================================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  color: var(--text-primary);
+  background-color: var(--canvas-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.app-shell {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 4rem 1.5rem;
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tabular nums for IDs, currency, versions, dates */
+.tnum, code, pre, .stat-value {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Custom delicate scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--zinc-300);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--zinc-400);
+}
+
+/* =========================================================================
+   Glassmorphism Surfaces
+   ========================================================================= */
+.glass-subtle {
+  background: var(--glass-bg-subtle);
+  backdrop-filter: var(--glass-blur-subtle);
+  -webkit-backdrop-filter: var(--glass-blur-subtle);
+  border: 1px solid var(--glass-border-subtle);
+}
+
+.glass-base {
+  background: var(--glass-bg-base);
+  backdrop-filter: var(--glass-blur-base);
+  -webkit-backdrop-filter: var(--glass-blur-base);
+  border: 1px solid var(--glass-border-base);
+  box-shadow: var(--glass-specular-highlight), var(--shadow-elevation-1);
+}
+
+.glass-heavy {
+  background: var(--glass-bg-heavy);
+  backdrop-filter: var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  border: 1px solid var(--glass-border-heavy);
+  box-shadow: var(--glass-specular-highlight), var(--shadow-elevation-2);
+}
+
+.glass-spruce {
+  background: var(--glass-spruce-glow-bg);
+  backdrop-filter: var(--glass-blur-base);
+  -webkit-backdrop-filter: var(--glass-blur-base);
+  border: 1px solid var(--glass-spruce-glow-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 2px 8px rgba(20, 122, 102, 0.04);
+}
+
+/* =========================================================================
+   Buttons & Micro-Interactions
+   ========================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: #FFFFFF;
+  border-color: #0D5C4D;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 1px 2px 0 rgba(9, 9, 11, 0.08);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--btn-primary-hover-bg);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 4px 0 rgba(9, 9, 11, 0.12);
+}
+
+.btn-secondary {
+  background: #FFFFFF;
+  color: var(--zinc-800);
+  border: 1px solid var(--zinc-200);
+  box-shadow: 0 1px 2px 0 rgba(9, 9, 11, 0.02);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--zinc-50);
+  border-color: var(--zinc-300);
+  color: var(--zinc-950);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--zinc-700);
+  border: 1px solid transparent;
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--zinc-100);
+  color: var(--zinc-900);
+}
+
+.btn-danger {
+  background: #FFFFFF;
+  color: var(--semantic-danger-fg);
+  border: 1px solid var(--semantic-danger-border);
+}
+.btn-danger:hover:not(:disabled) {
+  background: var(--semantic-danger-bg);
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+/* =========================================================================
+   Inputs & Form Controls
+   ========================================================================= */
+.input-control {
+  width: 100%;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--zinc-900);
+  background-color: #FFFFFF;
+  border: 1px solid var(--zinc-300);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+.input-control:hover:not(:disabled) {
+  border-color: var(--zinc-400);
+}
+.input-control:focus {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 3px rgba(20, 122, 102, 0.12);
+}
+.input-control::placeholder {
+  color: var(--zinc-400);
+}
+.input-control:disabled {
+  background-color: var(--zinc-100);
+  color: var(--zinc-500);
+  cursor: not-allowed;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--zinc-700);
+  margin-bottom: 0.375rem;
+}
+
+.input-hint {
+  font-size: 0.75rem;
+  color: var(--zinc-500);
+  margin-top: 0.25rem;
+}
+
+.input-error {
+  border-color: var(--semantic-danger-fg) !important;
+}
+.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(190, 18, 60, 0.12) !important;
+}
+
+/* =========================================================================
+   Badges & Pills
+   ========================================================================= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.badge-success {
+  background: var(--semantic-success-bg);
+  color: var(--semantic-success-fg);
+  border-color: var(--semantic-success-border);
+}
+
+.badge-warning {
+  background: var(--semantic-warning-bg);
+  color: var(--semantic-warning-fg);
+  border-color: var(--semantic-warning-border);
+}
+
+.badge-danger {
+  background: var(--semantic-danger-bg);
+  color: var(--semantic-danger-fg);
+  border-color: var(--semantic-danger-border);
+}
+
+.badge-info {
+  background: var(--semantic-info-bg);
+  color: var(--semantic-info-fg);
+  border-color: var(--semantic-info-border);
+}
+
+.badge-neutral {
+  background: var(--zinc-100);
+  color: var(--zinc-700);
+  border-color: var(--zinc-200);
+}
+
+/* =========================================================================
+   Cards & Layout Components
+   ========================================================================= */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  box-shadow: var(--shadow-elevation-1);
+  overflow: hidden;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-elevation-2);
+}
+
+/* =========================================================================
+   Animations & Indicators
+   ========================================================================= */
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(20, 122, 102, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(20, 122, 102, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(20, 122, 102, 0);
+  }
+}
+
+.pulse-green {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--brand-500);
+  animation: pulseDot 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  display: inline-block;
+}
+
+@keyframes shimmerBorder {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.shimmer-border {
+  position: relative;
+  background: linear-gradient(90deg, rgba(228, 228, 231, 0.8) 0%, rgba(20, 122, 102, 0.4) 50%, rgba(228, 228, 231, 0.8) 100%);
+  background-size: 200% 200%;
+  animation: shimmerBorder 8s ease infinite;
+}
+
+/* Micro-burst particles */
+@keyframes burstFade {
+  0% {
+    opacity: 0.9;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.2);
+  }
+}
+
+.burst-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--brand-500);
+  pointer-events: none;
+  animation: burstFade 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

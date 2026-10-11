@@ -8,9 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node e2e/search-input.test.mjs && node e2e/sidebar-collapse.test.mjs",
+    "test": "node e2e/search-input.test.mjs && node e2e/sidebar-collapse.test.mjs && node e2e/user-menu.test.mjs",
     "test:search": "node e2e/search-input.test.mjs",
-    "test:sidebar": "node e2e/sidebar-collapse.test.mjs"
+    "test:sidebar": "node e2e/sidebar-collapse.test.mjs",
+    "test:user-menu": "node e2e/user-menu.test.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.2.0",

@@ -157,12 +157,13 @@ async function runTests() {
     );
 
     // 截图保存
-    const scratchDir = path.resolve(__dirname, '../../../.gemini/antigravity/brain/d4d0dcb8-a1a0-44ed-8656-b52229585db1/scratch');
-    const screenshotPath = path.join(scratchDir, 'user_menu_redesign.png');
-    if (fs.existsSync(scratchDir)) {
-      await menuDropdown.screenshot({ path: screenshotPath });
-      console.log(`[截图已保存] ${screenshotPath}`);
+    const scratchDir = '/Users/allure/.gemini/antigravity/brain/d4d0dcb8-a1a0-44ed-8656-b52229585db1/scratch';
+    if (!fs.existsSync(scratchDir)) {
+      fs.mkdirSync(scratchDir, { recursive: true });
     }
+    const screenshotPath = path.join(scratchDir, 'user_menu_redesign.png');
+    await menuDropdown.screenshot({ path: screenshotPath });
+    console.log(`[截图已保存] ${screenshotPath}`);
 
     // 交互验证：按 Escape 键收起
     console.log('--- 6. 验证 Escape 快捷键收起菜单 ---');

@@ -3,13 +3,14 @@ import { useApp } from "../providers/AppContext";
 import {
   IconDashboard,
   IconUsers,
-  IconPlus,
+  IconUserPlus,
   IconPuzzle,
   IconSparkles,
   IconShield,
   IconSettings,
   IconActivity,
-  IconFileText,
+  IconUpload,
+  IconBookOpen,
 } from "../../shared/components/Icons";
 import {
   CommandDialog,

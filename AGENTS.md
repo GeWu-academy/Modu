@@ -11,7 +11,7 @@
 - `result.md` must include the current status (`discussion`, `in progress`, `completed`, or `blocked`), a task-specific checklist updated during work, actual changed files, verification commands and outcomes, and deviations, blockers, remaining issues, and follow-up suggestions. Chinese equivalents of these status labels are permitted.
 - Mark checklist items complete only when supported by actual work or verification. Distinguish passed, failed, not run, blocked, and not applicable checks; explain skipped or inapplicable checks instead of marking them passed. Discussion tasks deliver confirmed decisions and open questions, not claims of implemented code.
 - Before declaring completion, reconcile planned and actual file changes, verify the acceptance criteria, run `pnpm check:boundaries` and relevant app-specific checks, and finish the result record. For documentation-only tasks, record why app-specific checks are not applicable. If work is incomplete, preserve the truthful status and state what remains.
-- Keep change records available for future review. Do not automatically stage, commit, push, or delete records merely because a task is complete.
+- Keep change records available locally for future review. The root `changes/` directory is local-only. Never commit any files within it, including nested files, add ignore exceptions, or force-add them with `git add -f`. Keep existing local files when removing them from Git tracking. Continue creating and updating local records; do not automatically stage, commit, push, or delete records merely because a task is complete.
 
 ## Technical Baseline
 

@@ -21,3 +21,4 @@ apps/api/*.test
 
 # Local documentation: ignore all files and nested directories without exceptions.
 /docs/
+/changes/

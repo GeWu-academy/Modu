@@ -91,8 +91,8 @@ export function AuditView() {
       {/* 搜索工具条 */}
       <div className="card p-4 mb-6 bg-white border border-zinc-200 rounded-xl shadow-elevation-1 flex items-center justify-between gap-3">
         <div className="relative flex-1 max-w-sm">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
-            <IconSearch size={15} />
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+            <IconSearch size={16} />
           </span>
           <input
             type="text"

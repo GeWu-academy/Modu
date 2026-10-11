@@ -269,8 +269,8 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
           <div className="users-toolbar p-4 border-b border-zinc-200 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
             <div className="flex items-center gap-3 flex-1 min-w-[280px]">
               <div className="users-search relative flex-1 max-w-sm">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
-                  <IconSearch size={15} />
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+                  <IconSearch size={16} />
                 </span>
                 <input
                   type="text"
@@ -284,7 +284,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
               <select
                 value={userStatusFilter}
                 onChange={(e) => setUserStatusFilter(e.target.value)}
-                className="input-control text-xs w-32 py-1 h-8"
+                className="input-control text-xs w-32 shrink-0 py-1 h-8"
               >
                 <option value="all">全部状态</option>
                 <option value="active">生效中</option>
@@ -294,7 +294,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
               <select
                 value={userRoleFilter}
                 onChange={(e) => setUserRoleFilter(e.target.value)}
-                className="input-control text-xs w-36 py-1 h-8"
+                className="input-control text-xs w-36 shrink-0 py-1 h-8"
               >
                 <option value="all">全部预设角色</option>
                 <option value="系统超级管理员">系统超级管理员</option>
@@ -438,8 +438,8 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
           <div className="users-toolbar p-4 border-b border-zinc-200 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
             <div className="flex items-center gap-3 flex-1 min-w-[280px]">
               <div className="users-search relative flex-1 max-w-sm">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
-                  <IconSearch size={15} />
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+                  <IconSearch size={16} />
                 </span>
                 <input
                   type="text"
@@ -453,7 +453,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
               <select
                 value={inviteStatusFilter}
                 onChange={(e) => setInviteStatusFilter(e.target.value)}
-                className="input-control text-xs w-32 py-1 h-8"
+                className="input-control text-xs w-32 shrink-0 py-1 h-8"
               >
                 <option value="all">全部状态</option>
                 <option value="active">生效中</option>

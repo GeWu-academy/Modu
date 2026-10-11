@@ -2,17 +2,17 @@
 @import "./tokens.css";
 
 @theme {
-  --color-brand-50: #F4F7FA;
-  --color-brand-100: #E6EDF4;
-  --color-brand-200: #D0DCE8;
-  --color-brand-300: #A8BFD6;
-  --color-brand-400: #5D8DBE;
-  --color-brand-500: #2B6CB0;
-  --color-brand-600: #1B4F8A;
-  --color-brand-700: #153E6D;
-  --color-brand-800: #102E52;
-  --color-brand-900: #0C213B;
-  --color-brand-950: #081526;
+  --color-brand-50: #EFF6FF;
+  --color-brand-100: #DBEAFE;
+  --color-brand-200: #BFDBFE;
+  --color-brand-300: #93C5FD;
+  --color-brand-400: #60A5FA;
+  --color-brand-500: #3B82F6;
+  --color-brand-600: #2563EB;
+  --color-brand-700: #1D4ED8;
+  --color-brand-800: #1E40AF;
+  --color-brand-900: #1E3A8A;
+  --color-brand-950: #172554;
 
   --color-zinc-50: #F8FAFC;
   --color-zinc-100: #F1F5F9;
@@ -156,31 +156,65 @@ html, body {
   border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1), transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   user-select: none;
   white-space: nowrap;
 }
 
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
 .btn:active:not(:disabled) {
-  transform: scale(0.985);
+  transform: translateY(0.5px) scale(0.975);
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none !important;
 }
 
-.btn-primary, .btn-dark, .btn-amber {
+.btn svg {
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn:hover:not(:disabled) svg {
+  transform: scale(1.06);
+}
+
+.btn-primary {
   background: var(--btn-primary-bg);
   color: #FFFFFF;
-  border-color: #1677ff;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18), 0 1px 2px 0 rgba(22, 119, 255, 0.16);
+  border-color: #2563EB;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.20), 0 1px 2px 0 rgba(37, 99, 235, 0.16);
 }
-.btn-primary:hover:not(:disabled), .btn-dark:hover:not(:disabled), .btn-amber:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled) {
   background: var(--btn-primary-hover-bg);
-  border-color: #0958d9;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 5px 0 rgba(22, 119, 255, 0.24);
+  border-color: #1D4ED8;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25), 0 4px 14px 0 rgba(37, 99, 235, 0.28);
+}
+.btn-primary:active:not(:disabled) {
+  background: var(--btn-primary-active-bg);
+  border-color: #1E40AF;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(37, 99, 235, 0.16);
+}
+
+.btn-dark {
+  background: #0F172A;
+  color: #FFFFFF;
+  border-color: #0F172A;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 1px 2px 0 rgba(15, 23, 42, 0.12);
+}
+.btn-dark:hover:not(:disabled) {
+  background: #1E293B;
+  border-color: #1E293B;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 4px 12px 0 rgba(15, 23, 42, 0.22);
+}
+.btn-dark:active:not(:disabled) {
+  background: #0F172A;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
 .btn-secondary {
@@ -190,9 +224,15 @@ html, body {
   box-shadow: 0 1px 2px 0 rgba(9, 9, 11, 0.02);
 }
 .btn-secondary:hover:not(:disabled) {
-  background: var(--zinc-50);
+  background: #FFFFFF;
   border-color: var(--zinc-300);
   color: var(--zinc-950);
+  box-shadow: 0 4px 12px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+}
+.btn-secondary:active:not(:disabled) {
+  background: var(--zinc-100);
+  border-color: var(--zinc-300);
+  box-shadow: inset 0 1px 2px 0 rgba(15, 23, 42, 0.06);
 }
 
 .btn-frost-dark, .btn-frost-amber {
@@ -208,27 +248,31 @@ html, body {
   background: linear-gradient(180deg, rgba(24, 24, 27, 0.12) 0%, rgba(24, 24, 27, 0.08) 100%);
   border-color: #0F172A;
   color: #000000;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 2px 8px 0 rgba(15, 23, 42, 0.08);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 3px 10px 0 rgba(15, 23, 42, 0.10);
+}
+.btn-frost-dark:active:not(:disabled), .btn-frost-amber:active:not(:disabled) {
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.16) 0%, rgba(24, 24, 27, 0.12) 100%);
+  box-shadow: inset 0 1px 3px 0 rgba(15, 23, 42, 0.15);
 }
 
 .btn-frost-blue {
-  background: linear-gradient(180deg, rgba(235, 244, 254, 0.88) 0%, rgba(220, 236, 252, 0.72) 100%);
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.90) 0%, rgba(219, 234, 254, 0.70) 100%);
   backdrop-filter: blur(10px) saturate(150%);
   -webkit-backdrop-filter: blur(10px) saturate(150%);
   color: var(--brand-700);
-  border: 1px solid rgba(168, 191, 214, 0.70);
+  border: 1px solid rgba(191, 219, 254, 0.85);
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), 0 1px 2px 0 rgba(15, 23, 42, 0.03);
-  font-weight: 500;
+  font-weight: 550;
 }
 .btn-frost-blue:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(228, 240, 254, 0.96) 0%, rgba(208, 228, 250, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.98) 0%, rgba(191, 219, 254, 0.85) 100%);
   border-color: var(--brand-400);
   color: var(--brand-800);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 2px 8px 0 rgba(27, 79, 138, 0.10);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 3px 10px 0 rgba(37, 99, 235, 0.16);
 }
 .btn-frost-blue:active:not(:disabled) {
-  background: linear-gradient(180deg, rgba(216, 232, 250, 0.95) 0%, rgba(198, 222, 246, 0.90) 100%);
-  box-shadow: inset 0 1px 2px 0 rgba(15, 23, 42, 0.06);
+  background: linear-gradient(180deg, rgba(219, 234, 254, 0.95) 0%, rgba(191, 219, 254, 0.90) 100%);
+  box-shadow: inset 0 1px 3px 0 rgba(15, 23, 42, 0.08);
 }
 
 .btn-ghost {
@@ -240,6 +284,10 @@ html, body {
   background: var(--zinc-100);
   color: var(--zinc-900);
 }
+.btn-ghost:active:not(:disabled) {
+  background: var(--zinc-200);
+  color: var(--zinc-950);
+}
 
 .btn-danger {
   background: #FFFFFF;
@@ -248,6 +296,12 @@ html, body {
 }
 .btn-danger:hover:not(:disabled) {
   background: var(--semantic-danger-bg);
+  border-color: var(--semantic-danger-fg);
+  box-shadow: 0 4px 12px -1px rgba(190, 18, 60, 0.15);
+}
+.btn-danger:active:not(:disabled) {
+  background: #FFE4E6;
+  box-shadow: inset 0 1px 2px 0 rgba(190, 18, 60, 0.15);
 }
 
 .btn-sm {
@@ -263,58 +317,73 @@ html, body {
 }
 
 /* =========================================================================
-   Inputs & Form Controls (告别沉闷蓝色，引入极简黑曜高质感焦点)
+   Inputs & Form Controls (极简克制低眩光交互焦点)
    ========================================================================= */
-:where(.input-control) {
-  width: 100%;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: var(--zinc-900);
-  background-color: #FFFFFF;
-  border: 1px solid var(--zinc-300);
-  border-radius: 6px;
-  padding: 0.5rem 0.75rem;
-  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
-  outline: none;
-  caret-color: #0F172A;
-}
-.input-control:hover:not(:disabled) {
-  border-color: var(--zinc-400);
-}
-.input-control:focus {
-  border-color: #0F172A;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08), 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-}
-.input-control::placeholder {
-  color: var(--zinc-400);
-}
-.input-control:disabled {
-  background-color: var(--zinc-100);
-  color: var(--zinc-500);
-  cursor: not-allowed;
+@layer components {
+  .input-control {
+    width: 100%;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--zinc-900);
+    background-color: #FFFFFF;
+    border: 1px solid var(--zinc-300);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+    caret-color: var(--brand-600);
+  }
+  .input-control:hover:not(:disabled) {
+    border-color: var(--zinc-400);
+  }
+  .input-control:focus {
+    border-color: var(--focus-border-color);
+    box-shadow: 0 0 0 3px var(--focus-ring-color), 0 1px 2px 0 rgba(15, 23, 42, 0.03);
+  }
+  .input-control::placeholder {
+    color: var(--zinc-400);
+  }
+  .input-control:disabled {
+    background-color: var(--zinc-100);
+    color: var(--zinc-500);
+    cursor: not-allowed;
+  }
+
+  /* 原生表单勾选框与单选框强调色 */
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: var(--brand-600);
+    cursor: pointer;
+  }
+
+  /* 下拉框与文本域高亮统一 */
+  select.input-control:focus,
+  textarea.input-control:focus {
+    border-color: var(--focus-border-color);
+    box-shadow: 0 0 0 3px var(--focus-ring-color), 0 1px 2px 0 rgba(15, 23, 42, 0.03);
+  }
 }
 
-/* 原生表单勾选框与单选框黑曜强调色 */
-input[type="checkbox"],
-input[type="radio"] {
-  accent-color: #0F172A;
+/* 激活标签与高亮药丸样式 (极简舒适高质感白底浮岛胶囊 · Apple / Linear 风格) */
+.tab-pill {
+  transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
-
-/* 下拉框与文本域高亮统一 */
-select.input-control:focus,
-textarea.input-control:focus {
-  border-color: #0F172A;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08), 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+.tab-pill:hover:not(.tab-pill-active) {
+  background: var(--zinc-100);
+  color: var(--zinc-900);
+  transform: translateY(-0.5px);
+}
+.tab-pill:active {
+  transform: translateY(0.5px) scale(0.975);
 }
 
-/* 激活标签与高亮药丸样式 (极简黑曜高级质感 · Linear / Vercel 风格) */
 .tab-pill-active {
-  background: #0F172A !important;
-  color: #FFFFFF !important;
-  border: 1px solid #0F172A !important;
+  background: #FFFFFF !important;
+  color: var(--zinc-950) !important;
+  border: 1px solid var(--zinc-300) !important;
   font-weight: 600 !important;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.04) !important;
 }
 
 .input-label {
@@ -352,6 +421,7 @@ textarea.input-control:focus {
   border-radius: 9999px;
   border: 1px solid transparent;
   white-space: nowrap;
+  transition: transform 140ms ease;
 }
 
 .badge-success {
@@ -384,6 +454,22 @@ textarea.input-control:focus {
   border-color: var(--zinc-200);
 }
 
+/* 交互徽章 */
+.badge-interactive,
+.interactive-chip {
+  cursor: pointer;
+  transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.badge-interactive:hover,
+.interactive-chip:hover {
+  transform: translateY(-0.5px) scale(1.03);
+  box-shadow: 0 2px 4px 0 rgba(15, 23, 42, 0.06);
+}
+.badge-interactive:active,
+.interactive-chip:active {
+  transform: translateY(0.5px) scale(0.96);
+}
+
 /* =========================================================================
    Cards & Layout Components
    ========================================================================= */
@@ -393,11 +479,101 @@ textarea.input-control:focus {
   border-radius: 10px;
   box-shadow: var(--shadow-elevation-1);
   overflow: hidden;
-  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1), transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card:hover {
   box-shadow: var(--shadow-elevation-2);
+}
+
+/* 交互型卡片 (支持 hover 微悬浮与 active 触觉回弹) */
+.interactive-card,
+.card-interactive {
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-card:hover,
+.card-interactive:hover {
+  transform: translateY(-2.5px);
+  border-color: var(--zinc-300);
+  box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+}
+
+.interactive-card:active,
+.card-interactive:active {
+  transform: translateY(0.5px) scale(0.99);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+}
+
+/* 快捷操作卡片 */
+.quick-action-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid var(--zinc-200);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quick-action-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--zinc-300);
+  box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.07), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+}
+
+.quick-action-card:hover .action-icon {
+  transform: scale(1.12);
+}
+
+.quick-action-card:active {
+  transform: translateY(0.5px) scale(0.98);
+  background: var(--zinc-50);
+}
+
+/* 交互表格行 */
+.interactive-row {
+  transition: background-color 130ms ease, box-shadow 130ms ease;
+  position: relative;
+}
+
+.interactive-row:hover {
+  background-color: rgba(248, 250, 252, 0.95);
+  box-shadow: inset 3px 0 0 0 var(--brand-600);
+}
+
+.interactive-row:active {
+  background-color: rgba(241, 245, 249, 0.9);
+}
+
+/* 交互图标按钮 */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  color: var(--zinc-500);
+  cursor: pointer;
+  transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.icon-btn:hover {
+  background: var(--zinc-100);
+  color: var(--zinc-900);
+  transform: scale(1.08);
+}
+.icon-btn:active {
+  background: var(--zinc-200);
+  transform: scale(0.92);
 }
 
 /* =========================================================================
@@ -507,7 +683,7 @@ textarea.input-control:focus {
 
 .shimmer-border {
   position: relative;
-  background: linear-gradient(90deg, rgba(226, 232, 240, 0.8) 0%, rgba(27, 79, 138, 0.25) 50%, rgba(226, 232, 240, 0.8) 100%);
+  background: linear-gradient(90deg, rgba(226, 232, 240, 0.8) 0%, rgba(37, 99, 235, 0.18) 50%, rgba(226, 232, 240, 0.8) 100%);
   background-size: 200% 200%;
   animation: shimmerBorder 8s ease infinite;
 }

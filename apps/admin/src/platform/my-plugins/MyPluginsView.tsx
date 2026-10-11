@@ -80,8 +80,8 @@ export function MyPluginsView() {
       <div className="card p-4 mb-6 bg-white border border-zinc-200 rounded-xl shadow-elevation-1 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 flex-1 min-w-[280px]">
           <div className="relative flex-1 max-w-sm">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
-              <IconSearch size={15} />
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+              <IconSearch size={16} />
             </span>
             <input
               type="text"
@@ -95,7 +95,7 @@ export function MyPluginsView() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="input-control text-xs w-32 py-1 h-8"
+            className="input-control text-xs w-32 shrink-0 py-1 h-8"
           >
             <option value="all">全部本人状态</option>
             <option value="enabled">本人已启用</option>
@@ -105,7 +105,7 @@ export function MyPluginsView() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="input-control text-xs w-32 py-1 h-8"
+            className="input-control text-xs w-32 shrink-0 py-1 h-8"
           >
             <option value="all">全部分类</option>
             <option value="erp">ERP 业务</option>

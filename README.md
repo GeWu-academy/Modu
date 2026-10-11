@@ -41,6 +41,29 @@ pnpm dev:api
 Asynq。TanStack Query 管理前端的服务端数据状态，Zustand 管理客户端共享状态。
 这些是选型基线，不代表所有依赖和能力已经接入；上表描述当前应用框架。
 
+## 持续集成与交付（GitHub Actions）
+
+`.github/workflows/` 下有两个仓库级工作流：
+
+- `ci.yml`（检测与测试）：在 PR、`main`/`dev` 推送与手动触发时运行。作业包括根工具
+  （`pnpm check:boundaries`、`pnpm test`）、前端矩阵（`web`/`admin`/`app` 各自安装依赖后
+  执行 `lint`、`typecheck`、`build`）和后端（`gofmt -l` 校验、`go build ./...`、
+  `go vet ./...`、`go test ./...`）。每个作业只在自己的应用目录安装依赖。
+- `cd.yml`（交付）：在 `main` 推送与 `v*` tag（及手动触发）时，用各应用既有 Dockerfile
+  构建镜像并推送到 GHCR（`ghcr.io/<owner>/modu-<web|admin|api>`）。它只产出镜像，不部署
+  任何环境；`apps/app` 需要模拟器/设备，不在镜像矩阵内。
+
+本地等效命令（在各端目录执行）：
+
+| 端 | 本地等效检查 |
+| --- | --- |
+| 根工具 | `pnpm check:boundaries`、`pnpm test` |
+| web / admin / app | `pnpm --dir apps/<app> install --frozen-lockfile`，再 `pnpm lint`、`pnpm typecheck`、`pnpm build` |
+| api | `cd apps/api && gofmt -l . && go build ./... && go vet ./... && go test ./...` |
+
+工作流只在 GitHub runner 上真实执行；本地验证覆盖 YAML 结构、命令与各端脚本一致，
+以及上述命令的本地等效执行。
+
 每个独立任务按小 MVP 推进，在 `changes/YYYY-MM-DD-NN-short-topic/` 中先建立
 `plan.md` 与 `result.md`，持续记录计划、文件变更、checklist 和验证结果。
 同一任务的追问与修复更新原记录，不按每条消息拆分。

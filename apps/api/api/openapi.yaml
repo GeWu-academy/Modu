@@ -1,0 +1,11 @@
+openapi: 3.0.3
+info:
+  title: Your ERP API
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service is healthy

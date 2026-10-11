@@ -1,0 +1,14 @@
+{
+  "name": "your-erp",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @your-erp/web dev",
+    "build": "pnpm --filter @your-erp/web build",
+    "lint": "pnpm --filter @your-erp/web lint",
+    "typecheck": "pnpm --filter @your-erp/web typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  }
+}

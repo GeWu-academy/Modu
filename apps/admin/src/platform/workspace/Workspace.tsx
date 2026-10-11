@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useApp } from "../../app/providers/AppContext";
 import { ParticleCanvas } from "../../shared/components/ParticleCanvas";
+import { TiltCard } from "../../shared/components/TiltCard";
+import { AnimatedNumber } from "../../shared/components/AnimatedNumber";
 import {
   IconPuzzle,
   IconSparkles,
@@ -30,6 +32,7 @@ export function Workspace() {
           1. 顶层欢迎横幅与晨雾微尘光幕
           ========================================================================= */}
       <div
+        data-animate="banner"
         className="glass-base"
         style={{
           position: "relative",
@@ -93,6 +96,7 @@ export function Workspace() {
           ========================================================================= */}
       {!onboardingCollapsed && (
         <div
+          data-animate="checklist"
           className="card"
           style={{
             marginBottom: "1.75rem",
@@ -239,7 +243,7 @@ export function Workspace() {
       )}
 
       {/* =========================================================================
-          3. 四大核心指标概览浮岛卡片 (HUD Island · 微透毛玻璃)
+          3. 四大核心指标概览浮岛卡片 (HUD Island · GSAP 3D 物理倾斜 + 动态数字)
           ========================================================================= */}
       <div
         style={{
@@ -250,15 +254,11 @@ export function Workspace() {
         }}
       >
         {/* 卡片 1: 已启用插件 */}
-        <div
+        <TiltCard
+          data-animate="hud-card"
+          variant="glass"
           onClick={() => navigate("/my/plugins")}
-          className="glass-base"
-          style={{
-            padding: "1.25rem",
-            borderRadius: "12px",
-            cursor: "pointer",
-            transition: "all 150ms ease",
-          }}
+          style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
@@ -284,7 +284,7 @@ export function Workspace() {
               letterSpacing: "-0.02em",
             }}
           >
-            {enabledPluginsCount}{" "}
+            <AnimatedNumber value={enabledPluginsCount} />{" "}
             <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
               个
             </span>
@@ -292,18 +292,14 @@ export function Workspace() {
           <div style={{ fontSize: "0.75rem", color: "var(--brand-600)", fontWeight: 500 }}>
             平台共开放 {plugins.filter((p) => p.platformStatus === "available").length} 个 -&gt;
           </div>
-        </div>
+        </TiltCard>
 
         {/* 卡片 2: 我的 Skill */}
-        <div
+        <TiltCard
+          data-animate="hud-card"
+          variant="glass"
           onClick={() => navigate("/skills")}
-          className="glass-base"
-          style={{
-            padding: "1.25rem",
-            borderRadius: "12px",
-            cursor: "pointer",
-            transition: "all 150ms ease",
-          }}
+          style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
@@ -329,7 +325,7 @@ export function Workspace() {
               letterSpacing: "-0.02em",
             }}
           >
-            {activeSkillsCount}{" "}
+            <AnimatedNumber value={activeSkillsCount} />{" "}
             <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
               项
             </span>
@@ -337,18 +333,14 @@ export function Workspace() {
           <div style={{ fontSize: "0.75rem", color: "var(--brand-600)", fontWeight: 500 }}>
             包含 1 项待发布草稿变更 -&gt;
           </div>
-        </div>
+        </TiltCard>
 
         {/* 卡片 3: 团队成员 */}
-        <div
+        <TiltCard
+          data-animate="hud-card"
+          variant="glass"
           onClick={() => navigate("/system/users")}
-          className="glass-base"
-          style={{
-            padding: "1.25rem",
-            borderRadius: "12px",
-            cursor: "pointer",
-            transition: "all 150ms ease",
-          }}
+          style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
@@ -374,7 +366,7 @@ export function Workspace() {
               letterSpacing: "-0.02em",
             }}
           >
-            {activeUsersCount}{" "}
+            <AnimatedNumber value={activeUsersCount} />{" "}
             <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
               人
             </span>
@@ -382,18 +374,15 @@ export function Workspace() {
           <div style={{ fontSize: "0.75rem", color: "var(--brand-600)", fontWeight: 500 }}>
             当前活跃邀请链接 1 批次 -&gt;
           </div>
-        </div>
+        </TiltCard>
 
         {/* 卡片 4: 待处理维护 (附带 8s 微光呼吸流光边框) */}
-        <div
+        <TiltCard
+          data-animate="hud-card"
+          variant="glass"
           onClick={() => navigate("/system/audit")}
-          className="glass-base shimmer-border"
-          style={{
-            padding: "1.25rem",
-            borderRadius: "12px",
-            cursor: "pointer",
-            transition: "all 150ms ease",
-          }}
+          className="shimmer-border"
+          style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
@@ -419,7 +408,7 @@ export function Workspace() {
               letterSpacing: "-0.02em",
             }}
           >
-            1{" "}
+            <AnimatedNumber value={1} />{" "}
             <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
               项待复核
             </span>
@@ -427,13 +416,13 @@ export function Workspace() {
           <div style={{ fontSize: "0.75rem", color: "var(--semantic-warning-fg)", fontWeight: 500 }}>
             发现 1 次防锁死拒绝事件记录 -&gt;
           </div>
-        </div>
+        </TiltCard>
       </div>
 
       {/* =========================================================================
           4. 常用快捷入口组
           ========================================================================= */}
-      <div style={{ marginBottom: "2rem" }}>
+      <div data-animate="quick-actions" style={{ marginBottom: "2rem" }}>
         <h2 style={{ fontSize: "1rem", fontWeight: 600, color: "var(--zinc-900)", marginBottom: "0.875rem" }}>
           高频快捷操作
         </h2>
@@ -514,6 +503,7 @@ export function Workspace() {
           5. 业务扩展真实空态区 (坚决不展示虚假销售大屏)
           ========================================================================= */}
       <div
+        data-animate="empty-state"
         className="card"
         style={{
           padding: "2.5rem 1.5rem",

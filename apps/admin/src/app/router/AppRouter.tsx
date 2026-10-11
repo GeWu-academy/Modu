@@ -4,6 +4,8 @@ import { Header } from "../shell/Header";
 import { Sidebar } from "../shell/Sidebar";
 import { CommandPalette } from "../shell/CommandPalette";
 
+import { PageTransition } from "../../shared/components/PageTransition";
+
 // 页面组件
 import { AuthCenter } from "../../platform/auth/AuthCenter";
 import { Workspace } from "../../platform/workspace/Workspace";
@@ -32,19 +34,20 @@ export function AppRouter() {
 
   // 3. 登录态下的主应用外壳与内容路由
   const renderCurrentPage = () => {
-    if (currentRoute === "/workspace") return <Workspace />;
-    if (currentRoute === "/system/users") return <UsersView initialTab="users" />;
-    if (currentRoute === "/system/invites") return <UsersView initialTab="invites" />;
-    if (currentRoute.startsWith("/my/plugins")) return <MyPluginsView />;
-    if (currentRoute === "/platform/plugins") return <PlatformPluginsView />;
-    if (currentRoute === "/platform/plugins/install") return <PluginInstallGuide />;
-    if (currentRoute === "/skills") return <SkillsView />;
-    if (currentRoute === "/skills/import") return <SkillImportView />;
-    if (currentRoute === "/system/audit") return <AuditView />;
-    if (currentRoute === "/settings") return <SettingsView />;
+    let content: React.ReactNode = <Workspace />;
 
-    // 默认回退到工作台
-    return <Workspace />;
+    if (currentRoute === "/workspace") content = <Workspace />;
+    else if (currentRoute === "/system/users") content = <UsersView initialTab="users" />;
+    else if (currentRoute === "/system/invites") content = <UsersView initialTab="invites" />;
+    else if (currentRoute.startsWith("/my/plugins")) content = <MyPluginsView />;
+    else if (currentRoute === "/platform/plugins") content = <PlatformPluginsView />;
+    else if (currentRoute === "/platform/plugins/install") content = <PluginInstallGuide />;
+    else if (currentRoute === "/skills") content = <SkillsView />;
+    else if (currentRoute === "/skills/import") content = <SkillImportView />;
+    else if (currentRoute === "/system/audit") content = <AuditView />;
+    else if (currentRoute === "/settings") content = <SettingsView />;
+
+    return <PageTransition routeKey={currentRoute}>{content}</PageTransition>;
   };
 
   return (

@@ -3,6 +3,7 @@ import type { LucideIcon, LucideProps } from "lucide-react";
 import {
   User,
   Users,
+  UserPlus,
   Mail,
   Phone,
   Lock,
@@ -61,6 +62,7 @@ import {
   Share2,
   Tag,
   BookOpen,
+  Code,
 } from "lucide-react";
 
 /**
@@ -102,6 +104,7 @@ export function createIcon(LucideComponent: LucideIcon, defaultSize: number | st
 // ============================================================================
 export const IconUser = createIcon(User);
 export const IconUsers = createIcon(Users);
+export const IconUserPlus = createIcon(UserPlus);
 export const IconBuilding = createIcon(Building2);
 
 // ============================================================================
@@ -180,6 +183,7 @@ export const IconLayers = createIcon(Layers);
 export const IconCpu = createIcon(Cpu);
 export const IconTag = createIcon(Tag);
 export const IconBookOpen = createIcon(BookOpen);
+export const IconCode = createIcon(Code);
 
 // ============================================================================
 // 7. 官方第三方 OAuth 品牌矢量图标 (Official Brand Logomarks)

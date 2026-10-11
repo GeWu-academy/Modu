@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useApp } from "../providers/AppContext";
+import { MagneticButton } from "../../shared/components/MagneticButton";
 import {
   IconBuilding,
   IconCommand,
@@ -118,10 +119,12 @@ export function Header() {
 
       {/* 右侧：微透药丸指令胶囊、状态胶囊、视图切换与账号菜单 */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        {/* 1. Cmd+K 快捷指令药丸 */}
-        <button
+        {/* 1. Cmd+K 快捷指令药丸 (GSAP 磁力吸附) */}
+        <MagneticButton
           onClick={() => setCmdKOpen(true)}
           className="glass-subtle"
+          strength={0.24}
+          maxOffset={5}
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -132,7 +135,7 @@ export function Header() {
             color: "var(--zinc-600)",
             fontSize: "0.75rem",
             cursor: "pointer",
-            transition: "all 120ms ease",
+            transition: "border-color 120ms ease, background-color 120ms ease",
           }}
           title="按下 Cmd+K 搜索页面或执行快捷指令"
         >
@@ -151,7 +154,7 @@ export function Header() {
           >
             Cmd K
           </kbd>
-        </button>
+        </MagneticButton>
 
         {/* 2. 企业节点状态晶透胶囊 */}
         <div

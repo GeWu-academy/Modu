@@ -1,8 +1,18 @@
 import React from "react";
+import { Badge as ShadcnBadge, type BadgeProps as ShadcnBadgeProps } from "@/components/ui/badge";
 
-export type BadgeVariant = "success" | "warning" | "danger" | "info" | "neutral";
+export type BadgeVariant =
+  | "default"
+  | "secondary"
+  | "destructive"
+  | "outline"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info"
+  | "neutral";
 
-export interface BadgeProps {
+export interface BadgeProps extends Omit<ShadcnBadgeProps, "variant"> {
   variant?: BadgeVariant;
   children: React.ReactNode;
   pulse?: boolean;
@@ -14,13 +24,13 @@ export function Badge({
   children,
   pulse = false,
   className = "",
+  ...props
 }: BadgeProps) {
-  const variantClass = `badge-${variant}`;
-
   return (
-    <span className={`badge ${variantClass} ${className}`}>
-      {pulse && variant === "success" && <span className="pulse-green" />}
+    <ShadcnBadge variant={variant} pulse={pulse} className={className} {...props}>
       {children}
-    </span>
+    </ShadcnBadge>
   );
 }
+
+export { ShadcnBadge };

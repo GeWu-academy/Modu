@@ -5,8 +5,6 @@ import { Sidebar } from "../shell/Sidebar";
 import { CommandPalette } from "../shell/CommandPalette";
 
 import { PageTransition } from "../../shared/components/PageTransition";
-
-import { PageTransition } from "../../shared/components/PageTransition";
 import { ModuleSkeletonRouter } from "../../shared/components/ModuleSkeletons";
 
 // 页面组件按需代码分割懒加载

@@ -33,41 +33,56 @@ export function ParticleCanvas({
     if (!ctx) return;
 
     let animationFrameId: number;
-    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
+    let isRunning = false;
+    let isVisible = !document.hidden;
+    let isIntersecting = true;
+
+    // 适配视网膜高分屏 (DPR 2x 缩放)，保持极端清晰的粒子与发丝细线
+    const dpr = typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+    let cssWidth = canvas.parentElement?.clientWidth || window.innerWidth;
+    let cssHeight = canvas.parentElement?.clientHeight || window.innerHeight;
+
+    const setupDimensions = () => {
+      if (!canvas || !canvas.parentElement) return;
+      cssWidth = canvas.parentElement.clientWidth;
+      cssHeight = canvas.parentElement.clientHeight;
+      canvas.width = Math.floor(cssWidth * dpr);
+      canvas.height = Math.floor(cssHeight * dpr);
+      canvas.style.width = `${cssWidth}px`;
+      canvas.style.height = `${cssHeight}px`;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); // reset scale
+      ctx.scale(dpr, dpr);
+    };
+
+    setupDimensions();
 
     // 检查减弱动效偏好
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const resize = () => {
-      if (!canvas || !canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.clientWidth;
-      height = canvas.height = canvas.parentElement.clientHeight;
-    };
-    window.addEventListener("resize", resize);
-
-    // 初始化微尘粒子
+    // 初始化微尘粒子（严格统一至品牌蓝与冷钛色阶）
     const particles: Particle[] = [];
     const colors = [
-      "rgba(27, 79, 138, ", // 极简烟波微蓝
+      "rgba(37, 99, 235, ", // 现代智造蓝微光
       "rgba(148, 163, 184, ", // 冷钛微灰
       "rgba(203, 213, 225, ", // 霜白微光
     ];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.45) * 0.35, // 略微偏向右上方
+        x: Math.random() * cssWidth,
+        y: Math.random() * cssHeight,
+        vx: (Math.random() - 0.45) * 0.35,
         vy: (Math.random() - 0.55) * 0.35,
-        radius: 0.8 + Math.random() * 1.0, // 0.8px ~ 1.8px
+        radius: 0.8 + Math.random() * 1.0,
         color: colors[i % colors.length],
         alpha: 0.12 + Math.random() * 0.16,
       });
     }
 
     const render = () => {
-      ctx.clearRect(0, 0, width, height);
+      if (!isRunning) return;
+
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
 
       // 如果开启减弱动效，静态绘制点阵
       if (prefersReducedMotion) {
@@ -89,10 +104,10 @@ export function ParticleCanvas({
         p.y += p.vy;
 
         // 边界循环包裹
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
+        if (p.x < 0) p.x = cssWidth;
+        if (p.x > cssWidth) p.x = 0;
+        if (p.y < 0) p.y = cssHeight;
+        if (p.y > cssHeight) p.y = 0;
 
         // 120px 光标斥力场
         if (interactive) {
@@ -123,7 +138,7 @@ export function ParticleCanvas({
               ctx.beginPath();
               ctx.moveTo(p.x, p.y);
               ctx.lineTo(p2.x, p2.y);
-              ctx.strokeStyle = `rgba(27, 79, 138, ${linkAlpha})`;
+              ctx.strokeStyle = `rgba(37, 99, 235, ${linkAlpha})`;
               ctx.lineWidth = 0.5;
               ctx.stroke();
             }
@@ -134,6 +149,57 @@ export function ParticleCanvas({
       animationFrameId = requestAnimationFrame(render);
     };
 
+    const startLoop = () => {
+      if (!isRunning && isVisible && isIntersecting) {
+        isRunning = true;
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+
+    const stopLoop = () => {
+      isRunning = false;
+      cancelAnimationFrame(animationFrameId);
+    };
+
+    // 1. 窗口与容器自适应
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        setupDimensions();
+        if (prefersReducedMotion) render();
+      }, 100);
+    };
+    window.addEventListener("resize", handleResize);
+
+    // 2. 页面可见性监听（切换后台标签页时彻底停止 RAF，0% CPU 占用）
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+      if (isVisible) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // 3. 视口交叉监听（滑出视口时自动暂停渲染）
+    let observer: IntersectionObserver | null = null;
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          isIntersecting = entry.isIntersecting;
+          if (isIntersecting) {
+            startLoop();
+          } else {
+            stopLoop();
+          }
+        }
+      });
+      observer.observe(canvas);
+    }
+
+    // 4. 鼠标交互
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = {
@@ -150,11 +216,14 @@ export function ParticleCanvas({
     parent.addEventListener("mousemove", handleMouseMove as EventListener);
     parent.addEventListener("mouseleave", handleMouseLeave as EventListener);
 
-    animationFrameId = requestAnimationFrame(render);
+    startLoop();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("resize", resize);
+      stopLoop();
+      clearTimeout(resizeTimer);
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (observer) observer.disconnect();
       parent.removeEventListener("mousemove", handleMouseMove as EventListener);
       parent.removeEventListener("mouseleave", handleMouseLeave as EventListener);
     };

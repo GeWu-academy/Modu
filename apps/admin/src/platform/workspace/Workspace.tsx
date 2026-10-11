@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { useApp } from "../../app/providers/AppContext";
 import { ParticleCanvas } from "../../shared/components/ParticleCanvas";
-import { TiltCard } from "../../shared/components/TiltCard";
-import { AnimatedNumber } from "../../shared/components/AnimatedNumber";
 import {
   IconPuzzle,
-  IconSparkles,
-  IconUsers,
-  IconAlertTriangle,
   IconCheck,
   IconArrowRight,
   IconUserPlus,
@@ -21,12 +16,8 @@ import { TodoActionCenter } from "./components/TodoActionCenter";
 import { PlatformAssetsOverview } from "./components/PlatformAssetsOverview";
 
 export function Workspace() {
-  const { user, plugins, skills, users, navigate, currentCompany, activeView } = useApp();
+  const { user, navigate, currentCompany, activeView } = useApp();
   const [onboardingCollapsed, setOnboardingCollapsed] = useState(false);
-
-  const enabledPluginsCount = plugins.filter((p) => p.myStatus === "enabled").length;
-  const activeSkillsCount = skills.filter((s) => s.status === "active").length;
-  const activeUsersCount = users.filter((u) => u.status === "active").length;
 
   return (
     <div style={{ padding: "2rem", maxWidth: "1280px", margin: "0 auto" }}>
@@ -259,193 +250,7 @@ export function Workspace() {
         </div>
       )}
 
-      {/* =========================================================================
-          3. 四大核心指标概览浮岛卡片 (HUD Island · GSAP 3D 物理倾斜 + 动态数字)
-          ========================================================================= */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: "1.25rem",
-          marginBottom: "2rem",
-        }}
-      >
-        {/* 卡片 1: 插件 */}
-        <TiltCard
-          data-animate="hud-card"
-          variant="glass"
-          onClick={() => navigate(activeView === "platform" ? "/platform/plugins" : "/my/plugins")}
-          className="active:scale-[0.985] transition-transform duration-150"
-          style={{ padding: "1.25rem", cursor: "pointer" }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
-              {activeView === "platform" ? "平台开放插件" : "已启用插件"}
-            </span>
-            <div
-              style={{
-                padding: "0.375rem",
-                borderRadius: "6px",
-                backgroundColor: "var(--zinc-100)",
-                color: "var(--zinc-700)",
-              }}
-            >
-              <IconPuzzle size={16} />
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: "1.875rem",
-              fontWeight: 700,
-              color: "var(--zinc-950)",
-              margin: "0.625rem 0 0.25rem 0",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            <AnimatedNumber
-              value={
-                activeView === "platform"
-                  ? plugins.filter((p) => p.platformStatus === "available").length
-                  : enabledPluginsCount
-              }
-            />{" "}
-            <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
-              个
-            </span>
-          </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--brand-600)", fontWeight: 500 }}>
-            {activeView === "platform"
-              ? `总登记 ${plugins.length} 个插件，点击平台管理 ->`
-              : `平台共开放 ${plugins.filter((p) => p.platformStatus === "available").length} 个 ->`}
-          </div>
-        </TiltCard>
 
-        {/* 卡片 2: 我的 Skill */}
-        <TiltCard
-          data-animate="hud-card"
-          variant="glass"
-          onClick={() => navigate("/skills")}
-          className="active:scale-[0.985] transition-transform duration-150"
-          style={{ padding: "1.25rem", cursor: "pointer" }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
-              本人有效 Skill
-            </span>
-            <div
-              style={{
-                padding: "0.375rem",
-                borderRadius: "6px",
-                backgroundColor: "var(--zinc-100)",
-                color: "var(--zinc-700)",
-              }}
-            >
-              <IconSparkles size={16} />
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: "1.875rem",
-              fontWeight: 700,
-              color: "var(--zinc-950)",
-              margin: "0.625rem 0 0.25rem 0",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            <AnimatedNumber value={activeSkillsCount} />{" "}
-            <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
-              项
-            </span>
-          </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--brand-600)", fontWeight: 500 }}>
-            包含 1 项待发布草稿变更 -&gt;
-          </div>
-        </TiltCard>
-
-        {/* 卡片 3: 团队成员 */}
-        <TiltCard
-          data-animate="hud-card"
-          variant="glass"
-          onClick={() => navigate("/system/users")}
-          className="active:scale-[0.985] transition-transform duration-150"
-          style={{ padding: "1.25rem", cursor: "pointer" }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
-              团队有效成员
-            </span>
-            <div
-              style={{
-                padding: "0.375rem",
-                borderRadius: "6px",
-                backgroundColor: "var(--zinc-100)",
-                color: "var(--zinc-700)",
-              }}
-            >
-              <IconUsers size={16} />
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: "1.875rem",
-              fontWeight: 700,
-              color: "var(--zinc-950)",
-              margin: "0.625rem 0 0.25rem 0",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            <AnimatedNumber value={activeUsersCount} />{" "}
-            <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
-              人
-            </span>
-          </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--brand-600)", fontWeight: 500 }}>
-            当前活跃邀请链接 1 批次 -&gt;
-          </div>
-        </TiltCard>
-
-        {/* 卡片 4: 待处理维护 (附带 8s 微光呼吸流光边框) */}
-        <TiltCard
-          data-animate="hud-card"
-          variant="glass"
-          onClick={() => navigate("/system/audit")}
-          className="shimmer-border active:scale-[0.985] transition-transform duration-150"
-          style={{ padding: "1.25rem", cursor: "pointer" }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
-              待处理维护事项
-            </span>
-            <div
-              style={{
-                padding: "0.375rem",
-                borderRadius: "6px",
-                backgroundColor: "var(--semantic-warning-bg)",
-                color: "var(--semantic-warning-fg)",
-              }}
-            >
-              <IconAlertTriangle size={16} />
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: "1.875rem",
-              fontWeight: 700,
-              color: "var(--semantic-warning-fg)",
-              margin: "0.625rem 0 0.25rem 0",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            <AnimatedNumber value={1} />{" "}
-            <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
-              项待复核
-            </span>
-          </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--semantic-warning-fg)", fontWeight: 500 }}>
-            发现 1 次防锁死拒绝事件记录 -&gt;
-          </div>
-        </TiltCard>
-      </div>
 
       {/* =========================================================================
           4. 常用快捷入口组

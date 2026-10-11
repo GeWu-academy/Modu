@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 
 export interface UserAccount {
   id: string;
@@ -816,38 +816,54 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     navigate("/workspace");
   };
 
+  const contextValue = useMemo<AppContextValue>(
+    () => ({
+      user,
+      currentCompany,
+      updateCompanyName,
+      register,
+      activeView,
+      setActiveView: handleSetActiveView,
+      login,
+      logout,
+      currentRoute,
+      navigate,
+      isCmdKOpen,
+      setCmdKOpen,
+      users,
+      updateUserStatus,
+      updateUserProfile,
+      createUser,
+      invitations,
+      createInvitation,
+      revokeInvitation,
+      plugins,
+      toggleMyPlugin,
+      togglePlatformPlugin,
+      skills,
+      addSkill,
+      toggleSkillStatus,
+      auditLogs,
+      addAuditLog,
+    }),
+    [
+      user,
+      currentCompany,
+      activeView,
+      handleSetActiveView,
+      currentRoute,
+      navigate,
+      isCmdKOpen,
+      users,
+      invitations,
+      plugins,
+      skills,
+      auditLogs,
+    ]
+  );
+
   return (
-    <AppContext.Provider
-      value={{
-        user,
-        currentCompany,
-        updateCompanyName,
-        register,
-        activeView,
-        setActiveView: handleSetActiveView,
-        login,
-        logout,
-        currentRoute,
-        navigate,
-        isCmdKOpen,
-        setCmdKOpen,
-        users,
-        updateUserStatus,
-        updateUserProfile,
-        createUser,
-        invitations,
-        createInvitation,
-        revokeInvitation,
-        plugins,
-        toggleMyPlugin,
-        togglePlatformPlugin,
-        skills,
-        addSkill,
-        toggleSkillStatus,
-        auditLogs,
-        addAuditLog,
-      }}
-    >
+    <AppContext.Provider value={contextValue}>
       {children}
     </AppContext.Provider>
   );

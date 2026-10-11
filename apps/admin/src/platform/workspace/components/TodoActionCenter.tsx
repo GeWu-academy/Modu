@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import type { EChartsOption } from "echarts";
 import { useApp } from "../../../app/providers/AppContext";
 import { useToast } from "../../../shared/components/Toast";
 import { Badge } from "../../../shared/components/Badge";
 import { EChartsCard } from "../../../shared/components/EChartsCard";
 import {
   IconCheck,
-  IconCheckCircle2,
+  IconCheckCircle,
   IconClock,
   IconAlertTriangle,
   IconArrowRight,
@@ -176,15 +177,15 @@ export function TodoActionCenter() {
   };
 
   // 近 7 天待办产生与处理时效趋势图配置 (ECharts)
-  const trendOption = {
+  const trendOption: EChartsOption = {
     tooltip: {
-      trigger: "axis",
+      trigger: "axis" as const,
       backgroundColor: "rgba(15, 23, 42, 0.9)",
       borderColor: "transparent",
       textStyle: { color: "#f8fafc", fontSize: 12 },
       axisPointer: {
-        type: "line",
-        lineStyle: { color: "#94a3b8", width: 1, type: "dashed" },
+        type: "line" as const,
+        lineStyle: { color: "#94a3b8", width: 1, type: "dashed" as const },
       },
     },
     legend: {
@@ -202,13 +203,13 @@ export function TodoActionCenter() {
       left: 36,
     },
     xAxis: {
-      type: "category",
+      type: "category" as const,
       data: ["10-05", "10-06", "10-07", "10-08", "10-09", "10-10", "10-11 (今日)"],
       axisLine: { lineStyle: { color: "#e2e8f0" } },
       axisLabel: { color: "#64748b", fontSize: 11 },
     },
     yAxis: {
-      type: "value",
+      type: "value" as const,
       minInterval: 1,
       axisLine: { show: false },
       splitLine: { lineStyle: { color: "#f1f5f9" } },
@@ -421,7 +422,7 @@ export function TodoActionCenter() {
             <p className="text-xs text-zinc-500 mt-0.5">近 7 天新增事项 vs 办结走势（ECharts 折线图）</p>
           </div>
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
-            <IconCheckCircle2 size={12} />
+            <IconCheckCircle size={12} />
             办结率稳步攀升
           </span>
         </div>

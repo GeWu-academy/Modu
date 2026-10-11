@@ -77,6 +77,8 @@ html, body {
   background-color: var(--canvas-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 #root {
@@ -91,30 +93,32 @@ html, body {
   font-feature-settings: "tnum";
 }
 
-/* Custom delicate scrollbar */
+/* Custom delicate scrollbar (低感轻量优雅圆角滚动条) */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--zinc-300);
+  background: rgba(148, 163, 184, 0.35);
   border-radius: 9999px;
+  transition: background 150ms ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--zinc-400);
+  background: rgba(100, 116, 139, 0.55);
 }
 
 /* =========================================================================
-   Glassmorphism Surfaces
+   Glassmorphism Surfaces (硬件加速 GPU 合成层优化)
    ========================================================================= */
 .glass-subtle {
   background: var(--glass-bg-subtle);
   backdrop-filter: var(--glass-blur-subtle);
   -webkit-backdrop-filter: var(--glass-blur-subtle);
   border: 1px solid var(--glass-border-subtle);
+  transform: translateZ(0);
 }
 
 .glass-base {
@@ -123,6 +127,7 @@ html, body {
   -webkit-backdrop-filter: var(--glass-blur-base);
   border: 1px solid var(--glass-border-base);
   box-shadow: var(--glass-specular-highlight), var(--shadow-elevation-1);
+  transform: translateZ(0);
 }
 
 .glass-heavy {
@@ -131,6 +136,7 @@ html, body {
   -webkit-backdrop-filter: var(--glass-blur-heavy);
   border: 1px solid var(--glass-border-heavy);
   box-shadow: var(--glass-specular-highlight), var(--shadow-elevation-2);
+  transform: translateZ(0);
 }
 
 .glass-spruce, .glass-brand {
@@ -139,6 +145,7 @@ html, body {
   -webkit-backdrop-filter: var(--glass-blur-base);
   border: 1px solid var(--glass-brand-glow-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.90), 0 2px 8px rgba(15, 23, 42, 0.03);
+  transform: translateZ(0);
 }
 
 /* =========================================================================

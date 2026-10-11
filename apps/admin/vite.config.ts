@@ -29,6 +29,9 @@ export default defineConfig({
             if (id.includes("gsap")) {
               return "vendor-gsap";
             }
+            if (id.includes("echarts") || id.includes("zrender")) {
+              return "vendor-echarts";
+            }
           }
         },
       },

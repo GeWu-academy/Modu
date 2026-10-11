@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "./UsersView.css";
 import { useApp, UserAccount, Invitation } from "../../app/providers/AppContext";
 import { useToast } from "../../shared/components/Toast";
@@ -77,26 +77,34 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
   // 作废确认弹窗
   const [revokingInvite, setRevokingInvite] = useState<Invitation | null>(null);
 
-  // 1. 过滤用户数据
-  const filteredUsers = users.filter((u) => {
-    const matchSearch =
-      u.displayName.toLowerCase().includes(userSearch.toLowerCase()) ||
-      u.username.toLowerCase().includes(userSearch.toLowerCase()) ||
-      u.email.toLowerCase().includes(userSearch.toLowerCase());
-    const matchStatus = userStatusFilter === "all" || u.status === userStatusFilter;
-    const matchRole = userRoleFilter === "all" || u.role === userRoleFilter;
-    return matchSearch && matchStatus && matchRole;
-  });
+  // 1. 过滤用户数据（记忆化缓存避免频繁表单交互引起的冗余过滤）
+  const filteredUsers = useMemo(() => {
+    const q = userSearch.toLowerCase();
+    return users.filter((u) => {
+      const matchSearch =
+        !q ||
+        u.displayName.toLowerCase().includes(q) ||
+        u.username.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q);
+      const matchStatus = userStatusFilter === "all" || u.status === userStatusFilter;
+      const matchRole = userRoleFilter === "all" || u.role === userRoleFilter;
+      return matchSearch && matchStatus && matchRole;
+    });
+  }, [users, userSearch, userStatusFilter, userRoleFilter]);
 
-  // 2. 过滤邀请数据
-  const filteredInvites = invitations.filter((inv) => {
-    const matchSearch =
-      inv.note.toLowerCase().includes(inviteSearch.toLowerCase()) ||
-      inv.creatorName.toLowerCase().includes(inviteSearch.toLowerCase()) ||
-      inv.token.toLowerCase().includes(inviteSearch.toLowerCase());
-    const matchStatus = inviteStatusFilter === "all" || inv.status === inviteStatusFilter;
-    return matchSearch && matchStatus;
-  });
+  // 2. 过滤邀请数据（记忆化缓存）
+  const filteredInvites = useMemo(() => {
+    const q = inviteSearch.toLowerCase();
+    return invitations.filter((inv) => {
+      const matchSearch =
+        !q ||
+        inv.note.toLowerCase().includes(q) ||
+        inv.creatorName.toLowerCase().includes(q) ||
+        inv.token.toLowerCase().includes(q);
+      const matchStatus = inviteStatusFilter === "all" || inv.status === inviteStatusFilter;
+      return matchSearch && matchStatus;
+    });
+  }, [invitations, inviteSearch, inviteStatusFilter]);
 
   // 提交编辑用户资料
   const handleSaveUserProfile = () => {

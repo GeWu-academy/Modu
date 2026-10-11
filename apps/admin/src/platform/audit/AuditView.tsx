@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useApp } from "../../app/providers/AppContext";
 import { Badge } from "../../shared/components/Badge";
 import {
@@ -15,15 +15,19 @@ export function AuditView() {
   const [search, setSearch] = useState("");
   const [expandedLogId, setExpandedLogId] = useState<string | null>(null);
 
-  const filtered = auditLogs.filter((log) => {
-    const matchDomain = domainFilter === "all" || log.domain === domainFilter;
-    const matchSearch =
-      log.action.toLowerCase().includes(search.toLowerCase()) ||
-      log.operator.toLowerCase().includes(search.toLowerCase()) ||
-      log.target.toLowerCase().includes(search.toLowerCase()) ||
-      log.details.toLowerCase().includes(search.toLowerCase());
-    return matchDomain && matchSearch;
-  });
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase();
+    return auditLogs.filter((log) => {
+      const matchDomain = domainFilter === "all" || log.domain === domainFilter;
+      const matchSearch =
+        !q ||
+        log.action.toLowerCase().includes(q) ||
+        log.operator.toLowerCase().includes(q) ||
+        log.target.toLowerCase().includes(q) ||
+        log.details.toLowerCase().includes(q);
+      return matchDomain && matchSearch;
+    });
+  }, [auditLogs, domainFilter, search]);
 
   return (
     <div className="p-8 max-w-7xl mx-auto">

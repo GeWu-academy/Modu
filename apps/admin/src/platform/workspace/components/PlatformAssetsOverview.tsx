@@ -1,20 +1,21 @@
 import React from "react";
+import type { EChartsOption } from "echarts";
 import { useApp } from "../../../app/providers/AppContext";
+import { TiltCard } from "../../../shared/components/TiltCard";
+import { AnimatedNumber } from "../../../shared/components/AnimatedNumber";
 import { EChartsCard } from "../../../shared/components/EChartsCard";
 import {
   IconPuzzle,
   IconSparkles,
   IconUsers,
   IconDatabase,
-  IconServer,
   IconLayers,
-  IconActivity,
   IconArrowRight,
   IconShieldCheck,
 } from "../../../shared/components/Icons";
 
 export function PlatformAssetsOverview() {
-  const { plugins, skills, users, navigate, currentCompany, activeView } = useApp();
+  const { plugins, skills, users, navigate, activeView } = useApp();
 
   const enabledPluginsCount = plugins.filter((p) => p.myStatus === "enabled").length;
   const availablePluginsCount = plugins.filter((p) => p.platformStatus === "available").length;
@@ -22,16 +23,16 @@ export function PlatformAssetsOverview() {
   const activeUsersCount = users.filter((u) => u.status === "active").length;
 
   // 1. ECharts 资产多维分类构成环形图
-  const assetDistributionOption = {
+  const assetDistributionOption: EChartsOption = {
     tooltip: {
-      trigger: "item",
+      trigger: "item" as const,
       backgroundColor: "rgba(15, 23, 42, 0.9)",
       borderColor: "transparent",
       textStyle: { color: "#f8fafc", fontSize: 12 },
       formatter: "{b}: {c} 项 ({d}%)",
     },
     legend: {
-      orient: "horizontal",
+      orient: "horizontal" as const,
       bottom: 0,
       itemWidth: 10,
       itemHeight: 10,
@@ -76,13 +77,13 @@ export function PlatformAssetsOverview() {
   };
 
   // 2. ECharts 各类资产近 7 天调度吞吐活跃度 (柱状/走势图)
-  const assetActivityOption = {
+  const assetActivityOption: EChartsOption = {
     tooltip: {
-      trigger: "axis",
+      trigger: "axis" as const,
       backgroundColor: "rgba(15, 23, 42, 0.9)",
       borderColor: "transparent",
       textStyle: { color: "#f8fafc", fontSize: 12 },
-      axisPointer: { type: "shadow" },
+      axisPointer: { type: "shadow" as const },
     },
     legend: {
       right: 10,
@@ -99,13 +100,13 @@ export function PlatformAssetsOverview() {
       left: 36,
     },
     xAxis: {
-      type: "category",
+      type: "category" as const,
       data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
       axisLine: { lineStyle: { color: "#e2e8f0" } },
       axisLabel: { color: "#64748b", fontSize: 11 },
     },
     yAxis: {
-      type: "value",
+      type: "value" as const,
       axisLine: { show: false },
       splitLine: { lineStyle: { color: "#f1f5f9" } },
       axisLabel: { color: "#64748b", fontSize: 11 },
@@ -163,35 +164,45 @@ export function PlatformAssetsOverview() {
         </button>
       </div>
 
-      {/* 1. 四大资产卡片组 */}
+      {/* 1. 四大资产卡片组 (使用 TiltCard 3D 物理倾斜 + AnimatedNumber 数字动画) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
         {/* 卡片 1: 插件资产 */}
-        <div
+        <TiltCard
+          variant="glass"
           onClick={() => navigate(activeView === "platform" ? "/platform/plugins" : "/my/plugins")}
-          className="bg-white p-4.5 rounded-xl border border-zinc-200/80 shadow-xs hover:border-brand-300 transition-all cursor-pointer group"
+          className="p-4.5 cursor-pointer active:scale-[0.985] transition-transform duration-150 group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-500">插件生态资产</span>
+            <span className="text-xs font-medium text-zinc-500">
+              插件生态资产 ({activeView === "platform" ? "平台开放" : "已启用"})
+            </span>
             <div className="p-1.5 rounded-md bg-blue-50 text-blue-600 group-hover:scale-105 transition-transform">
               <IconPuzzle size={16} />
             </div>
           </div>
-          <div className="mt-2.5 flex items-baseline gap-2">
+          <div className="mt-2.5 flex items-baseline gap-1.5">
             <span className="text-2xl font-bold text-zinc-900 tracking-tight">
-              {availablePluginsCount}
+              <AnimatedNumber
+                value={
+                  activeView === "platform" ? availablePluginsCount : enabledPluginsCount
+                }
+              />
             </span>
-            <span className="text-xs text-zinc-500">款可用 / 登记 {plugins.length} 款</span>
+            <span className="text-xs text-zinc-500">款 / 总登记 {plugins.length} 款</span>
           </div>
           <div className="mt-2 text-xs text-brand-600 font-medium flex items-center justify-between">
-            <span>本人已启用 {enabledPluginsCount} 款</span>
-            <span className="text-zinc-400 group-hover:text-brand-600 transition-colors">配置 -&gt;</span>
+            <span>
+              {activeView === "platform" ? "全平台插件集中管控" : `平台共开放 ${availablePluginsCount} 款`}
+            </span>
+            <span className="text-zinc-400 group-hover:text-brand-600 transition-colors">-&gt;</span>
           </div>
-        </div>
+        </TiltCard>
 
         {/* 卡片 2: Skill 规则知识资产 */}
-        <div
+        <TiltCard
+          variant="glass"
           onClick={() => navigate("/skills")}
-          className="bg-white p-4.5 rounded-xl border border-zinc-200/80 shadow-xs hover:border-brand-300 transition-all cursor-pointer group"
+          className="p-4.5 cursor-pointer active:scale-[0.985] transition-transform duration-150 group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-zinc-500">Skill 规则知识资产</span>
@@ -199,22 +210,23 @@ export function PlatformAssetsOverview() {
               <IconSparkles size={16} />
             </div>
           </div>
-          <div className="mt-2.5 flex items-baseline gap-2">
+          <div className="mt-2.5 flex items-baseline gap-1.5">
             <span className="text-2xl font-bold text-zinc-900 tracking-tight">
-              {activeSkillsCount}
+              <AnimatedNumber value={activeSkillsCount} />
             </span>
             <span className="text-xs text-zinc-500">项激活 / 总库 {skills.length} 项</span>
           </div>
           <div className="mt-2 text-xs text-violet-600 font-medium flex items-center justify-between">
             <span>包含 1 项待发布草稿变更</span>
-            <span className="text-zinc-400 group-hover:text-violet-600 transition-colors">管理 -&gt;</span>
+            <span className="text-zinc-400 group-hover:text-violet-600 transition-colors">-&gt;</span>
           </div>
-        </div>
+        </TiltCard>
 
         {/* 卡片 3: 组织与授权席位 */}
-        <div
+        <TiltCard
+          variant="glass"
           onClick={() => navigate("/system/users")}
-          className="bg-white p-4.5 rounded-xl border border-zinc-200/80 shadow-xs hover:border-brand-300 transition-all cursor-pointer group"
+          className="p-4.5 cursor-pointer active:scale-[0.985] transition-transform duration-150 group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-zinc-500">组织授权席位资产</span>
@@ -222,22 +234,23 @@ export function PlatformAssetsOverview() {
               <IconUsers size={16} />
             </div>
           </div>
-          <div className="mt-2.5 flex items-baseline gap-2">
+          <div className="mt-2.5 flex items-baseline gap-1.5">
             <span className="text-2xl font-bold text-zinc-900 tracking-tight">
-              {activeUsersCount}
+              <AnimatedNumber value={activeUsersCount} />
             </span>
             <span className="text-xs text-zinc-500">人就绪 / 授权上限 50 席</span>
           </div>
           <div className="mt-2 text-xs text-sky-600 font-medium flex items-center justify-between">
             <span>当前活跃邀请 1 批次</span>
-            <span className="text-zinc-400 group-hover:text-sky-600 transition-colors">分发 -&gt;</span>
+            <span className="text-zinc-400 group-hover:text-sky-600 transition-colors">-&gt;</span>
           </div>
-        </div>
+        </TiltCard>
 
         {/* 卡片 4: 数据库与存储底座 */}
-        <div
+        <TiltCard
+          variant="glass"
           onClick={() => navigate("/system/audit")}
-          className="bg-white p-4.5 rounded-xl border border-zinc-200/80 shadow-xs hover:border-brand-300 transition-all cursor-pointer group"
+          className="p-4.5 cursor-pointer active:scale-[0.985] transition-transform duration-150 group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-zinc-500">自托管数据与存储资产</span>
@@ -245,20 +258,20 @@ export function PlatformAssetsOverview() {
               <IconDatabase size={16} />
             </div>
           </div>
-          <div className="mt-2.5 flex items-baseline gap-2">
+          <div className="mt-2.5 flex items-baseline gap-1.5">
             <span className="text-2xl font-bold text-zinc-900 tracking-tight">
-              32.4 <span className="text-sm font-normal text-zinc-500">GB</span>
+              32.4
             </span>
-            <span className="text-xs text-zinc-500">/ 100 GB 独立配额</span>
+            <span className="text-xs text-zinc-500">GB / 100 GB 独立配额</span>
           </div>
           <div className="mt-2 text-xs text-emerald-600 font-medium flex items-center justify-between">
             <span className="flex items-center gap-1">
               <IconShieldCheck size={12} />
               数据主权 100% 本地自控
             </span>
-            <span className="text-zinc-400 group-hover:text-emerald-600 transition-colors">审计 -&gt;</span>
+            <span className="text-zinc-400 group-hover:text-emerald-600 transition-colors">-&gt;</span>
           </div>
-        </div>
+        </TiltCard>
       </div>
 
       {/* 2. ECharts 可视化图表双联栏 */}

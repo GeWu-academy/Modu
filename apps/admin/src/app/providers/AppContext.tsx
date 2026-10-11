@@ -66,15 +66,26 @@ export interface AuditLog {
   details: string;
 }
 
+export interface CompanyInfo {
+  name: string;
+  instanceId: string;
+  version: string;
+  status: string;
+}
+
 interface AppContextValue {
   // 认证与身份
   user: UserAccount | null;
-  currentCompany: {
-    name: string;
-    instanceId: string;
-    version: string;
-    status: string;
-  };
+  currentCompany: CompanyInfo;
+  updateCompanyName: (name: string) => void;
+  register: (data: {
+    username: string;
+    displayName?: string;
+    email: string;
+    phone: string;
+    role: string;
+    companyName?: string;
+  }) => void;
   activeView: "business" | "platform";
   setActiveView: (view: "business" | "platform") => void;
   login: (email: string, role?: string) => void;
@@ -112,6 +123,35 @@ interface AppContextValue {
 
 const AppContext = createContext<AppContextValue | null>(null);
 
+const COMPANY_STORAGE_KEY = "modu_admin_company_info";
+
+function getInitialCompany(): CompanyInfo {
+  if (typeof window !== "undefined") {
+    try {
+      const saved = localStorage.getItem(COMPANY_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed.name === "string") {
+          return {
+            name: parsed.name,
+            instanceId: parsed.instanceId || "inst_modu_prod_01",
+            version: parsed.version || "v1.0.0-rc2",
+            status: parsed.status || "节点就绪",
+          };
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return {
+    name: "", // 默认不预置硬编码公司名，未填写时系统不展示公司名
+    instanceId: "inst_modu_prod_01",
+    version: "v1.0.0-rc2",
+    status: "节点就绪",
+  };
+}
+
 export function AppProvider({ children }: { children: React.ReactNode }) {
   // 1. 当前登录账号（初始登录状态为系统管理员）
   const [user, setUser] = useState<UserAccount | null>({
@@ -126,12 +166,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     isCurrentUser: true,
   });
 
-  const [currentCompany] = useState({
-    name: "智汇未来科技有限公司",
-    instanceId: "inst_modu_prod_01",
-    version: "v1.0.0-rc2",
-    status: "节点就绪",
-  });
+  const [currentCompany, setCurrentCompany] = useState<CompanyInfo>(getInitialCompany);
 
   const [activeView, setActiveView] = useState<"business" | "platform">("business");
   const [isCmdKOpen, setCmdKOpen] = useState(false);
@@ -691,11 +726,90 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setAuditLogs((prev) => [newLog, ...prev]);
   };
 
+  const updateCompanyName = (name: string) => {
+    const trimmed = name.trim();
+    setCurrentCompany((prev) => {
+      const next = { ...prev, name: trimmed };
+      try {
+        localStorage.setItem(COMPANY_STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+
+    addAuditLog({
+      domain: "platform",
+      operator: `${user?.displayName || "系统"} (${user?.id || ""})`,
+      action: "更新企业全称",
+      target: trimmed ? `企业名称: ${trimmed}` : "清空企业名称",
+      result: "success",
+      ip: "127.0.0.1",
+      details: trimmed
+        ? `管理员更新企业注册全称为 [${trimmed}]`
+        : "管理员清空企业名称，系统全局转为不展示企业名模式",
+    });
+  };
+
+  const register = (data: {
+    username: string;
+    displayName?: string;
+    email: string;
+    phone: string;
+    role: string;
+    companyName?: string;
+  }) => {
+    const newUser: UserAccount = {
+      id: `usr_${Math.random().toString(36).substring(2, 8)}`,
+      username: data.username,
+      displayName: data.displayName || data.username,
+      email: data.email,
+      phone: data.phone,
+      role: data.role,
+      status: "active",
+      createdAt: new Date().toISOString().replace("T", " ").substring(0, 16),
+      lastLoginAt: new Date().toISOString().replace("T", " ").substring(0, 16),
+      isCurrentUser: true,
+    };
+
+    if (data.companyName !== undefined) {
+      const trimmed = data.companyName.trim();
+      setCurrentCompany((prev) => {
+        const next = { ...prev, name: trimmed };
+        try {
+          localStorage.setItem(COMPANY_STORAGE_KEY, JSON.stringify(next));
+        } catch {
+          // ignore
+        }
+        return next;
+      });
+    }
+
+    setUser(newUser);
+    setUsers((prev) => [newUser, ...prev]);
+
+    addAuditLog({
+      domain: "account",
+      operator: `${newUser.displayName} (${newUser.id})`,
+      action: data.role.includes("管理员") ? "注册管理员账号" : "受邀注册账号",
+      target: `${newUser.displayName} (${newUser.email})`,
+      result: "success",
+      ip: "127.0.0.1",
+      details: data.companyName?.trim()
+        ? `完成注册并绑定角色 [${data.role}]，登记企业全称 [${data.companyName.trim()}]`
+        : `完成注册并绑定角色 [${data.role}]，未填写企业名称（不展示企业名）`,
+    });
+
+    navigate("/workspace");
+  };
+
   return (
     <AppContext.Provider
       value={{
         user,
         currentCompany,
+        updateCompanyName,
+        register,
         activeView,
         setActiveView,
         login,

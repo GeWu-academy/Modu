@@ -189,10 +189,14 @@ export function Header({
               }}
             >
               <span>Modu</span>
-              <span style={{ color: "var(--zinc-400)", fontWeight: 400 }}>/</span>
-              <span style={{ fontSize: "0.8125rem", color: "var(--zinc-700)" }}>
-                {currentCompany.name}
-              </span>
+              {currentCompany.name?.trim() ? (
+                <>
+                  <span style={{ color: "var(--zinc-400)", fontWeight: 400 }}>/</span>
+                  <span style={{ fontSize: "0.8125rem", color: "var(--zinc-700)" }}>
+                    {currentCompany.name.trim()}
+                  </span>
+                </>
+              ) : null}
             </div>
           </div>
         </div>

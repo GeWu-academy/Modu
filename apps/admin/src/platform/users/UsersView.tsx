@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./UsersView.css";
 import { useApp, UserAccount, Invitation } from "../../app/providers/AppContext";
 import { useToast } from "../../shared/components/Toast";
 import { Badge } from "../../shared/components/Badge";
@@ -25,6 +26,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
   const {
     users,
     invitations,
+    currentCompany,
     updateUserStatus,
     updateUserProfile,
     createUser,
@@ -179,28 +181,29 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
   // 复制邀请模板
   const copyInviteTemplate = (inv: Invitation) => {
     const url = `${window.location.origin}/#/invite/${inv.token}`;
-    const text = `【智汇未来科技】${inv.creatorName} 邀请您加入管理系统，预设角色为 [${inv.presetRole}]。请点击以下安全链接完成受邀注册：${url}`;
+    const companyPrefix = currentCompany.name?.trim() ? `【${currentCompany.name.trim()}】` : "【Modu】";
+    const text = `${companyPrefix}${inv.creatorName} 邀请您加入管理系统，预设角色为 [${inv.presetRole}]。请点击以下安全链接完成受邀注册：${url}`;
     navigator.clipboard.writeText(text);
     toast.success("企业邀请话术模板已复制");
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="admin-users-view p-8 max-w-7xl mx-auto">
       {/* 粒子触觉绽放组件 */}
       <TactileBurst active={burstActive} onComplete={() => setBurstActive(false)} />
 
       {/* 顶部标题与核心操作栏 */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div className="users-page-header flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-950 tracking-tight m-0">
-            用户管理与企业成员
+            用户与成员
           </h1>
           <p className="text-sm text-zinc-500 mt-1 mb-0">
-            系统账号维护底座，支持独立账号读写、防锁死保护与直绑企业的成员受邀注册全链路。
+            管理企业账号、角色权限与成员邀请。
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="users-page-actions flex items-center gap-3">
           <button
             onClick={() => setIsCreateUserOpen(true)}
             className="btn btn-secondary text-xs h-9 px-3.5"
@@ -214,7 +217,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
               setGeneratedInvite(null);
               setIsInviteDrawerOpen(true);
             }}
-            className="btn btn-frost-blue text-xs h-9 px-3.5 transition-all group"
+            className="btn btn-primary text-xs h-9 px-3.5 transition-all group"
           >
             <IconUserPlus size={14} className="text-brand-600 transition-transform group-hover:scale-110" />
             <span>邀请成员加入</span>
@@ -222,30 +225,38 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
         </div>
       </div>
 
-      {/* 主视图 Tab 切换器 (微透胶囊组) */}
-      <div className="flex items-center gap-2 border-b border-zinc-200 mb-6 pb-2">
+      {/* 主视图 Tab 切换器 */}
+      <div className="users-tabs flex items-center gap-2 border-b border-zinc-200 mb-6 pb-2" role="tablist" aria-label="用户管理视图">
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "users"}
           onClick={() => setActiveTab("users")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
+          className={`users-tab px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "users"
               ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
           <IconUsers size={14} />
-          <span>现有系统用户 ({users.length})</span>
+          <span>现有系统用户</span>
+          <span className="users-tab-count">{users.length}</span>
         </button>
 
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "invites"}
           onClick={() => setActiveTab("invites")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
+          className={`users-tab px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "invites"
               ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
           <IconUserPlus size={14} />
-          <span>邀请链接管理 ({invitations.length})</span>
+          <span>邀请链接</span>
+          <span className="users-tab-count">{invitations.length}</span>
         </button>
       </div>
 
@@ -253,11 +264,11 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
           Tab 1: 现有系统用户列表
           ========================================================================= */}
       {activeTab === "users" && (
-        <div className="card bg-white border border-zinc-200 rounded-xl shadow-elevation-1">
+        <div className="users-panel card bg-white border border-zinc-200 rounded-xl shadow-elevation-1">
           {/* 筛选过滤工具条 */}
-          <div className="p-4 border-b border-zinc-200 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
+          <div className="users-toolbar p-4 border-b border-zinc-200 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
             <div className="flex items-center gap-3 flex-1 min-w-[280px]">
-              <div className="relative flex-1 max-w-sm">
+              <div className="users-search relative flex-1 max-w-sm">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
                   <IconSearch size={15} />
                 </span>
@@ -294,14 +305,14 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
               </select>
             </div>
 
-            <div className="text-xs text-zinc-500 font-medium">
+            <div className="users-result-count text-xs text-zinc-500 font-medium">
               共查询到 {filteredUsers.length} 个账号
             </div>
           </div>
 
           {/* 数据表格 */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm border-collapse">
+            <table className="users-data-table w-full text-left text-sm border-collapse">
               <thead>
                 <tr className="bg-zinc-50/70 border-b border-zinc-200 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                   <th className="py-3 px-4">账号标识 / 显示名称</th>
@@ -364,10 +375,10 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
                       <td className="py-3.5 px-4">
                         {u.status === "active" ? (
                           <Badge variant="success" pulse={true}>
-                            [状态: 生效中]
+                            生效中
                           </Badge>
                         ) : (
-                          <Badge variant="danger">[状态: 已停用]</Badge>
+                          <Badge variant="danger">已停用</Badge>
                         )}
                       </td>
 
@@ -422,11 +433,11 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
           Tab 2: 邀请链接管理
           ========================================================================= */}
       {activeTab === "invites" && (
-        <div className="card bg-white border border-zinc-200 rounded-xl shadow-elevation-1">
+        <div className="users-panel card bg-white border border-zinc-200 rounded-xl shadow-elevation-1">
           {/* 工具栏 */}
-          <div className="p-4 border-b border-zinc-200 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
+          <div className="users-toolbar p-4 border-b border-zinc-200 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
             <div className="flex items-center gap-3 flex-1 min-w-[280px]">
-              <div className="relative flex-1 max-w-sm">
+              <div className="users-search relative flex-1 max-w-sm">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
                   <IconSearch size={15} />
                 </span>
@@ -452,14 +463,14 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
               </select>
             </div>
 
-            <div className="text-xs text-zinc-500 font-medium">
+            <div className="users-result-count text-xs text-zinc-500 font-medium">
               共查询到 {filteredInvites.length} 批次邀请
             </div>
           </div>
 
           {/* 表格 */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm border-collapse">
+            <table className="users-data-table users-invites-table w-full text-left text-sm border-collapse">
               <thead>
                 <tr className="bg-zinc-50/70 border-b border-zinc-200 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                   <th className="py-3 px-4">邀请备注 / Token</th>
@@ -517,16 +528,16 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
 
                       <td className="py-3.5 px-4">
                         {inv.status === "active" && (
-                          <Badge variant="success">[状态: 生效中]</Badge>
+                          <Badge variant="success">生效中</Badge>
                         )}
                         {inv.status === "consumed" && (
-                          <Badge variant="neutral">[状态: 已核销]</Badge>
+                          <Badge variant="neutral">已核销</Badge>
                         )}
                         {inv.status === "expired" && (
-                          <Badge variant="warning">[状态: 已过期]</Badge>
+                          <Badge variant="warning">已过期</Badge>
                         )}
                         {inv.status === "revoked" && (
-                          <Badge variant="danger">[状态: 已作废]</Badge>
+                          <Badge variant="danger">已作废</Badge>
                         )}
                       </td>
 

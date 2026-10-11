@@ -25,7 +25,7 @@ interface AuthCenterProps {
 }
 
 export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
-  const { login, currentCompany, invitations } = useApp();
+  const { login, register, currentCompany, invitations } = useApp();
   const toast = useToast();
 
   const [mode, setMode] = useState<"login" | "register">(
@@ -33,6 +33,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
   );
 
   // 表单状态
+  const [companyName, setCompanyName] = useState(currentCompany.name || "");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -97,8 +98,27 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
       return;
     }
 
-    toast.success("注册成功！已自动绑定当前企业实例与预设角色");
-    login(email, activeInvite?.presetRole || "普通业务成员");
+    const assignedRole = activeInvite?.presetRole || "系统超级管理员";
+    const trimmedCompany = companyName.trim();
+
+    register({
+      username,
+      displayName: username,
+      email,
+      phone: `${areaCode} ${phone}`,
+      role: assignedRole,
+      companyName: activeInvite ? undefined : trimmedCompany,
+    });
+
+    if (activeInvite) {
+      toast.success("注册成功！已自动绑定当前企业实例与受邀角色");
+    } else {
+      if (trimmedCompany) {
+        toast.success(`管理员注册成功！已登记企业全称：${trimmedCompany}`);
+      } else {
+        toast.success("管理员注册成功！未填写公司名，系统将以独立底座模式运行");
+      }
+    }
   };
 
   const handleOAuthClick = (provider: "google" | "github") => {
@@ -177,7 +197,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               letterSpacing: "-0.02em",
             }}
           >
-            {currentCompany.name}
+            {currentCompany.name?.trim() ? currentCompany.name.trim() : "Modu 企业管理底座"}
           </h2>
           <p style={{ fontSize: "0.9375rem", color: "var(--zinc-600)", margin: 0, maxWidth: "420px" }}>
             为单企业量身定制的独立数据主权管理平台，告别多租户数据泄露风险与笨重预制流程。
@@ -440,7 +460,11 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                   margin: 0,
                 }}
               >
-                {mode === "login" ? "欢迎回来" : "创建您的企业账号"}
+                {mode === "login"
+                  ? "欢迎回来"
+                  : activeInvite
+                  ? "创建您的受邀账号"
+                  : "注册管理员账号"}
               </h1>
               <p
                 style={{
@@ -451,7 +475,9 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               >
                 {mode === "login"
                   ? "请输入您的电子邮箱与密码进入控制台"
-                  : "完成四项基础资料即可加入本企业实例"}
+                  : activeInvite
+                  ? "完成四项基础资料即可加入本企业实例"
+                  : "设置管理员账号，并可指定所属公司名称（选填）"}
               </p>
             </div>
             <button
@@ -463,7 +489,11 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                 fontWeight: 600,
               }}
             >
-              {mode === "login" ? "受邀注册 ->" : "已有账号登录 ->"}
+              {mode === "login"
+                ? activeInvite
+                  ? "受邀注册 ->"
+                  : "管理员注册 ->"
+                : "已有账号登录 ->"}
             </button>
           </div>
 
@@ -551,8 +581,40 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               </button>
             </form>
           ) : (
-            /* 四字段注册表单 (用户名 + 邮箱 + 手机号 + 密码) */
+            /* 注册表单 (管理员模式含企业名称，邀请模式直绑当前企业) */
             <form onSubmit={handleRegisterSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+              {!activeInvite && (
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <label className="input-label">所属公司 / 企业名称</label>
+                    <span style={{ fontSize: "0.75rem", color: "var(--zinc-400)" }}>选填，留空则不展示</span>
+                  </div>
+                  <div style={{ position: "relative" }}>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "0.75rem",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "var(--zinc-400)",
+                      }}
+                    >
+                      <IconBuilding size={16} />
+                    </span>
+                    <input
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="例如：智汇未来科技有限公司（选填）"
+                      className="input-control"
+                      style={{ paddingLeft: "2.25rem" }}
+                    />
+                  </div>
+                  <p style={{ fontSize: "0.6875rem", color: "var(--zinc-500)", margin: "0.25rem 0 0 0" }}>
+                    初始注册设置。若填写将在系统顶栏与受邀界面展示；若未填写则不展示当前公司名。
+                  </p>
+                </div>
+              )}
               <div>
                 <label className="input-label">用户名 (3-32位展示标识)</label>
                 <div style={{ position: "relative" }}>
@@ -735,7 +797,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                 className="btn btn-primary"
                 style={{ width: "100%", marginTop: "0.5rem", height: "42px" }}
               >
-                立即注册并加入企业
+                {activeInvite ? "立即注册并加入企业" : "立即创建管理员账号"}
               </button>
             </form>
           )}

@@ -1,0 +1,358 @@
+.admin-users-view {
+  width: min(100%, 1280px);
+  color: #172033;
+}
+
+.admin-users-view .users-page-header {
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.admin-users-view .users-page-header h1 {
+  font-size: 25px;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  font-weight: 650;
+}
+
+.admin-users-view .users-page-header p {
+  margin-top: 7px;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.admin-users-view .users-page-actions {
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.admin-users-view .users-page-actions .btn {
+  min-height: 36px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 550;
+  box-shadow: none;
+}
+
+.admin-users-view .users-page-actions .btn-secondary {
+  color: #344054;
+  background: #fff;
+  border-color: #d0d5dd;
+}
+
+.admin-users-view .users-page-actions .btn-primary {
+  color: #fff;
+  background: #1d4ed8;
+  border: 1px solid #1d4ed8;
+}
+
+.admin-users-view .users-page-actions .btn-primary:hover:not(:disabled) {
+  background: #1e40af;
+  border-color: #1e40af;
+}
+
+.admin-users-view .users-page-actions .btn-primary svg {
+  color: currentColor;
+}
+
+.admin-users-view .users-tabs {
+  gap: 22px;
+  margin-bottom: 16px;
+  padding-bottom: 0;
+  border-color: #e4e7ec;
+}
+
+.admin-users-view .users-tab {
+  position: relative;
+  gap: 8px;
+  padding: 11px 2px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #667085;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.admin-users-view .users-tab:hover {
+  background: transparent;
+  color: #344054;
+}
+
+.admin-users-view .users-tab.tab-pill-active {
+  background: transparent !important;
+  color: #1d2939 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+.admin-users-view .users-tab.tab-pill-active::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: #1d4ed8;
+  content: "";
+}
+
+.admin-users-view .users-tab-count {
+  display: inline-flex;
+  min-width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #f2f4f7;
+  color: #667085;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-users-view .users-tab.tab-pill-active .users-tab-count {
+  background: #eef4ff;
+  color: #1d4ed8;
+}
+
+.admin-users-view .users-panel {
+  border-color: #e4e7ec;
+  border-radius: 9px;
+  box-shadow: 0 1px 2px rgb(16 24 40 / 4%);
+}
+
+.admin-users-view .users-panel:hover {
+  box-shadow: 0 2px 5px rgb(16 24 40 / 5%);
+}
+
+.admin-users-view .users-toolbar {
+  min-height: 64px;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fff;
+  border-color: #eaecf0;
+}
+
+.admin-users-view .users-toolbar > div:first-child {
+  gap: 8px;
+}
+
+.admin-users-view .users-toolbar .users-search {
+  width: min(100%, 360px);
+  min-width: 260px;
+  flex: 1 1 260px;
+}
+
+.admin-users-view .users-toolbar select.input-control {
+  width: 140px;
+  flex: 0 0 140px;
+}
+
+.admin-users-view .users-toolbar select.input-control:last-of-type {
+  width: 170px;
+  flex-basis: 170px;
+}
+
+.admin-users-view .users-toolbar .input-control {
+  min-height: 36px;
+  border-color: #d0d5dd;
+  border-radius: 6px;
+  color: #344054;
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.admin-users-view .users-toolbar .input-control:focus {
+  border-color: #84adff;
+  box-shadow: 0 0 0 3px rgb(47 111 235 / 12%);
+}
+
+.admin-users-view .users-result-count {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 450;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-data-table {
+  min-width: 900px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.admin-users-view .users-invites-table {
+  min-width: 1200px;
+}
+
+.admin-users-view .users-invites-table :is(th, td):nth-child(1) {
+  min-width: 320px;
+}
+
+.admin-users-view .users-invites-table :is(th, td):nth-child(2) {
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-invites-table :is(th, td):nth-child(3) {
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-invites-table :is(th, td):nth-child(4) {
+  min-width: 140px;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-invites-table :is(th, td):nth-child(5) {
+  min-width: 140px;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-invites-table :is(th, td):nth-child(6) {
+  min-width: 100px;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-invites-table th:last-child,
+.admin-users-view .users-invites-table td:last-child {
+  min-width: 180px;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-invites-table td:last-child button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-data-table thead tr {
+  background: #f9fafb;
+  color: #667085;
+}
+
+.admin-users-view .users-data-table th {
+  height: 42px;
+  padding: 0 16px;
+  border-bottom: 1px solid #eaecf0;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-data-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #f0f1f3;
+  vertical-align: middle;
+}
+
+.admin-users-view .users-data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-users-view .users-data-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.admin-users-view .users-data-table tbody td:first-child > div > div:first-child {
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.admin-users-view .users-data-table .badge {
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.admin-users-view .users-data-table .btn-ghost {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 7px;
+  border-radius: 5px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.admin-users-view .users-data-table button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.admin-users-view :is(button, input, select):focus-visible {
+  outline: 2px solid #528bff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .admin-users-view {
+    padding: 24px 16px;
+  }
+
+  .admin-users-view .users-page-header {
+    align-items: flex-start;
+    margin-bottom: 22px;
+  }
+
+  .admin-users-view .users-page-header h1 {
+    font-size: 22px;
+  }
+
+  .admin-users-view .users-page-actions {
+    width: 100%;
+  }
+
+  .admin-users-view .users-page-actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .admin-users-view .users-tabs {
+    gap: 18px;
+    overflow-x: auto;
+  }
+
+  .admin-users-view .users-tab {
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .admin-users-view .users-toolbar {
+    align-items: stretch;
+  }
+
+  .admin-users-view .users-toolbar > div:first-child {
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .admin-users-view .users-toolbar > div:first-child > div {
+    min-width: 100%;
+    max-width: none;
+  }
+
+  .admin-users-view .users-toolbar select.input-control {
+    flex: 1;
+    width: auto;
+    min-width: 130px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-users-view *,
+  .admin-users-view *::before,
+  .admin-users-view *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

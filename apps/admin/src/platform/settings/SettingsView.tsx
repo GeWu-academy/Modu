@@ -10,10 +10,14 @@ import {
 import { StatusIndicator } from "../../shared/components/StatusIndicator";
 
 export function SettingsView() {
-  const { user, currentCompany, updateUserProfile } = useApp();
+  const { user, currentCompany, updateUserProfile, updateCompanyName } = useApp();
   const toast = useToast();
 
   const [activeTab, setActiveTab] = useState<"profile" | "company">("profile");
+
+  // 企业全称修改状态
+  const [isEditingCompany, setIsEditingCompany] = useState(false);
+  const [companyInput, setCompanyInput] = useState(currentCompany.name || "");
 
   // 个人资料修改
   const [displayName, setDisplayName] = useState(user?.displayName || "");
@@ -31,6 +35,18 @@ export function SettingsView() {
       updateUserProfile(user.id, { displayName, phone });
       toast.success("个人偏好设置已更新");
     }
+  };
+
+  const handleSaveCompany = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = companyInput.trim();
+    updateCompanyName(trimmed);
+    if (trimmed) {
+      toast.success(`企业全称已更新为 [${trimmed}]`);
+    } else {
+      toast.success("已清除企业全称，系统顶栏将不再展示公司名称");
+    }
+    setIsEditingCompany(false);
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -231,9 +247,75 @@ export function SettingsView() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-1">
-              <div className="text-zinc-500">企业注册全称</div>
-              <div className="text-sm font-semibold text-zinc-900">{currentCompany.name}</div>
+            <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="text-zinc-500">企业注册全称</div>
+                {!isEditingCompany ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCompanyInput(currentCompany.name || "");
+                      setIsEditingCompany(true);
+                    }}
+                    className="text-xs text-brand-600 hover:text-brand-700 font-medium cursor-pointer"
+                  >
+                    {currentCompany.name?.trim() ? "修改" : "设置公司名称"}
+                  </button>
+                ) : null}
+              </div>
+
+              {!isEditingCompany ? (
+                <div className="text-sm font-semibold text-zinc-900">
+                  {currentCompany.name?.trim() ? (
+                    currentCompany.name.trim()
+                  ) : (
+                    <span className="text-zinc-400 font-normal">未填写（当前不展示公司名称）</span>
+                  )}
+                </div>
+              ) : (
+                <form onSubmit={handleSaveCompany} className="space-y-2 pt-1">
+                  <input
+                    type="text"
+                    value={companyInput}
+                    onChange={(e) => setCompanyInput(e.target.value)}
+                    placeholder="例如：智汇未来科技有限公司（留空保存则清除）"
+                    className="input-control text-xs w-full"
+                    autoFocus
+                  />
+                  <div className="flex items-center gap-2 justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingCompany(false)}
+                      className="btn-ghost btn-sm text-xs px-2 py-1"
+                    >
+                      取消
+                    </button>
+                    {companyInput.trim() && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCompanyInput("");
+                          updateCompanyName("");
+                          toast.success("已清除企业全称，系统顶栏将不再展示公司名称");
+                          setIsEditingCompany(false);
+                        }}
+                        className="btn-ghost btn-sm text-xs px-2 py-1 text-rose-600 hover:text-rose-700"
+                      >
+                        清空
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      className="btn btn-primary text-xs px-3 py-1"
+                    >
+                      保存
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 m-0">
+                    若留空保存，系统顶部及受邀注册将不再展示公司名称。
+                  </p>
+                </form>
+              )}
             </div>
 
             <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-1">

@@ -214,9 +214,9 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
               setGeneratedInvite(null);
               setIsInviteDrawerOpen(true);
             }}
-            className="btn btn-primary text-xs h-9 px-3.5"
+            className="btn btn-frost-blue text-xs h-9 px-3.5 transition-all group"
           >
-            <IconUserPlus size={14} />
+            <IconUserPlus size={14} className="text-brand-600 transition-transform group-hover:scale-110" />
             <span>邀请成员加入</span>
           </button>
         </div>

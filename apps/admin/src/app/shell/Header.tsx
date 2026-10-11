@@ -8,6 +8,7 @@ import {
   IconSettings,
   IconActivity,
 } from "../../shared/components/Icons";
+import { NodeStatusCapsule } from "../../shared/components/StatusIndicator";
 
 export type HeaderVariant = "glass" | "transparent" | "floating";
 
@@ -252,27 +253,12 @@ export function Header({
           </kbd>
         </MagneticButton>
 
-        {/* 2. 企业节点状态晶透胶囊 */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.375rem",
-            padding: "0.25rem 0.625rem",
-            borderRadius: "9999px",
-            backgroundColor: "rgba(240, 253, 244, 0.65)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(187, 247, 208, 0.8)",
-            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.8)",
-            color: "var(--brand-700)",
-            fontSize: "0.75rem",
-            fontWeight: 500,
-          }}
-        >
-          <span className="pulse-green" />
-          <span>{currentCompany.status}</span>
-        </div>
+        {/* 2. 企业节点状态晶透胶囊 (微遥测信号格代替传统小绿点) */}
+        <NodeStatusCapsule
+          statusText={currentCompany.status}
+          latencyText="32ms"
+          variant="signal"
+        />
 
         {/* 3. 视图切换药丸 (业务视图 / 平台管理视图 - 微透滑块底槽) */}
         <div

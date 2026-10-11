@@ -7,6 +7,7 @@ import {
   IconShieldCheck,
   IconLock,
 } from "../../shared/components/Icons";
+import { StatusIndicator } from "../../shared/components/StatusIndicator";
 
 export function SettingsView() {
   const { user, currentCompany, updateUserProfile } = useApp();
@@ -251,8 +252,8 @@ export function SettingsView() {
 
             <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-1">
               <div className="text-zinc-500">实例自治运转状态</div>
-              <div className="text-sm font-semibold text-emerald-700 flex items-center gap-1.5">
-                <span className="pulse-green" />
+              <div className="text-sm font-semibold text-emerald-700 flex items-center gap-2">
+                <StatusIndicator variant="signal" />
                 <span>{currentCompany.status}</span>
               </div>
             </div>

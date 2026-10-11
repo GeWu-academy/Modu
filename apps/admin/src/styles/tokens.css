@@ -98,15 +98,30 @@
   --gradient-enterprise-blue: radial-gradient(ellipse 70% 35% at 50% -10%, rgba(27, 79, 138, 0.02) 0%, rgba(255, 255, 255, 0) 75%);
   --shimmer-border-white: linear-gradient(90deg, rgba(226, 232, 240, 0.6) 0%, rgba(27, 79, 138, 0.20) 50%, rgba(226, 232, 240, 0.6) 100%);
 
-  /* Primary Button Gradient - 极简精练烟波蓝哑光质感 */
-  --btn-primary-bg: linear-gradient(180deg, #1D5494 0%, #174275 100%);
-  --btn-primary-hover-bg: linear-gradient(180deg, #174275 0%, #12355E 100%);
+  /* Primary Button Gradient - 曜黑雅墨极简质感 (Linear / Raycast 风格，摆脱沉闷暗蓝) */
+  --btn-primary-bg: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+  --btn-primary-hover-bg: linear-gradient(180deg, #334155 0%, #1E293B 100%);
+
+  /* Warm Amber Button Gradient - 琥珀暖金重点按钮 (Apple Pro / Raycast 风格) */
+  --btn-amber-bg: linear-gradient(180deg, #F59E0B 0%, #D97706 100%);
+  --btn-amber-hover-bg: linear-gradient(180deg, #D97706 0%, #B45309 100%);
 
   /* 粒子光晕 */
   --particle-glow: rgba(27, 79, 138, 0.12);
 
   /* =========================================================================
-     7. shadcn/ui Standard Theme Variables
+     7. Warm Amber & Artisan Accent Tokens (温润琥珀与工匠暖金点睛色)
+     ========================================================================= */
+  --accent-amber: #D97706;
+  --accent-amber-light: #F59E0B;
+  --accent-amber-dark: #B45309;
+  --accent-amber-subtle: #FFFBEB;
+  --accent-amber-border: #FDE68A;
+  --accent-amber-ring: rgba(245, 158, 11, 0.18);
+  --accent-amber-glow: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+
+  /* =========================================================================
+     8. shadcn/ui Standard Theme Variables
      ========================================================================= */
   --background: #F8FAFC;
   --foreground: #0F172A;
@@ -114,19 +129,19 @@
   --card-foreground: #0F172A;
   --popover: #FFFFFF;
   --popover-foreground: #0F172A;
-  --primary: #1B4F8A;
+  --primary: #0F172A;
   --primary-foreground: #FFFFFF;
   --secondary: #F1F5F9;
   --secondary-foreground: #1E293B;
   --muted: #F1F5F9;
   --muted-foreground: #64748B;
-  --accent: #F1F5F9;
-  --accent-foreground: #0F172A;
+  --accent: #FFFBEB;
+  --accent-foreground: #78350F;
   --destructive: #BE123C;
   --destructive-foreground: #FFFFFF;
   --border: #E2E8F0;
   --input: #E2E8F0;
-  --ring: #1B4F8A;
+  --ring: #D97706;
   --radius: 0.5rem;
 }
 

@@ -16,6 +16,7 @@ import {
   IconLayers,
   IconZap,
 } from "../../shared/components/Icons";
+import { StatusIndicator } from "../../shared/components/StatusIndicator";
 
 export function Workspace() {
   const { user, plugins, skills, users, navigate, currentCompany } = useApp();
@@ -61,7 +62,7 @@ export function Workspace() {
               marginBottom: "0.75rem",
             }}
           >
-            <span className="pulse-green" />
+            <StatusIndicator variant="signal" />
             <span>自托管独立节点 · {currentCompany.instanceId}</span>
           </div>
 

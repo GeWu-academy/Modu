@@ -18,6 +18,7 @@ import {
   IconZap,
   IconSparkles,
 } from "../../shared/components/Icons";
+import { StatusIndicator } from "../../shared/components/StatusIndicator";
 
 interface AuthCenterProps {
   initialInviteToken?: string;
@@ -335,7 +336,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               fontWeight: 500,
             }}
           >
-            <span className="pulse-green" />
+            <StatusIndicator variant="signal" />
             <span>自托管节点正常运转</span>
           </div>
         </div>

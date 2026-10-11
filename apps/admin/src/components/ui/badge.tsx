@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { StatusIndicator } from "../../shared/components/StatusIndicator";
 
 const badgeVariants = cva(
   "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
@@ -24,6 +25,8 @@ const badgeVariants = cva(
           "border-[#D0DCE8] bg-[#F4F7FA] text-[#1B4F8A]",
         neutral:
           "border-zinc-200 bg-zinc-100 text-zinc-700",
+        amber:
+          "border-amber-200 bg-amber-50 text-amber-800",
       },
     },
     defaultVariants: {
@@ -38,10 +41,11 @@ export interface BadgeProps
   pulse?: boolean;
 }
 
+
 function Badge({ className, variant, pulse, children, ...props }: BadgeProps) {
   return (
     <div className={cn(badgeVariants({ variant }), className)} {...props}>
-      {pulse && <span className="pulse-green mr-1.5" />}
+      {pulse && <StatusIndicator variant="signal" className="mr-1.5" />}
       {children}
     </div>
   );

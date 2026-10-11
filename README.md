@@ -1,6 +1,6 @@
 # Your ERP
 
-面向多租户业务团队的轻量级 ERP。单仓库管理，四个应用独立维护、按需组合。
+面向多租户业务团队的轻量级 ERP。采用 Monorepo 管理，四个应用独立维护、按需组合。
 
 ## 应用定位
 
@@ -37,5 +37,14 @@ pnpm dev:api
 检查使用 `pnpm lint:<app>`、`pnpm typecheck:<app>`、`pnpm build:<app>`。
 `pnpm build:app` 仅导出移动端 JavaScript bundle 和资源，不生成安装包。
 
+前端使用 TypeScript；目标后端基础为 Go + Gin + GORM + PostgreSQL + Redis +
+Asynq。TanStack Query 管理前端的服务端数据状态，Zustand 管理客户端共享状态。
+这些是选型基线，不代表所有依赖和能力已经接入；上表描述当前应用框架。
+
+每个独立任务按小 MVP 推进，在 `changes/YYYY-MM-DD-NN-short-topic/` 中先建立
+`plan.md` 与 `result.md`，持续记录计划、文件变更、checklist 和验证结果。
+同一任务的追问与修复更新原记录，不按每条消息拆分。
+
 更多约定见 [架构决策](./ARCHITECTURE.md)、
+[技术栈选型](./docs/architecture/tech-stack.md)、
 [开发说明](./docs/development/README.md) 和 [AGENTS.md](./AGENTS.md)。

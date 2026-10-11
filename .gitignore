@@ -19,5 +19,5 @@ apps/api/*.test
 .vscode/
 .idea/
 
-# Local documentation (never commit)
+# Local documentation: ignore all files and nested directories without exceptions.
 /docs/

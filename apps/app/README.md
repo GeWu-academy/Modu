@@ -1,6 +1,7 @@
 # Modu App
 
-React Native + Expo + TypeScript 移动端脚手架，使用官方
+面向普通用户权限的 React Native + Expo + TypeScript 客户端脚手架，
+不是移动管理后台。使用官方
 `expo-template-blank-typescript@57.0.29` 初始化（Expo SDK 57）。
 当前只有启动页，不包含路由、认证、后端请求或业务插件。
 
@@ -9,7 +10,7 @@ React Native + Expo + TypeScript 移动端脚手架，使用官方
 在仓库根目录执行：
 
 ```bash
-pnpm install
+pnpm install:app
 pnpm dev:app
 ```
 
@@ -45,10 +46,10 @@ pnpm build:app
 - `tsconfig.json`：继承 Expo 配置并开启严格类型检查。
 - `eslint.config.js`：Expo ESLint flat config。
 
-沿用仓库根目录的 pnpm workspace 和锁文件，不在 App 目录单独维护锁文件。
-保持 Metro 默认配置，不添加旧式 monorepo 路径补丁。
+本目录独立维护依赖、pnpm 锁文件和工程配置，不依赖 web、admin 或根级共享包。
+也可以直接在本目录执行 `pnpm install` 和 `pnpm dev`。保持 Metro 默认配置。
 
-后续类型、API 客户端和平台无关逻辑放入 `packages/`；共享包不得反向导入
-应用代码。插件移动端 UI 与 Web UI 分开实现，通过注册元数据接入宿主。
+业务模块和插件放在 `src/modules/`，本客户端内共享的类型、API 适配层和逻辑
+放在 `src/shared/`，不得跨端复用管理后台会话或权限。普通用户权限由 API 校验。
 目前不生成或提交 `ios/`、`android/` 原生目录；需要原生构建时再按实际需求
 配置 Expo Prebuild / development build。

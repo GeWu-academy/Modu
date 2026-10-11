@@ -1,0 +1,3 @@
+# Fence repository tooling off from ancestor workspaces; no application members.
+packages:
+  - '.'

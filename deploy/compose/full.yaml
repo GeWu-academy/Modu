@@ -1,0 +1,33 @@
+# Full local stack: enterprise website (web) + admin console (admin) + backend (api).
+# Each build context is limited to its own application directory; no cross-app dependencies.
+# PostgreSQL/Redis/Asynq are intentionally absent: those choices are not integrated yet.
+# For the api + admin-only example, see api-admin.yaml.
+name: modu-dev
+services:
+  api:
+    build:
+      context: ../../apps/api
+    environment:
+      API_PORT: "8080"
+    ports:
+      # Host ports are overridable so a busy local port (3000 is common) can be remapped,
+      # e.g. WEB_HOST_PORT=3001 ./deploy/scripts/start.sh
+      - "127.0.0.1:${API_HOST_PORT:-8080}:8080"
+  admin:
+    build:
+      context: ../../apps/admin
+    ports:
+      - "127.0.0.1:${ADMIN_HOST_PORT:-8081}:80"
+    # Start order only: the frontends do not call the API yet.
+    depends_on:
+      - api
+  web:
+    build:
+      context: ../../apps/web
+    environment:
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    ports:
+      - "127.0.0.1:${WEB_HOST_PORT:-3000}:3000"
+    depends_on:
+      - api

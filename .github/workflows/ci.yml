@@ -1,0 +1,131 @@
+# CI: detect and test. Runs on pull requests, on pushes to main/dev, and manually.
+# Every job installs dependencies inside its own application directory; there is no
+# root-level install of application dependencies and no cross-application coupling.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+# A new push to the same ref supersedes the previous run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Read-only: CI never writes to the repository.
+permissions:
+  contents: read
+
+jobs:
+  # Repository-level guardrails: architecture boundaries plus the root tooling tests.
+  tooling:
+    name: Repository tooling
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # No `version` input: the pnpm version comes from the root package.json
+      # `packageManager` field (pnpm@9.15.0), so the two cannot drift or conflict.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install repository tooling dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check application boundaries
+        run: pnpm check:boundaries
+
+      - name: Run repository tooling tests
+        run: pnpm test
+
+  # Each client owns its dependencies, lockfile and package manager version, so each
+  # matrix entry installs and checks itself only.
+  clients:
+    name: Client (${{ matrix.app }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [web, admin, app]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Read the pnpm version from this application's own package.json, because the
+      # applications are on different versions (web: pnpm@11.17.0, admin/app: 9.15.0)
+      # and the root packageManager field must not be used for them.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: apps/${{ matrix.app }}/package.json
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: apps/${{ matrix.app }}/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: apps/${{ matrix.app }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        working-directory: apps/${{ matrix.app }}
+        run: pnpm lint
+
+      - name: Typecheck
+        working-directory: apps/${{ matrix.app }}
+        run: pnpm typecheck
+
+      - name: Build
+        working-directory: apps/${{ matrix.app }}
+        run: pnpm build
+
+  # Backend checks. Go version and formatting rules follow apps/api/go.mod and
+  # apps/api/Dockerfile (go 1.22).
+  api:
+    name: Backend API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/api/go.mod
+          cache-dependency-path: apps/api/go.sum
+
+      - name: Check formatting
+        run: |
+          unformatted="$(gofmt -l .)"
+          if [ -n "$unformatted" ]; then
+            echo "::error::gofmt reported unformatted files:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...

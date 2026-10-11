@@ -17,6 +17,8 @@ import {
   IconZap,
 } from "../../shared/components/Icons";
 import { StatusIndicator } from "../../shared/components/StatusIndicator";
+import { TodoActionCenter } from "./components/TodoActionCenter";
+import { PlatformAssetsOverview } from "./components/PlatformAssetsOverview";
 
 export function Workspace() {
   const { user, plugins, skills, users, navigate, currentCompany, activeView } = useApp();
@@ -96,7 +98,17 @@ export function Workspace() {
       </div>
 
       {/* =========================================================================
-          2. 新实例开箱向导卡片 (Onboarding Checklist)
+          2. 管理员待办与处理中心 (Action Items & Todo Center · 含 ECharts 趋势图)
+          ========================================================================= */}
+      <TodoActionCenter />
+
+      {/* =========================================================================
+          3. 平台资产全景与资源大盘 (Platform Assets Overview · 含 ECharts 构成图与吞吐图)
+          ========================================================================= */}
+      <PlatformAssetsOverview />
+
+      {/* =========================================================================
+          4. 新实例开箱向导卡片 (Onboarding Checklist)
           ========================================================================= */}
       {!onboardingCollapsed && (
         <div

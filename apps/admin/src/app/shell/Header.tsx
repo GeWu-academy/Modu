@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useApp } from "../providers/AppContext";
 import { useToast } from "../../shared/components/Toast";
-import { MagneticButton } from "../../shared/components/MagneticButton";
 import {
-  IconCommand,
   IconChevronDown,
   IconChevronRight,
   IconLogout,
@@ -65,7 +63,6 @@ export function Header({
     logout,
     navigate,
     currentRoute,
-    setCmdKOpen,
   } = useApp();
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -259,48 +256,9 @@ export function Header({
         </div>
       </div>
 
-      {/* 右侧：微透快捷指令药丸、视图切换与账号菜单 */}
+      {/* 右侧：视图切换与账号菜单 */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        {/* 1. Cmd+K 快捷指令药丸 (GSAP 磁力吸附 + 高透水漾晶体，彻底消除毛玻璃模糊) */}
-        <MagneticButton
-          onClick={() => setCmdKOpen(true)}
-          strength={0.24}
-          maxOffset={5}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            padding: "0.3125rem 0.625rem",
-            borderRadius: "9999px",
-            backgroundColor: "rgba(255, 255, 255, 0.35)",
-            border: "1px solid rgba(226, 232, 240, 0.75)",
-            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(15, 23, 42, 0.02)",
-            color: "var(--zinc-700)",
-            fontSize: "0.75rem",
-            cursor: "pointer",
-            transition: "all 150ms ease",
-          }}
-          className="hover:bg-white/80 hover:border-zinc-300 hover:shadow-xs hover:-translate-y-0.5 active:scale-[0.97]"
-          title="按下 Cmd+K 搜索页面或执行快捷指令"
-        >
-          <IconCommand size={13} />
-          <span>快捷指令</span>
-          <kbd
-            style={{
-              padding: "0.0625rem 0.25rem",
-              borderRadius: "4px",
-              backgroundColor: "rgba(241, 245, 249, 0.55)",
-              border: "1px solid rgba(226, 232, 240, 0.8)",
-              fontSize: "0.6875rem",
-              color: "var(--zinc-500)",
-              fontFamily: "monospace",
-            }}
-          >
-            Cmd K
-          </kbd>
-        </MagneticButton>
-
-        {/* 2. 视图切换药丸 (业务视图 / 平台管理视图 - 仅管理员可用，高透清澈底槽) */}
+        {/* 1. 视图切换药丸 (业务视图 / 平台管理视图 - 仅管理员可用，高透清澈底槽) */}
         {isPlatformAdmin && (
           <div
             style={{

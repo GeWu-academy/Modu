@@ -8,11 +8,19 @@
 #   ./deploy/scripts/start.sh --logs        # 启动后跟随日志（Ctrl+C 退出日志，容器继续运行）
 #   ./deploy/scripts/start.sh --help
 #
+# 端口冲突（如本机 3000 已被占用）时可改宿主端口:
+#   WEB_HOST_PORT=3001 ADMIN_HOST_PORT=8082 API_HOST_PORT=8080 ./deploy/scripts/start.sh
+#
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 COMPOSE_FILE="${ROOT_DIR}/deploy/compose/full.yaml"
+
+# Host ports; keep in sync with full.yaml defaults so the printed URLs are correct.
+WEB_PORT="${WEB_HOST_PORT:-3000}"
+ADMIN_PORT="${ADMIN_HOST_PORT:-8081}"
+API_PORT="${API_HOST_PORT:-8080}"
 
 BUILD_ARGS=("--build")
 FOLLOW_LOGS=0
@@ -29,7 +37,10 @@ usage() {
   --logs, -f   启动后跟随容器日志
   --help, -h   显示本帮助
 
-启动后:
+宿主端口可用环境变量覆盖（默认 3000 / 8081 / 8080）:
+  WEB_HOST_PORT  ADMIN_HOST_PORT  API_HOST_PORT
+
+启动后（默认端口）:
   web    http://localhost:3000
   admin  http://localhost:8081
   api    http://localhost:8080/health
@@ -81,14 +92,38 @@ if ! docker info >/dev/null 2>&1; then
   echo
 fi
 
+# 提前检查宿主端口占用，避免 compose 中途失败、留下半启动状态。
+port_busy() {
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -nP -iTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1
+  else
+    return 1
+  fi
+}
+
+conflict=0
+for entry in "web:${WEB_PORT}" "admin:${ADMIN_PORT}" "api:${API_PORT}"; do
+  name="${entry%%:*}"
+  port="${entry##*:}"
+  if port_busy "${port}"; then
+    echo "✗ 宿主端口 ${port}（${name}）已被占用。" >&2
+    conflict=1
+  fi
+done
+if [ "${conflict}" -eq 1 ]; then
+  echo "  请先释放端口，或改用其它宿主端口，例如:" >&2
+  echo "  WEB_HOST_PORT=3001 ./deploy/scripts/start.sh" >&2
+  exit 1
+fi
+
 echo "→ 构建并启动全栈服务（web + admin + api）…"
 docker compose -f "${COMPOSE_FILE}" up ${BUILD_ARGS[@]+"${BUILD_ARGS[@]}"} -d
 
 echo
 echo "✓ 已启动（compose 项目: modu-dev）"
-echo "  web    http://localhost:3000"
-echo "  admin  http://localhost:8081"
-echo "  api    http://localhost:8080/health"
+echo "  web    http://localhost:${WEB_PORT}"
+echo "  admin  http://localhost:${ADMIN_PORT}"
+echo "  api    http://localhost:${API_PORT}/health"
 echo
 docker compose -f "${COMPOSE_FILE}" ps
 echo

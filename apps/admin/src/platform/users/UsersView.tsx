@@ -8,10 +8,12 @@ import { TactileBurst } from "../../shared/components/TactileBurst";
 import {
   IconSearch,
   IconPlus,
+  IconUserPlus,
   IconCopy,
   IconQrCode,
   IconFileText,
   IconUser,
+  IconUsers,
   IconMail,
   IconPhone,
   IconShield,
@@ -217,7 +219,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
             }}
             className="btn btn-primary text-xs h-9 px-3.5"
           >
-            <IconPlus size={14} />
+            <IconUserPlus size={14} />
             <span>邀请成员加入</span>
           </button>
         </div>
@@ -227,24 +229,26 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
       <div className="flex items-center gap-2 border-b border-zinc-200 mb-6 pb-2">
         <button
           onClick={() => setActiveTab("users")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "users"
               ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
-          现有系统用户 ({users.length})
+          <IconUsers size={14} />
+          <span>现有系统用户 ({users.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("invites")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "invites"
               ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
-          邀请链接管理 ({invitations.length})
+          <IconUserPlus size={14} />
+          <span>邀请链接管理 ({invitations.length})</span>
         </button>
       </div>
 

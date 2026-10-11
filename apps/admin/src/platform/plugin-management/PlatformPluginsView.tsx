@@ -7,7 +7,7 @@ import {
   IconSearch,
   IconShield,
   IconAlertTriangle,
-  IconFileText,
+  IconBookOpen,
   IconPower,
   IconCheck,
 } from "../../shared/components/Icons";
@@ -75,7 +75,7 @@ export function PlatformPluginsView() {
           onClick={() => navigate("/platform/plugins/install")}
           className="btn btn-primary text-xs h-9"
         >
-          <IconFileText size={14} />
+          <IconBookOpen size={14} />
           <span>插件引入与构建说明</span>
         </button>
       </div>

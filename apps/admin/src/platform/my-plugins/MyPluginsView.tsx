@@ -12,6 +12,8 @@ import {
   IconExternalLink,
   IconShield,
   IconPower,
+  IconBookOpen,
+  IconSparkles,
 } from "../../shared/components/Icons";
 
 export function MyPluginsView() {
@@ -70,8 +72,9 @@ export function MyPluginsView() {
 
         <button
           onClick={() => navigate("/platform/plugins/install")}
-          className="btn btn-secondary text-xs h-9"
+          className="btn btn-secondary text-xs h-9 flex items-center gap-1.5"
         >
+          <IconBookOpen size={14} />
           <span>查看插件引入规范</span>
         </button>
       </div>
@@ -236,8 +239,9 @@ export function MyPluginsView() {
                   {isEnabled && p.id === "plugin_skills" && (
                     <button
                       onClick={() => navigate("/skills")}
-                      className="btn-ghost btn-sm text-xs text-brand-600 hover:text-brand-800 font-semibold"
+                      className="btn-ghost btn-sm text-xs text-brand-600 hover:text-brand-800 font-semibold flex items-center gap-1"
                     >
+                      <IconSparkles size={13} />
                       <span>打开 Skill</span>
                     </button>
                   )}

@@ -26,12 +26,12 @@ export function usePageEntrance(
         // 设置初始静止状态
         gsap.set(targets, {
           opacity: 0,
-          y: 10,
+          y: 14,
           willChange: "transform, opacity",
           force3D: true,
         });
 
-        // 统一阶梯缓动入场
+        // 统一阶梯缓动入场 (平滑滚动视差)
         gsap.to(targets, {
           opacity: 1,
           y: 0,
@@ -41,10 +41,10 @@ export function usePageEntrance(
           clearProps: "willChange",
         });
       } else {
-        // 全容器轻微入场
+        // 全容器平滑滚动入场
         gsap.fromTo(
           el,
-          { opacity: 0, y: 8, willChange: "transform, opacity", force3D: true },
+          { opacity: 0, y: 14, willChange: "transform, opacity", force3D: true },
           {
             opacity: 1,
             y: 0,

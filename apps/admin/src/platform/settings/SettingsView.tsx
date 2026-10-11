@@ -6,6 +6,7 @@ import {
   IconBuilding,
   IconUser,
   IconShield,
+  IconShieldCheck,
   IconLock,
   IconCheck,
 } from "../../shared/components/Icons";
@@ -261,7 +262,7 @@ export function SettingsView() {
           </div>
 
           <div className="p-4 bg-brand-50/50 border border-brand-200 rounded-lg text-xs text-brand-900 flex items-start gap-2.5">
-            <IconShield size={16} className="text-brand-700 flex-shrink-0 mt-0.5" />
+            <IconShieldCheck size={16} className="text-brand-700 flex-shrink-0 mt-0.5" />
             <div>
               <strong>数据主权与架构边界声明：</strong>
               本实例不连接任何中心化遥测平台或多租户母站。所有组织成员、业务插件、Skill 及分域审计记录均权威保存在本地 PostgreSQL 数据库中。

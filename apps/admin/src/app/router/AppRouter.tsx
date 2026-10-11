@@ -20,6 +20,14 @@ import { SettingsView } from "../../platform/settings/SettingsView";
 
 export function AppRouter() {
   const { user, currentRoute } = useApp();
+  const mainScrollRef = React.useRef<HTMLElement | null>(null);
+
+  // 侧边栏/路由切换时，主内容视口平滑滚动回顶部
+  React.useEffect(() => {
+    if (mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentRoute]);
 
   // 1. 检查邀请专属落地页 /invite/:token
   if (currentRoute.startsWith("/invite/")) {
@@ -55,7 +63,10 @@ export function AppRouter() {
       <Header />
       <div className="flex-1 flex">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto min-w-0 bg-zinc-50">
+        <main
+          ref={mainScrollRef}
+          className="flex-1 overflow-y-auto min-w-0 bg-zinc-50 scroll-smooth"
+        >
           {renderCurrentPage()}
         </main>
       </div>

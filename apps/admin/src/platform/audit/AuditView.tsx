@@ -6,6 +6,8 @@ import {
   IconActivity,
   IconShield,
   IconUser,
+  IconUsers,
+  IconLayers,
   IconPuzzle,
   IconAlertTriangle,
 } from "../../shared/components/Icons";
@@ -42,13 +44,14 @@ export function AuditView() {
       <div className="flex items-center gap-2 border-b border-zinc-200 mb-6 pb-2">
         <button
           onClick={() => setDomainFilter("all")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             domainFilter === "all"
               ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
-          全部审计域 ({auditLogs.length})
+          <IconLayers size={14} />
+          <span>全部审计域 ({auditLogs.length})</span>
         </button>
 
         <button
@@ -59,7 +62,7 @@ export function AuditView() {
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
-          <IconUser size={14} />
+          <IconUsers size={14} />
           <span>系统账号维护域</span>
         </button>
 

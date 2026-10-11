@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useApp } from "../../app/providers/AppContext";
 import { ParticleCanvas } from "../../shared/components/ParticleCanvas";
+import { TiltCard } from "../../shared/components/TiltCard";
 import { useToast } from "../../shared/components/Toast";
 import {
   IconUser,
@@ -200,8 +201,8 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
             margin: "2.5rem 0",
           }}
         >
-          <div
-            className="glass-base"
+          <TiltCard
+            variant="glass"
             style={{
               padding: "0.875rem 1rem",
               borderRadius: "10px",
@@ -211,33 +212,35 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               border: "1px solid rgba(228, 228, 231, 0.7)",
             }}
           >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "8px",
-                backgroundColor: "var(--brand-50)",
-                color: "var(--brand-600)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <IconShield size={18} />
-            </div>
-            <div>
-              <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
-                独享本地数据主权
+            <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "8px",
+                  backgroundColor: "var(--brand-50)",
+                  color: "var(--brand-600)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <IconShield size={18} />
               </div>
-              <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
-                单企业专属实例独立部署，绝无跨租户数据池穿透风险。
+              <div>
+                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
+                  独享本地数据主权
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
+                  单企业专属实例独立部署，绝无跨租户数据池穿透风险。
+                </div>
               </div>
             </div>
-          </div>
+          </TiltCard>
 
-          <div
-            className="glass-base"
+          <TiltCard
+            variant="glass"
             style={{
               padding: "0.875rem 1rem",
               borderRadius: "10px",
@@ -247,33 +250,35 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               border: "1px solid rgba(228, 228, 231, 0.7)",
             }}
           >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "8px",
-                backgroundColor: "var(--brand-50)",
-                color: "var(--brand-600)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <IconZap size={18} />
-            </div>
-            <div>
-              <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
-                渐进式插件无缝热插拔
+            <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "8px",
+                  backgroundColor: "var(--brand-50)",
+                  color: "var(--brand-600)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <IconZap size={18} />
               </div>
-              <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
-                通用底座不预置死板行业表单，按需启用 CRM、合同与仓储模块。
+              <div>
+                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
+                  渐进式插件无缝热插拔
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
+                  通用底座不预置死板行业表单，按需启用 CRM、合同与仓储模块。
+                </div>
               </div>
             </div>
-          </div>
+          </TiltCard>
 
-          <div
-            className="glass-base"
+          <TiltCard
+            variant="glass"
             style={{
               padding: "0.875rem 1rem",
               borderRadius: "10px",
@@ -283,30 +288,32 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               border: "1px solid rgba(228, 228, 231, 0.7)",
             }}
           >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "8px",
-                backgroundColor: "var(--brand-50)",
-                color: "var(--brand-600)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <IconSparkles size={18} />
-            </div>
-            <div>
-              <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
-                零信任安全与分域审计
+            <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "8px",
+                  backgroundColor: "var(--brand-50)",
+                  color: "var(--brand-600)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <IconSparkles size={18} />
               </div>
-              <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
-                账号维护、平台插件与本人业务分域审计，不可篡改。
+              <div>
+                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
+                  零信任安全与分域审计
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
+                  账号维护、平台插件与本人业务分域审计，不可篡改。
+                </div>
               </div>
             </div>
-          </div>
+          </TiltCard>
         </div>
 
         {/* 底部：版本与节点状态 */}

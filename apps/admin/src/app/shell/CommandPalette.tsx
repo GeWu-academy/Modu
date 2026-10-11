@@ -79,7 +79,7 @@ export function CommandPalette() {
               setCmdKOpen(false);
             }}
           >
-            <IconPlus className="mr-2 h-4 w-4 text-zinc-600" />
+            <IconUserPlus className="mr-2 h-4 w-4 text-zinc-600" />
             <div className="flex flex-col">
               <span className="font-medium text-zinc-900">企业邀请链接管理</span>
               <span className="text-xs text-zinc-500">生成直绑当前企业的成员受邀注册链接</span>
@@ -124,7 +124,7 @@ export function CommandPalette() {
               setCmdKOpen(false);
             }}
           >
-            <IconFileText className="mr-2 h-4 w-4 text-zinc-600" />
+            <IconUpload className="mr-2 h-4 w-4 text-zinc-600" />
             <div className="flex flex-col">
               <span className="font-medium text-zinc-900">导入业务 Skill</span>
               <span className="text-xs text-zinc-500">以受控方式导入 Markdown 业务指令草稿</span>
@@ -155,7 +155,7 @@ export function CommandPalette() {
               setCmdKOpen(false);
             }}
           >
-            <IconFileText className="mr-2 h-4 w-4 text-zinc-600" />
+            <IconBookOpen className="mr-2 h-4 w-4 text-zinc-600" />
             <div className="flex flex-col">
               <span className="font-medium text-zinc-900">插件受控引入说明</span>
               <span className="text-xs text-zinc-500">查看宿主构建打包与插件安装规范</span>

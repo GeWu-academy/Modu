@@ -63,6 +63,7 @@ import {
   Tag,
   BookOpen,
   Code,
+  PanelLeft,
 } from "lucide-react";
 
 /**
@@ -142,6 +143,7 @@ export const IconChevronLeft = createIcon(ChevronLeft);
 export const IconArrowRight = createIcon(ArrowRight);
 export const IconArrowLeft = createIcon(ArrowLeft);
 export const IconExternalLink = createIcon(ExternalLink);
+export const IconPanelLeft = createIcon(PanelLeft);
 
 // ============================================================================
 // 5. 操作与编辑语义 (Actions & Editing)

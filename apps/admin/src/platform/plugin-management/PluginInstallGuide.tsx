@@ -3,7 +3,8 @@ import { useApp } from "../../app/providers/AppContext";
 import {
   IconFileText,
   IconShield,
-  IconZap,
+  IconShieldCheck,
+  IconLayers,
   IconAlertTriangle,
   IconArrowLeft,
   IconCheck,
@@ -50,7 +51,7 @@ export function PluginInstallGuide() {
         {/* 板块 1: 插件生命周期三维度模型 */}
         <div className="card p-6 bg-white border border-zinc-200 rounded-xl shadow-elevation-1">
           <h2 className="text-base font-bold text-zinc-950 m-0 mb-3 flex items-center gap-2">
-            <IconZap size={16} className="text-brand-600" />
+            <IconLayers size={16} className="text-brand-600" />
             <span>1. 插件状态三维度解耦设计</span>
           </h2>
           <p className="text-xs text-zinc-600 leading-relaxed mb-4">
@@ -108,7 +109,7 @@ export function PluginInstallGuide() {
         {/* 板块 3: 未来阶段受控安装向导流转 */}
         <div className="card p-6 bg-white border border-zinc-200 rounded-xl shadow-elevation-1">
           <h2 className="text-base font-bold text-zinc-950 m-0 mb-3 flex items-center gap-2">
-            <IconShield size={16} className="text-brand-600" />
+            <IconShieldCheck size={16} className="text-brand-600" />
             <span>3. 第二阶段：受控在线安装向导演进路径</span>
           </h2>
           <p className="text-xs text-zinc-600 leading-relaxed mb-4">

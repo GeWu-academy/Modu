@@ -8,6 +8,7 @@ import {
   IconSparkles,
   IconPlus,
   IconUpload,
+  IconEye,
   IconFileText,
   IconCheck,
   IconEdit,
@@ -157,21 +158,22 @@ export function SkillsView() {
                   <div className="flex items-center justify-end gap-2">
                     <button
                       onClick={() => setSelectedSkill(s)}
-                      className="btn-ghost btn-sm text-xs text-zinc-600 hover:text-zinc-950"
+                      className="btn-ghost btn-sm text-xs text-zinc-600 hover:text-zinc-950 flex items-center gap-1"
                     >
-                      <IconFileText size={13} />
+                      <IconEye size={13} />
                       <span>查看详情</span>
                     </button>
 
                     <button
                       onClick={() => handleToggle(s)}
-                      className={`btn-ghost btn-sm text-xs ${
+                      className={`btn-ghost btn-sm text-xs flex items-center gap-1 ${
                         s.status === "active"
                           ? "text-rose-600 hover:text-rose-800"
                           : "text-brand-600 hover:text-brand-800"
                       }`}
                     >
-                      {s.status === "active" ? "停用" : "启用"}
+                      <IconPower size={12} />
+                      <span>{s.status === "active" ? "停用" : "启用"}</span>
                     </button>
                   </div>
                 </td>

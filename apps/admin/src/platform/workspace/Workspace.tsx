@@ -19,7 +19,7 @@ import {
 import { StatusIndicator } from "../../shared/components/StatusIndicator";
 
 export function Workspace() {
-  const { user, plugins, skills, users, navigate, currentCompany } = useApp();
+  const { user, plugins, skills, users, navigate, currentCompany, activeView } = useApp();
   const [onboardingCollapsed, setOnboardingCollapsed] = useState(false);
 
   const enabledPluginsCount = plugins.filter((p) => p.myStatus === "enabled").length;
@@ -54,16 +54,18 @@ export function Workspace() {
               gap: "0.375rem",
               padding: "0.2rem 0.625rem",
               borderRadius: "9999px",
-              backgroundColor: "rgba(240, 253, 244, 0.85)",
-              border: "1px solid rgba(187, 247, 208, 0.9)",
-              color: "var(--semantic-success-fg)",
+              backgroundColor: activeView === "platform" ? "rgba(239, 246, 255, 0.85)" : "rgba(240, 253, 244, 0.85)",
+              border: `1px solid ${activeView === "platform" ? "rgba(191, 219, 254, 0.9)" : "rgba(187, 247, 208, 0.9)"}`,
+              color: activeView === "platform" ? "var(--brand-700)" : "var(--semantic-success-fg)",
               fontSize: "0.75rem",
               fontWeight: 500,
               marginBottom: "0.75rem",
             }}
           >
             <StatusIndicator variant="signal" />
-            <span>自托管独立节点 · {currentCompany.instanceId}</span>
+            <span>
+              自托管独立节点 · {currentCompany.instanceId} · {activeView === "platform" ? "平台运维管理视图" : "业务视图"}
+            </span>
           </div>
 
           <h1
@@ -86,7 +88,9 @@ export function Workspace() {
               lineHeight: 1.5,
             }}
           >
-            当前管理底座运转平稳。系统严格恪守数据主权与架构边界，未预置冗余死板行业大屏，按需通过插件插拔业务。
+            {activeView === "platform"
+              ? "当前正处于平台管理视图，可集中进行全平台插件目录管控、安装引入规范审查与系统安全分域审计。"
+              : "当前正处于业务视图，系统运转平稳，未预置冗余死板行业大屏，按需通过插件插拔业务。"}
           </p>
         </div>
       </div>
@@ -254,17 +258,17 @@ export function Workspace() {
           marginBottom: "2rem",
         }}
       >
-        {/* 卡片 1: 已启用插件 */}
+        {/* 卡片 1: 插件 */}
         <TiltCard
           data-animate="hud-card"
           variant="glass"
-          onClick={() => navigate("/my/plugins")}
+          onClick={() => navigate(activeView === "platform" ? "/platform/plugins" : "/my/plugins")}
           className="active:scale-[0.985] transition-transform duration-150"
           style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: "0.8125rem", color: "var(--zinc-500)", fontWeight: 500 }}>
-              已启用插件
+              {activeView === "platform" ? "平台开放插件" : "已启用插件"}
             </span>
             <div
               style={{
@@ -286,13 +290,21 @@ export function Workspace() {
               letterSpacing: "-0.02em",
             }}
           >
-            <AnimatedNumber value={enabledPluginsCount} />{" "}
+            <AnimatedNumber
+              value={
+                activeView === "platform"
+                  ? plugins.filter((p) => p.platformStatus === "available").length
+                  : enabledPluginsCount
+              }
+            />{" "}
             <span style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--zinc-500)" }}>
               个
             </span>
           </div>
           <div style={{ fontSize: "0.75rem", color: "var(--brand-600)", fontWeight: 500 }}>
-            平台共开放 {plugins.filter((p) => p.platformStatus === "available").length} 个 -&gt;
+            {activeView === "platform"
+              ? `总登记 ${plugins.length} 个插件，点击平台管理 ->`
+              : `平台共开放 ${plugins.filter((p) => p.platformStatus === "available").length} 个 ->`}
           </div>
         </TiltCard>
 

@@ -168,7 +168,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const [currentCompany, setCurrentCompany] = useState<CompanyInfo>(getInitialCompany);
 
-  const [activeView, setActiveView] = useState<"business" | "platform">("business");
+  const [activeView, setActiveView] = useState<"business" | "platform">(() => {
+    try {
+      const saved = localStorage.getItem("modu_admin_active_view");
+      if (saved === "platform" || saved === "business") return saved;
+    } catch {}
+    return "business";
+  });
+
+  const handleSetActiveView = useCallback((view: "business" | "platform") => {
+    setActiveView(view);
+    try {
+      localStorage.setItem("modu_admin_active_view", view);
+    } catch {}
+  }, []);
   const [isCmdKOpen, setCmdKOpen] = useState(false);
 
   // 2. 路由控制 (基于 location.hash 兼容开发与直接浏览)
@@ -811,7 +824,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         updateCompanyName,
         register,
         activeView,
-        setActiveView,
+        setActiveView: handleSetActiveView,
         login,
         logout,
         currentRoute,

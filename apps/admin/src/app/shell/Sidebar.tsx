@@ -142,10 +142,14 @@ export function Sidebar() {
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const prevActiveIdRef = useRef<string | null>(null);
 
-  // 汇总所有当前可视的导航项
-  const showPlatform = activeView === "platform" || Boolean(user?.role.includes("管理员"));
+  // 汇总所有当前可视的导航项：严格响应 activeView，杜绝管理员身份短路导致视图无法切换
+  const isPlatformAdmin = Boolean(user?.role?.includes("管理员"));
+  const showPlatform = activeView === "platform" && isPlatformAdmin;
   const allNavItems = useMemo(() => {
-    return [...MAIN_NAV, ...(showPlatform ? PLATFORM_NAV : []), ...SYSTEM_NAV];
+    if (showPlatform) {
+      return [...PLATFORM_NAV, ...MAIN_NAV, ...SYSTEM_NAV];
+    }
+    return [...MAIN_NAV, ...SYSTEM_NAV];
   }, [showPlatform]);
 
   // 全局唯一激活项 ID（严格单一映射，彻底杜绝激活状态未卸载）
@@ -279,6 +283,21 @@ export function Sidebar() {
       if (ro) {
         ro.disconnect();
       }
+    };
+  }, [syncIndicator]);
+
+  // 5. 监听导航容器纵向滚动，实时同步指示器
+  useEffect(() => {
+    const navContainer = navContainerRef.current;
+    if (!navContainer) return;
+
+    const handleScroll = () => {
+      syncIndicator(true);
+    };
+
+    navContainer.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      navContainer.removeEventListener("scroll", handleScroll);
     };
   }, [syncIndicator]);
 
@@ -450,18 +469,19 @@ export function Sidebar() {
         height: "calc(100vh - 56px)",
         position: "sticky",
         top: "56px",
-        overflowY: "auto",
-        overflowX: "hidden",
-        scrollBehavior: "smooth",
+        overflow: "hidden",
         transition: "width 280ms cubic-bezier(0.16, 1, 0.3, 1), padding 240ms ease",
       }}
     >
-      {/* 相对定位的导航主容器：承载全局唯一的 GSAP 平滑滑动高亮胶囊 */}
+      {/* 导航主列表滚动区域：正常高度下内容自然铺展不触发滚动，仅在高度不足实在装不下时开启纵向平滑滚动 */}
       <div
         ref={navContainerRef}
         style={{
           position: "relative",
-          minHeight: "100%",
+          flex: "1 1 auto",
+          minHeight: 0,
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
       >
         {/* 全侧边栏唯一 GSAP 平滑滑动指示器 (Single Global Sliding Indicator) */}
@@ -500,78 +520,81 @@ export function Sidebar() {
           )}
         </div>
 
-        {renderNavGroup("管理底座", MAIN_NAV)}
-
-        {/* 平台管理专属组（仅在平台视图展示，或管理员可见） */}
+        {/* 平台管理视图：将平台中心置顶凸显，隐藏业务扩展 */}
         {showPlatform && renderNavGroup("平台中心", PLATFORM_NAV)}
 
-        {/* 业务扩展（真实空态原则） */}
-        <div style={{ marginBottom: "1.25rem" }}>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              color: "var(--zinc-400)",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              padding: isCollapsed ? "0" : "0 0.75rem 0.375rem 0.75rem",
-              textAlign: isCollapsed ? "center" : "left",
-              maxHeight: isCollapsed ? "0" : "24px",
-              opacity: isCollapsed ? 0 : 1,
-              overflow: "hidden",
-              transition: "max-height 200ms ease, opacity 180ms ease, padding 200ms ease",
-              whiteSpace: "nowrap",
-            }}
-          >
-            业务扩展
-          </div>
-          <div
-            onClick={() => navigate("/my/plugins")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: isCollapsed ? "center" : "space-between",
-              padding: isCollapsed ? "0.4375rem 0.25rem" : "0.4375rem 0.75rem",
-              borderRadius: "6px",
-              color: "var(--zinc-400)",
-              fontSize: "0.8125rem",
-              backgroundColor: "var(--zinc-50)",
-              border: "1px dashed var(--zinc-200)",
-              cursor: "pointer",
-              transition: "all 150ms ease",
-            }}
-            title={
-              isCollapsed
-                ? "业务扩展：暂无业务表单，点击引入"
-                : "底座未预置行业表单，点击前往插件中心启用"
-            }
-          >
-            {isCollapsed ? (
-              <span style={{ color: "var(--brand-600)" }}>
-                <IconPlus size={16} />
-              </span>
-            ) : (
-              <>
-                <span style={{ fontSize: "0.75rem" }}>暂无业务表单</span>
-                <span
-                  style={{
-                    fontSize: "0.6875rem",
-                    color: "var(--brand-600)",
-                    fontWeight: 500,
-                  }}
-                >
-                  按需引入
+        {/* 通用管理底座 */}
+        {renderNavGroup("管理底座", MAIN_NAV)}
+
+        {/* 业务扩展（仅在业务视图呈现，遵循真实空态原则） */}
+        {!showPlatform && (
+          <div style={{ marginBottom: "1.25rem" }}>
+            <div
+              style={{
+                fontSize: "0.6875rem",
+                fontWeight: 600,
+                color: "var(--zinc-400)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                padding: isCollapsed ? "0" : "0 0.75rem 0.375rem 0.75rem",
+                textAlign: isCollapsed ? "center" : "left",
+                maxHeight: isCollapsed ? "0" : "24px",
+                opacity: isCollapsed ? 0 : 1,
+                overflow: "hidden",
+                transition: "max-height 200ms ease, opacity 180ms ease, padding 200ms ease",
+                whiteSpace: "nowrap",
+              }}
+            >
+              业务扩展
+            </div>
+            <div
+              onClick={() => navigate("/my/plugins")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: isCollapsed ? "center" : "space-between",
+                padding: isCollapsed ? "0.4375rem 0.25rem" : "0.4375rem 0.75rem",
+                borderRadius: "6px",
+                color: "var(--zinc-400)",
+                fontSize: "0.8125rem",
+                backgroundColor: "var(--zinc-50)",
+                border: "1px dashed var(--zinc-200)",
+                cursor: "pointer",
+                transition: "all 150ms ease",
+              }}
+              title={
+                isCollapsed
+                  ? "业务扩展：暂无业务表单，点击引入"
+                  : "底座未预置行业表单，点击前往插件中心启用"
+              }
+            >
+              {isCollapsed ? (
+                <span style={{ color: "var(--brand-600)" }}>
+                  <IconPlus size={16} />
                 </span>
-              </>
-            )}
+              ) : (
+                <>
+                  <span style={{ fontSize: "0.75rem" }}>暂无业务表单</span>
+                  <span
+                    style={{
+                      fontSize: "0.6875rem",
+                      color: "var(--brand-600)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    按需引入
+                  </span>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {renderNavGroup("偏好与安全", SYSTEM_NAV)}
       </div>
 
-      {/* 底部：自部署实例说明与折叠切换按钮 */}
-      <div>
+      {/* 底部固定区：自部署实例说明与折叠切换按钮始终固定在底座，不随导航项滚动而丢失 */}
+      <div style={{ flexShrink: 0, paddingTop: "0.5rem" }}>
         {isCollapsed ? (
           <div
             title="自托管实例主权 · 单租户本地部署模式，数据 100% 独享隔离"

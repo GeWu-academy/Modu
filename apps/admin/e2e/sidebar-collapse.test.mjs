@@ -101,6 +101,11 @@ async function runTests() {
           asideWidth: Math.round(asideRect.width),
           asideTop: asideRect.top,
           asideScrollTop: aside.scrollTop,
+          asideScrollHeight: aside.scrollHeight,
+          asideClientHeight: aside.clientHeight,
+          navScrollHeight: navContainer.scrollHeight,
+          navClientHeight: navContainer.clientHeight,
+          navScrollTop: navContainer.scrollTop,
           navContainerTop: navContainerRect.top,
           activeText: activeBtn.textContent.trim(),
           btnTop: btnRect.top,
@@ -115,12 +120,20 @@ async function runTests() {
       });
     };
 
-    console.log('\n--- 1. 验证初始状态 (展开态) 对齐 ---');
+    console.log('\n--- 1. 验证初始状态 (展开态) 对齐与无滚动 ---');
     const initial = await getAlignment();
     console.log('初始状态指标:', initial);
     assert(initial !== null, '找不到激活按钮或指示器');
     assert(initial.asideWidth > 200, `预期侧边栏展开宽度 > 200, 实际: ${initial.asideWidth}`);
     assert(initial.diffTop <= 1.5, `初始状态下指示器与按钮顶边偏差过大: ${initial.diffTop}px`);
+    assert(
+      initial.navScrollHeight <= initial.navClientHeight,
+      `初始状态下导航栏内容不应溢出滚动！navScrollHeight: ${initial.navScrollHeight}, navClientHeight: ${initial.navClientHeight}`
+    );
+    assert(
+      initial.asideScrollHeight <= initial.asideClientHeight,
+      `初始状态下侧边栏不应溢出滚动！asideScrollHeight: ${initial.asideScrollHeight}, asideClientHeight: ${initial.asideClientHeight}`
+    );
 
     console.log('\n--- 2. 验证切换至其他菜单项时的平滑对齐 ---');
     const usersBtn = page.locator('aside button').filter({ hasText: '用户管理' });
@@ -204,9 +217,29 @@ async function runTests() {
 
     await collapseBtn.click();
     await page.waitForTimeout(500);
-    const pluginsReExpanded = await getAlignment();
-    console.log('我的插件重新展开态指标:', pluginsReExpanded);
-    assert(pluginsReExpanded.diffTop <= 1.5, `我的插件重新展开态指示器偏移: ${pluginsReExpanded.diffTop}px`);
+    console.log('\n--- 8. 验证视口高度不足（实在装不下）时的滚动溢出与对齐 ---');
+    // 将视口高度缩小至 420px，模拟内容实在装不下的极限场景
+    await page.setViewportSize({ width: 1280, height: 420 });
+    await page.waitForTimeout(300);
+    const smallViewport = await getAlignment();
+    console.log('小视口（装不下）指标:', smallViewport);
+    assert(
+      smallViewport.navScrollHeight > smallViewport.navClientHeight,
+      `视口缩小至 420px 后导航区域应正确触发溢出滚动！navScrollHeight: ${smallViewport.navScrollHeight}, navClientHeight: ${smallViewport.navClientHeight}`
+    );
+    assert(
+      smallViewport.diffTop <= 1.5,
+      `小视口溢出滚动状态下指示器与按钮偏差过大: ${smallViewport.diffTop}px`
+    );
+
+    // 恢复标准视口 1280x800
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.waitForTimeout(300);
+    const restored = await getAlignment();
+    assert(
+      restored.navScrollHeight <= restored.navClientHeight,
+      '恢复标准视口后导航栏应恢复无滚动状态'
+    );
 
     console.log('\n所有 Playwright 侧边栏对齐测试全部通过！');
   } finally {

@@ -85,10 +85,10 @@ export function SettingsView() {
       <div className="flex items-center gap-2 border-b border-zinc-200 mb-6 pb-2">
         <button
           onClick={() => setActiveTab("profile")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
+          className={`tab-pill px-4 py-2 text-sm font-medium rounded-lg flex items-center gap-1.5 active:scale-[0.98] ${
             activeTab === "profile"
               ? "tab-pill-active"
-              : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+              : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 hover:-translate-y-0.5"
           }`}
         >
           <IconUser size={14} />
@@ -97,10 +97,10 @@ export function SettingsView() {
 
         <button
           onClick={() => setActiveTab("company")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
+          className={`tab-pill px-4 py-2 text-sm font-medium rounded-lg flex items-center gap-1.5 active:scale-[0.98] ${
             activeTab === "company"
               ? "tab-pill-active"
-              : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+              : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 hover:-translate-y-0.5"
           }`}
         >
           <IconBuilding size={14} />

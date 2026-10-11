@@ -164,7 +164,7 @@ export function Sidebar() {
         const activeBtn = buttonRefs.current[activeItemId]!;
         const btnRect = activeBtn.getBoundingClientRect();
         const containerRect = navContainer.getBoundingClientRect();
-        const targetTop = btnRect.top - containerRect.top;
+        const targetTop = btnRect.top - containerRect.top + navContainer.scrollTop;
         const targetHeight = btnRect.height;
 
         if (immediate || isPrefersReducedMotion()) {
@@ -197,15 +197,19 @@ export function Sidebar() {
     [activeItemId]
   );
 
-  // 1. 当激活菜单项发生改变时，平滑滑动定位；仅在真正切换路由时将目标菜单滚动入视口
+  // 1. 当激活菜单项发生改变时，平滑滑动定位；仅在真正切换路由且内容溢出装不下时将目标菜单滚动入视口
   useEffect(() => {
     syncIndicator(false);
 
     if (activeItemId && activeItemId !== prevActiveIdRef.current) {
+      const isInitialMount = prevActiveIdRef.current === null;
       prevActiveIdRef.current = activeItemId;
       const activeBtn = buttonRefs.current[activeItemId];
-      if (activeBtn) {
-        activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (activeBtn && !isInitialMount) {
+        const navContainer = navContainerRef.current;
+        if (navContainer && navContainer.scrollHeight > navContainer.clientHeight) {
+          activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
       }
     }
   }, [activeItemId, syncIndicator]);
@@ -364,10 +368,10 @@ export function Sidebar() {
                 title={isCollapsed ? item.label : undefined}
                 className={`group relative z-[1] w-full flex items-center ${
                   isCollapsed ? "justify-center px-1 py-1.5" : "justify-between px-3 py-1.5"
-                } rounded-md text-[0.8125rem] text-left border-0 cursor-pointer transition-colors duration-150 ${
+                } rounded-md text-[0.8125rem] text-left border-0 cursor-pointer transition-all duration-150 active:scale-[0.98] ${
                   isActive
                     ? "font-semibold text-brand-700 bg-transparent"
-                    : "font-medium text-zinc-700 bg-transparent hover:bg-zinc-100 hover:text-zinc-900"
+                    : "font-medium text-zinc-700 bg-transparent hover:bg-zinc-100 hover:text-zinc-900 hover:translate-x-0.5 active:bg-zinc-200/70"
                 }`}
                 style={{
                   backgroundColor: "transparent",
@@ -384,12 +388,13 @@ export function Sidebar() {
                   }}
                 >
                   <span
+                    className="group-hover:scale-110"
                     style={{
                       color: isActive ? "var(--brand-600)" : "var(--zinc-500)",
                       display: "inline-flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      transition: "color 150ms ease",
+                      transition: "color 150ms ease, transform 150ms ease",
                     }}
                   >
                     {item.icon}
@@ -470,8 +475,8 @@ export function Sidebar() {
             top: 0,
             height: "34px",
             borderRadius: "6px",
-            backgroundColor: "rgba(27, 79, 138, 0.045)",
-            border: "1px solid rgba(27, 79, 138, 0.12)",
+            backgroundColor: "rgba(37, 99, 235, 0.05)",
+            border: "1px solid rgba(37, 99, 235, 0.12)",
             boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
             pointerEvents: "none",
             opacity: 0,
@@ -606,7 +611,7 @@ export function Sidebar() {
         {/* 侧边栏折叠/展开平滑切换控制按钮 */}
         <button
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className="btn-ghost"
+          className="btn-ghost active:scale-[0.97]"
           title={isCollapsed ? "展开侧边栏" : "收起侧边栏"}
           style={{
             width: "100%",

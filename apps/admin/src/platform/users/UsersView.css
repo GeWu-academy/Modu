@@ -83,11 +83,18 @@
   font-size: 13px;
   font-weight: 500;
   box-shadow: none;
+  cursor: pointer;
+  transition: color 150ms ease, transform 120ms ease;
 }
 
 .admin-users-view .users-tab:hover {
   background: transparent;
-  color: var(--color-zinc-700);
+  color: var(--color-zinc-900);
+  transform: translateY(-0.5px);
+}
+
+.admin-users-view .users-tab:active {
+  transform: translateY(0.5px) scale(0.98);
 }
 
 .admin-users-view .users-tab.tab-pill-active {
@@ -269,8 +276,18 @@
   border-bottom: 0;
 }
 
+.admin-users-view .users-data-table tbody tr {
+  transition: background-color 140ms ease, box-shadow 140ms ease;
+  position: relative;
+}
+
 .admin-users-view .users-data-table tbody tr:hover {
-  background: var(--color-zinc-50);
+  background: rgba(248, 250, 252, 0.95);
+  box-shadow: inset 3px 0 0 0 var(--color-brand-600);
+}
+
+.admin-users-view .users-data-table tbody tr:active {
+  background: rgba(241, 245, 249, 0.9);
 }
 
 .admin-users-view .users-data-table tbody td:first-child > div > div:first-child {
@@ -294,6 +311,17 @@
   border-radius: 5px;
   font-size: 11px;
   white-space: nowrap;
+  transition: all 130ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-users-view .users-data-table .btn-ghost:hover:not(:disabled) {
+  background: var(--color-zinc-100);
+  transform: translateY(-0.5px);
+}
+
+.admin-users-view .users-data-table .btn-ghost:active:not(:disabled) {
+  transform: translateY(0.5px) scale(0.95);
+  background: var(--color-zinc-200);
 }
 
 .admin-users-view .users-data-table button:disabled {

@@ -22,7 +22,7 @@ const badgeVariants = cva(
         danger:
           "border-[#FECDD3] bg-[#FFF1F2] text-[#BE123C]",
         info:
-          "border-[#D0DCE8] bg-[#F4F7FA] text-[#1B4F8A]",
+          "border-[#BFDBFE] bg-[#EFF6FF] text-[#1D4ED8]",
         neutral:
           "border-zinc-200 bg-zinc-100 text-zinc-700",
         dark:
@@ -41,12 +41,12 @@ export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
   pulse?: boolean;
+  interactive?: boolean;
 }
 
-
-function Badge({ className, variant, pulse, children, ...props }: BadgeProps) {
+function Badge({ className, variant, pulse, interactive = false, children, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props}>
+    <div className={cn(badgeVariants({ variant }), interactive && "badge-interactive", className)} {...props}>
       {pulse && <StatusIndicator variant="signal" className="mr-1.5" />}
       {children}
     </div>

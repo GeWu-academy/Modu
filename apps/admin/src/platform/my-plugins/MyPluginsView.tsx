@@ -128,9 +128,9 @@ export function MyPluginsView() {
           return (
             <div
               key={p.id}
-              className={`card flex flex-col justify-between bg-white border rounded-xl transition-all duration-150 ${
+              className={`interactive-card group flex flex-col justify-between bg-white border rounded-xl ${
                 isEnabled
-                  ? "border-brand-200 shadow-elevation-1 hover:shadow-elevation-2"
+                  ? "border-brand-300 shadow-elevation-1"
                   : "border-zinc-200 hover:border-zinc-300"
               }`}
             >
@@ -138,7 +138,7 @@ export function MyPluginsView() {
                 {/* 顶部：图标与状态 Badge */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-150 group-hover:scale-105 ${
                       isEnabled
                         ? "bg-brand-50 text-brand-600 border border-brand-200"
                         : "bg-zinc-100 text-zinc-500 border border-zinc-200"

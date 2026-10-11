@@ -8,7 +8,6 @@ import {
   IconSettings,
   IconActivity,
 } from "../../shared/components/Icons";
-import { NodeStatusCapsule } from "../../shared/components/StatusIndicator";
 
 export type HeaderVariant = "crystal" | "glass" | "transparent" | "floating";
 
@@ -215,7 +214,7 @@ export function Header({
         </div>
       </div>
 
-      {/* 右侧：微透快捷药丸、状态胶囊、视图切换与账号菜单 */}
+      {/* 右侧：微透快捷指令药丸、视图切换与账号菜单 */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
         {/* 1. Cmd+K 快捷指令药丸 (GSAP 磁力吸附 + 高透水漾晶体，彻底消除毛玻璃模糊) */}
         <MagneticButton
@@ -234,9 +233,9 @@ export function Header({
             color: "var(--zinc-700)",
             fontSize: "0.75rem",
             cursor: "pointer",
-            transition: "border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease",
+            transition: "all 150ms ease",
           }}
-          className="hover:bg-white/65 hover:border-zinc-300"
+          className="hover:bg-white/80 hover:border-zinc-300 hover:shadow-xs hover:-translate-y-0.5 active:scale-[0.97]"
           title="按下 Cmd+K 搜索页面或执行快捷指令"
         >
           <IconCommand size={13} />
@@ -256,14 +255,7 @@ export function Header({
           </kbd>
         </MagneticButton>
 
-        {/* 2. 企业节点状态晶透胶囊 (微遥测信号格代替传统小绿点) */}
-        <NodeStatusCapsule
-          statusText={currentCompany.status}
-          latencyText="32ms"
-          variant="signal"
-        />
-
-        {/* 3. 视图切换药丸 (业务视图 / 平台管理视图 - 高透清澈底槽) */}
+        {/* 2. 视图切换药丸 (业务视图 / 平台管理视图 - 高透清澈底槽) */}
         <div
           style={{
             display: "inline-flex",
@@ -276,6 +268,7 @@ export function Header({
         >
           <button
             onClick={() => setActiveView("business")}
+            className="hover:text-zinc-950 active:scale-[0.96]"
             style={{
               padding: "0.2rem 0.5rem",
               fontSize: "0.75rem",
@@ -293,6 +286,7 @@ export function Header({
           </button>
           <button
             onClick={() => setActiveView("platform")}
+            className="hover:text-zinc-950 active:scale-[0.96]"
             style={{
               padding: "0.2rem 0.5rem",
               fontSize: "0.75rem",
@@ -310,7 +304,7 @@ export function Header({
           </button>
         </div>
 
-        {/* 4. 账号信息与下拉菜单 */}
+        {/* 3. 账号信息与下拉菜单 */}
         <div style={{ position: "relative" }}>
           <button
             onClick={() => setUserMenuOpen((prev) => !prev)}
@@ -326,7 +320,7 @@ export function Header({
               cursor: "pointer",
               transition: "all 150ms ease",
             }}
-            className="hover:bg-white/50 hover:border-zinc-200"
+            className="hover:bg-white/70 hover:border-zinc-300 hover:shadow-xs hover:-translate-y-0.5 active:scale-[0.97]"
           >
             <div
               style={{

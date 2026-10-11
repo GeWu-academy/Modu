@@ -54,9 +54,9 @@ export function Workspace() {
               gap: "0.375rem",
               padding: "0.2rem 0.625rem",
               borderRadius: "9999px",
-              backgroundColor: "rgba(240, 253, 244, 0.8)",
+              backgroundColor: "rgba(240, 253, 244, 0.85)",
               border: "1px solid rgba(187, 247, 208, 0.9)",
-              color: "var(--brand-700)",
+              color: "var(--semantic-success-fg)",
               fontSize: "0.75rem",
               fontWeight: 500,
               marginBottom: "0.75rem",
@@ -100,15 +100,15 @@ export function Workspace() {
           className="card"
           style={{
             marginBottom: "1.75rem",
-            border: "1px solid rgba(27, 79, 138, 0.12)",
+            border: "1px solid var(--border-subtle)",
             backgroundColor: "#FFFFFF",
           }}
         >
           <div
             style={{
               padding: "1rem 1.5rem",
-              backgroundColor: "rgba(244, 247, 250, 0.7)",
-              borderBottom: "1px solid rgba(208, 220, 232, 0.7)",
+              backgroundColor: "var(--zinc-50)",
+              borderBottom: "1px solid var(--zinc-200)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -129,7 +129,7 @@ export function Workspace() {
               >
                 <IconZap size={14} />
               </div>
-              <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--brand-900)" }}>
+              <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
                 实例初始化极速向导 (已完成 2/3)
               </span>
             </div>
@@ -219,6 +219,7 @@ export function Workspace() {
             {/* Step 3 (待办) */}
             <div
               onClick={() => navigate("/my/plugins")}
+              className="interactive-card"
               style={{
                 padding: "0.875rem",
                 borderRadius: "8px",
@@ -258,6 +259,7 @@ export function Workspace() {
           data-animate="hud-card"
           variant="glass"
           onClick={() => navigate("/my/plugins")}
+          className="active:scale-[0.985] transition-transform duration-150"
           style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -299,6 +301,7 @@ export function Workspace() {
           data-animate="hud-card"
           variant="glass"
           onClick={() => navigate("/skills")}
+          className="active:scale-[0.985] transition-transform duration-150"
           style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -340,6 +343,7 @@ export function Workspace() {
           data-animate="hud-card"
           variant="glass"
           onClick={() => navigate("/system/users")}
+          className="active:scale-[0.985] transition-transform duration-150"
           style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -381,7 +385,7 @@ export function Workspace() {
           data-animate="hud-card"
           variant="glass"
           onClick={() => navigate("/system/audit")}
-          className="shimmer-border"
+          className="shimmer-border active:scale-[0.985] transition-transform duration-150"
           style={{ padding: "1.25rem", cursor: "pointer" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -435,10 +439,12 @@ export function Workspace() {
         >
           <button
             onClick={() => navigate("/my/plugins")}
-            className="btn btn-secondary"
-            style={{ justifyContent: "flex-start", padding: "0.875rem 1rem", height: "auto" }}
+            className="quick-action-card group"
+            style={{ width: "100%" }}
           >
-            <IconPuzzle size={18} className="text-brand-600" />
+            <div className="action-icon text-brand-600 transition-transform duration-150 group-hover:scale-110">
+              <IconPuzzle size={20} />
+            </div>
             <div style={{ textAlign: "left", lineHeight: 1.2 }}>
               <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--zinc-900)" }}>
                 管理本人插件
@@ -451,10 +457,12 @@ export function Workspace() {
 
           <button
             onClick={() => navigate("/skills/import")}
-            className="btn btn-secondary"
-            style={{ justifyContent: "flex-start", padding: "0.875rem 1rem", height: "auto" }}
+            className="quick-action-card group"
+            style={{ width: "100%" }}
           >
-            <IconUpload size={18} className="text-brand-600" />
+            <div className="action-icon text-brand-600 transition-transform duration-150 group-hover:scale-110">
+              <IconUpload size={20} />
+            </div>
             <div style={{ textAlign: "left", lineHeight: 1.2 }}>
               <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--zinc-900)" }}>
                 受控导入 Skill
@@ -467,10 +475,12 @@ export function Workspace() {
 
           <button
             onClick={() => navigate("/system/invites")}
-            className="btn btn-secondary"
-            style={{ justifyContent: "flex-start", padding: "0.875rem 1rem", height: "auto" }}
+            className="quick-action-card group"
+            style={{ width: "100%" }}
           >
-            <IconUserPlus size={18} className="text-brand-600" />
+            <div className="action-icon text-brand-600 transition-transform duration-150 group-hover:scale-110">
+              <IconUserPlus size={20} />
+            </div>
             <div style={{ textAlign: "left", lineHeight: 1.2 }}>
               <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--zinc-900)" }}>
                 邀请新成员加入
@@ -483,10 +493,12 @@ export function Workspace() {
 
           <button
             onClick={() => navigate("/system/audit")}
-            className="btn btn-secondary"
-            style={{ justifyContent: "flex-start", padding: "0.875rem 1rem", height: "auto" }}
+            className="quick-action-card group"
+            style={{ width: "100%" }}
           >
-            <IconActivity size={18} className="text-brand-600" />
+            <div className="action-icon text-brand-600 transition-transform duration-150 group-hover:scale-110">
+              <IconActivity size={20} />
+            </div>
             <div style={{ textAlign: "left", lineHeight: 1.2 }}>
               <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--zinc-900)" }}>
                 分域操作审计

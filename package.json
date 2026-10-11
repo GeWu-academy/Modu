@@ -6,7 +6,14 @@
     "dev": "pnpm --filter @your-erp/web dev",
     "build": "pnpm --filter @your-erp/web build",
     "lint": "pnpm --filter @your-erp/web lint",
-    "typecheck": "pnpm --filter @your-erp/web typecheck"
+    "typecheck": "pnpm --filter @your-erp/web typecheck",
+    "dev:app": "pnpm --filter @your-erp/app dev",
+    "android:app": "pnpm --filter @your-erp/app android",
+    "ios:app": "pnpm --filter @your-erp/app ios",
+    "web:app": "pnpm --filter @your-erp/app web",
+    "build:app": "pnpm --filter @your-erp/app build",
+    "lint:app": "pnpm --filter @your-erp/app lint",
+    "typecheck:app": "pnpm --filter @your-erp/app typecheck"
   },
   "devDependencies": {
     "turbo": "^2.3.3"

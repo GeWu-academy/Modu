@@ -26,3 +26,16 @@ go run ./cmd/server
 ```
 
 更多约定见 [`AGENTS.md`](./AGENTS.md) 与 [`docs/development/`](./docs/development/)。
+
+## App 开发
+
+`apps/app` 使用 React Native + Expo + TypeScript。完成 `pnpm install` 后，在根目录运行：
+
+```bash
+pnpm dev:app
+```
+
+其他命令：`pnpm ios:app`、`pnpm android:app`、`pnpm web:app`、
+`pnpm typecheck:app`、`pnpm lint:app`、`pnpm build:app`。
+其中 `build:app` 仅导出移动端 JavaScript bundle 和资源，不生成安装包。
+详细说明见 [`apps/app/README.md`](./apps/app/README.md)。

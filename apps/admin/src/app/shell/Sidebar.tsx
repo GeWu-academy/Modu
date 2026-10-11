@@ -88,48 +88,61 @@ const SYSTEM_NAV: NavItem[] = [
  * 避免前缀包含关系（如 /platform/plugins 与 /platform/plugins/install）导致多个激活项无法卸载
  */
 function getActiveItemId(route: string, items: NavItem[]): string | null {
-  if (!route) return "workspace";
+  const itemIds = new Set(items.map((item) => item.id));
 
-  // 1. 优先完全一致匹配
-  const exact = items.find((item) => item.path === route);
-  if (exact) return exact.id;
+  const resolve = (): string | null => {
+    if (!route) return "workspace";
 
-  // 2. 特殊子路由定向映射
-  if (route.startsWith("/system/users") || route.startsWith("/system/invites")) {
-    return "users";
+    // 1. 优先完全一致匹配
+    const exact = items.find((item) => item.path === route);
+    if (exact) return exact.id;
+
+    // 2. 特殊子路由定向映射
+    if (route.startsWith("/system/users") || route.startsWith("/system/invites")) {
+      return "users";
+    }
+    if (route.startsWith("/skills")) {
+      return "skills";
+    }
+    if (route.startsWith("/my/plugins")) {
+      return "my-plugins";
+    }
+    if (route === "/platform/plugins/install") {
+      return "plugins-install";
+    }
+    if (route.startsWith("/platform/plugins")) {
+      return "platform-plugins";
+    }
+    if (route.startsWith("/system/audit")) {
+      return "audit";
+    }
+    if (route.startsWith("/settings")) {
+      return "settings";
+    }
+    if (route === "/workspace" || route === "/" || route === "") {
+      return "workspace";
+    }
+
+    // 3. 兜底最长前缀匹配
+    const prefixMatches = items
+      .filter((item) => item.path !== "/workspace" && route.startsWith(item.path + "/"))
+      .sort((a, b) => b.path.length - a.path.length);
+
+    if (prefixMatches.length > 0) {
+      return prefixMatches[0].id;
+    }
+
+    return null;
+  };
+
+  const candidate = resolve();
+  if (candidate && itemIds.has(candidate)) {
+    return candidate;
   }
-  if (route.startsWith("/skills")) {
-    return "skills";
-  }
-  if (route.startsWith("/my/plugins")) {
-    return "my-plugins";
-  }
-  if (route === "/platform/plugins/install") {
-    return "plugins-install";
-  }
-  if (route.startsWith("/platform/plugins")) {
-    return "platform-plugins";
-  }
-  if (route.startsWith("/system/audit")) {
-    return "audit";
-  }
-  if (route.startsWith("/settings")) {
-    return "settings";
-  }
-  if (route === "/workspace" || route === "/" || route === "") {
+  if (itemIds.has("workspace")) {
     return "workspace";
   }
-
-  // 3. 兜底最长前缀匹配
-  const prefixMatches = items
-    .filter((item) => item.path !== "/workspace" && route.startsWith(item.path + "/"))
-    .sort((a, b) => b.path.length - a.path.length);
-
-  if (prefixMatches.length > 0) {
-    return prefixMatches[0].id;
-  }
-
-  return null;
+  return items[0]?.id || null;
 }
 
 export function Sidebar() {
@@ -201,7 +214,7 @@ export function Sidebar() {
     [activeItemId]
   );
 
-  // 1. 当激活菜单项发生改变时，平滑滑动定位；仅在真正切换路由且内容溢出装不下时将目标菜单滚动入视口
+  // 1. 当激活菜单项或业务/平台视图切换时，平滑滑动定位；仅在真正切换路由且内容溢出装不下时将目标菜单滚动入视口
   useEffect(() => {
     syncIndicator(false);
 
@@ -216,7 +229,7 @@ export function Sidebar() {
         }
       }
     }
-  }, [activeItemId, syncIndicator]);
+  }, [activeItemId, showPlatform, activeView, syncIndicator]);
 
   // 2. 当侧边栏收起/展开时，在 CSS 过渡期间启动 requestAnimationFrame 持续帧同步，彻底消除几何偏移
   useEffect(() => {

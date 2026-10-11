@@ -12,7 +12,7 @@ const distDir = path.join(adminDir, 'dist');
 const label = process.argv[2] || 'before';
 const outputDir = path.resolve(
   __dirname,
-  '../../../changes/2026-10-11-30-admin-color-palette-optimization/screenshots',
+  '../../../changes/10-11/30-admin-color-palette-optimization/screenshots',
   label
 );
 

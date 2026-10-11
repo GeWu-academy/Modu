@@ -147,7 +147,7 @@ async function runTests() {
     console.log('ECharts Canvas 图表实例均具有正常长宽并已完成渲染');
 
     console.log('\n--- 5. 截图保存验证 ---');
-    const screenshotDir = path.resolve(__dirname, '../../../brain/178cd496-5094-4cd9-8281-124be1517c5f/scratch');
+    const screenshotDir = '/Users/allure/.gemini/antigravity/brain/178cd496-5094-4cd9-8281-124be1517c5f/scratch';
     fs.mkdirSync(screenshotDir, { recursive: true });
     const screenshotPath = path.join(screenshotDir, 'dashboard-echarts-assets-todos.png');
     await page.screenshot({ path: screenshotPath, fullPage: true });

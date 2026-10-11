@@ -64,7 +64,7 @@ Asynq。TanStack Query 管理前端的服务端数据状态，Zustand 管理客�
 工作流只在 GitHub runner 上真实执行；本地验证覆盖 YAML 结构、命令与各端脚本一致，
 以及上述命令的本地等效执行。
 
-每个独立任务按小 MVP 推进，在 `changes/YYYY-MM-DD-NN-short-topic/` 中先建立
+每个独立任务按小 MVP 推进，按日期目录归档（如 `changes/10-11/NN-short-topic/`），先建立
 `plan.md` 与 `result.md`，持续记录计划、文件变更、checklist 和验证结果。
 同一任务的追问与修复更新原记录，不按每条消息拆分。
 

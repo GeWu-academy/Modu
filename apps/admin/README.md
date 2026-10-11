@@ -8,6 +8,7 @@ pnpm dev
 pnpm lint
 pnpm typecheck
 pnpm build
+pnpm test:sidebar # Playwright 侧边栏折叠/展开对齐测试
 ```
 
 也可在仓库根目录使用 `pnpm install:admin`、`pnpm dev:admin` 等快捷命令。

@@ -228,7 +228,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
           onClick={() => setActiveTab("users")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "users"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
@@ -240,7 +240,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
           onClick={() => setActiveTab("invites")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "invites"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
@@ -692,7 +692,7 @@ export function UsersView({ initialTab = "users" }: { initialTab?: "users" | "in
                     onClick={() => setInviteDays(item.val)}
                     className={`py-2 text-xs font-medium rounded-md border transition-all ${
                       inviteDays === item.val
-                        ? "bg-brand-50 text-brand-700 border-brand-300 font-semibold"
+                        ? "tab-pill-active"
                         : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50"
                     }`}
                   >

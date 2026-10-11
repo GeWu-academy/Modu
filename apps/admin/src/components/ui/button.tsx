@@ -21,10 +21,14 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         frost:
           "btn-frost-blue shadow-sm active:scale-[0.985]",
+        dark:
+          "btn-dark shadow-sm active:scale-[0.985]",
+        frostDark:
+          "btn-frost-dark shadow-sm active:scale-[0.985]",
         amber:
-          "btn-amber shadow-sm active:scale-[0.985]",
+          "btn-dark shadow-sm active:scale-[0.985]",
         frostAmber:
-          "btn-frost-amber shadow-sm active:scale-[0.985]",
+          "btn-frost-dark shadow-sm active:scale-[0.985]",
       },
       size: {
         default: "h-9 px-4 py-2",

@@ -142,7 +142,7 @@ export interface NodeStatusCapsuleProps {
 
 /**
  * 企业节点状态晶透胶囊
- * 替代原生小绿点药丸，提供企业级阶梯遥测信号与毛玻璃晶透质感
+ * 替代原生小绿点药丸，提供企业级阶梯遥测信号与高透晶体质感（彻底告别毛玻璃模糊）
  */
 export function NodeStatusCapsule({
   statusText = "节点就绪",
@@ -156,11 +156,9 @@ export function NodeStatusCapsule({
     <div
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 select-none ${className}`}
       style={{
-        backgroundColor: "rgba(240, 253, 244, 0.7)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        border: "1px solid rgba(187, 247, 208, 0.85)",
-        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(16, 185, 129, 0.05)",
+        backgroundColor: "rgba(240, 253, 244, 0.45)",
+        border: "1px solid rgba(187, 247, 208, 0.75)",
+        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(16, 185, 129, 0.04)",
         color: "var(--brand-700, #153E6D)",
         ...style,
       }}

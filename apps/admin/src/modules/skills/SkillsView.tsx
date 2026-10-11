@@ -49,7 +49,7 @@ export function SkillsView() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate("/skills/import")}
-            className="btn btn-primary text-xs h-9"
+            className="btn btn-primary text-xs h-9 shadow-sm"
           >
             <IconUpload size={14} />
             <span>受控导入 Skill</span>
@@ -165,7 +165,7 @@ export function SkillsView() {
                       className={`btn-ghost btn-sm text-xs flex items-center gap-1 ${
                         s.status === "active"
                           ? "text-rose-600 hover:text-rose-800"
-                          : "text-brand-600 hover:text-brand-800"
+                          : "text-zinc-900 hover:text-black font-semibold"
                       }`}
                     >
                       <IconPower size={12} />

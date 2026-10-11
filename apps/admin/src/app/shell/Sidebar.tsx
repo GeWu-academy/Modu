@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useApp } from "../providers/AppContext";
 import {
   IconDashboard,
@@ -136,9 +136,11 @@ export function Sidebar() {
   const { currentRoute, navigate, activeView, user } = useApp();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const asideRef = useRef<HTMLElement | null>(null);
   const navContainerRef = useRef<HTMLDivElement | null>(null);
   const indicatorRef = useRef<HTMLDivElement | null>(null);
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const prevActiveIdRef = useRef<string | null>(null);
 
   // 汇总所有当前可视的导航项
   const showPlatform = activeView === "platform" || Boolean(user?.role.includes("管理员"));
@@ -151,55 +153,139 @@ export function Sidebar() {
     return getActiveItemId(currentRoute, allNavItems);
   }, [currentRoute, allNavItems]);
 
-  // 全局单一指示器 GSAP 平滑滑动动画与生命周期清理
-  useEffect(() => {
-    const indicator = indicatorRef.current;
-    const navContainer = navContainerRef.current;
-    if (!indicator || !navContainer) return;
+  // 指示器精确对齐计算函数
+  const syncIndicator = useCallback(
+    (immediate = false) => {
+      const indicator = indicatorRef.current;
+      const navContainer = navContainerRef.current;
+      if (!indicator || !navContainer) return;
 
-    if (activeItemId && buttonRefs.current[activeItemId]) {
-      const activeBtn = buttonRefs.current[activeItemId]!;
-      const btnRect = activeBtn.getBoundingClientRect();
-      const containerRect = navContainer.getBoundingClientRect();
-      const targetTop = btnRect.top - containerRect.top;
-      const targetHeight = btnRect.height;
+      if (activeItemId && buttonRefs.current[activeItemId]) {
+        const activeBtn = buttonRefs.current[activeItemId]!;
+        const btnRect = activeBtn.getBoundingClientRect();
+        const containerRect = navContainer.getBoundingClientRect();
+        const targetTop = btnRect.top - containerRect.top;
+        const targetHeight = btnRect.height;
 
-      if (isPrefersReducedMotion()) {
-        gsap.set(indicator, {
-          y: targetTop,
-          height: targetHeight,
-          opacity: 1,
-        });
+        if (immediate || isPrefersReducedMotion()) {
+          gsap.killTweensOf(indicator);
+          gsap.set(indicator, {
+            y: targetTop,
+            height: targetHeight,
+            opacity: 1,
+          });
+        } else {
+          gsap.to(indicator, {
+            y: targetTop,
+            height: targetHeight,
+            opacity: 1,
+            duration: GSAP_DURATIONS.normal,
+            ease: GSAP_EASINGS.outExpo,
+            force3D: true,
+            overwrite: "auto",
+          });
+        }
       } else {
         gsap.to(indicator, {
-          y: targetTop,
-          height: targetHeight,
-          opacity: 1,
-          duration: GSAP_DURATIONS.normal,
-          ease: GSAP_EASINGS.outExpo,
-          force3D: true,
+          opacity: 0,
+          duration: GSAP_DURATIONS.fast,
+          ease: GSAP_EASINGS.smooth,
           overwrite: "auto",
         });
       }
+    },
+    [activeItemId]
+  );
 
-      // 平滑滚动至视口内（侧边栏出现垂直滚动条时）
-      activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    } else {
-      // 当离开侧边栏路由或无激活项时，完全卸载/淡出指示器
-      gsap.to(indicator, {
-        opacity: 0,
-        duration: GSAP_DURATIONS.fast,
-        ease: GSAP_EASINGS.smooth,
-        overwrite: "auto",
+  // 1. 当激活菜单项发生改变时，平滑滑动定位；仅在真正切换路由时将目标菜单滚动入视口
+  useEffect(() => {
+    syncIndicator(false);
+
+    if (activeItemId && activeItemId !== prevActiveIdRef.current) {
+      prevActiveIdRef.current = activeItemId;
+      const activeBtn = buttonRefs.current[activeItemId];
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [activeItemId, syncIndicator]);
+
+  // 2. 当侧边栏收起/展开时，在 CSS 过渡期间启动 requestAnimationFrame 持续帧同步，彻底消除几何偏移
+  useEffect(() => {
+    let rafId: number;
+    const startTime = performance.now();
+    const transitionDuration = 360;
+
+    const frameTick = (now: number) => {
+      syncIndicator(true);
+      if (now - startTime < transitionDuration) {
+        rafId = requestAnimationFrame(frameTick);
+      } else {
+        syncIndicator(true);
+      }
+    };
+
+    rafId = requestAnimationFrame(frameTick);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
+  }, [isCollapsed, syncIndicator]);
+
+  // 3. 监听侧边栏 transitionend，确保 CSS 动画结束瞬间 100% 精确对齐
+  useEffect(() => {
+    const aside = asideRef.current;
+    if (!aside) return;
+
+    const handleTransitionEnd = (e: TransitionEvent) => {
+      if (e.target === aside) {
+        syncIndicator(true);
+      }
+    };
+
+    aside.addEventListener("transitionend", handleTransitionEnd);
+    return () => {
+      aside.removeEventListener("transitionend", handleTransitionEnd);
+    };
+  }, [syncIndicator]);
+
+  // 4. 监听容器与视口尺寸变化（ResizeObserver 与 window resize）
+  useEffect(() => {
+    const navContainer = navContainerRef.current;
+    const aside = asideRef.current;
+    if (!navContainer || !aside) return;
+
+    const handleResize = () => {
+      syncIndicator(true);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(() => {
+        syncIndicator(true);
       });
+      ro.observe(navContainer);
+      ro.observe(aside);
     }
 
     return () => {
-      if (indicator) {
-        gsap.killTweensOf(indicator);
+      window.removeEventListener("resize", handleResize);
+      if (ro) {
+        ro.disconnect();
       }
     };
-  }, [activeItemId, isCollapsed]);
+  }, [syncIndicator]);
+
+  // 卸载时清理 GSAP 补间
+  useEffect(() => {
+    return () => {
+      if (indicatorRef.current) {
+        gsap.killTweensOf(indicatorRef.current);
+      }
+    };
+  }, []);
 
   const renderNavGroup = (title: string, items: NavItem[]) => {
     return (
@@ -212,7 +298,7 @@ export function Sidebar() {
             color: "var(--zinc-400)",
             textTransform: "uppercase",
             letterSpacing: "0.05em",
-            padding: isCollapsed ? "0 0.25rem 0.375rem 0.25rem" : "0 0.75rem 0.375rem 0.75rem",
+            padding: isCollapsed ? "0" : "0 0.75rem 0.375rem 0.75rem",
             textAlign: isCollapsed ? "center" : "left",
             maxHeight: isCollapsed ? "0" : "24px",
             opacity: isCollapsed ? 0 : 1,
@@ -345,6 +431,7 @@ export function Sidebar() {
 
   return (
     <aside
+      ref={asideRef}
       aria-label="侧边主导航栏"
       style={{
         width: isCollapsed ? "68px" : "232px",
@@ -422,7 +509,7 @@ export function Sidebar() {
               color: "var(--zinc-400)",
               textTransform: "uppercase",
               letterSpacing: "0.05em",
-              padding: isCollapsed ? "0 0.25rem 0.375rem 0.25rem" : "0 0.75rem 0.375rem 0.75rem",
+              padding: isCollapsed ? "0" : "0 0.75rem 0.375rem 0.75rem",
               textAlign: isCollapsed ? "center" : "left",
               maxHeight: isCollapsed ? "0" : "24px",
               opacity: isCollapsed ? 0 : 1,

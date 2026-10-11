@@ -10,14 +10,15 @@ import {
 } from "../../shared/components/Icons";
 import { NodeStatusCapsule } from "../../shared/components/StatusIndicator";
 
-export type HeaderVariant = "glass" | "transparent" | "floating";
+export type HeaderVariant = "crystal" | "glass" | "transparent" | "floating";
 
 export interface HeaderProps {
   /**
    * 视觉变体:
-   * - "glass" (默认): 高透液态微晶磨砂 (晶莹通透，增强模糊、发丝镜面高光与微透底色)
-   * - "transparent": 纯透无界模式 (背景完全透明，极简发丝线，与页面背景无缝一体)
-   * - "floating": 浮岛微透模式 (悬浮胶囊形态，边缘留白内缩，带有优雅立体漫射光)
+   * - "crystal" (默认推荐): 超白高透无界晶体 (彻底告别毛玻璃与磨砂模糊，超高透光率，双层镜面切角发丝高光与清澈底感)
+   * - "glass": 兼容别名，映射为高透晶体质感
+   * - "transparent": 纯透无界模式 (背景完全透明，极简发丝线，与页面背景融为一体)
+   * - "floating": 浮岛高透模式 (悬浮胶囊形态，边缘留白内缩，带有晶体微反光与浮岛微影)
    */
   variant?: HeaderVariant;
   /**
@@ -25,7 +26,7 @@ export interface HeaderProps {
    */
   transparent?: boolean;
   /**
-   * 模糊强度等级
+   * 模糊强度等级 (默认为 "none"，不使用任何毛玻璃模糊)
    */
   blur?: "none" | "subtle" | "base" | "heavy";
   /**
@@ -43,14 +44,14 @@ export interface HeaderProps {
 }
 
 /**
- * Admin 管理控制台顶部透明 Header 组件
- * 支持高透微晶磨砂 (glass)、纯透无界 (transparent) 及浮岛微透 (floating) 多种形态
+ * Admin 管理控制台顶部高透明 Header 组件
+ * 具备极高透光率与双层镜面切角发丝高光（告别毛玻璃磨砂模糊，超清透水漾晶体质感）
  * 严格保持 WCAG AA/AAA 对比度与全功能微交互
  */
 export function Header({
-  variant = "glass",
+  variant = "crystal",
   transparent = false,
-  blur = "base",
+  blur = "none",
   showBorder = true,
   className = "",
   style = {},
@@ -86,13 +87,13 @@ export function Header({
 
   // 根据变体与模糊配置计算容器样式
   const getContainerStyles = (): React.CSSProperties => {
-    const blurFilterMap = {
+    const blurFilterMap: Record<string, string> = {
       none: "none",
-      subtle: "blur(8px) saturate(160%)",
-      base: "blur(16px) saturate(190%)",
-      heavy: "blur(24px) saturate(200%)",
+      subtle: "blur(8px) saturate(140%)",
+      base: "blur(16px) saturate(160%)",
+      heavy: "blur(24px) saturate(180%)",
     };
-    const activeBlur = blurFilterMap[blur] || blurFilterMap.base;
+    const activeBlur = blurFilterMap[blur] || "none";
 
     const baseStyles: React.CSSProperties = {
       position: "sticky",
@@ -110,9 +111,9 @@ export function Header({
       return {
         ...baseStyles,
         backgroundColor: "transparent",
-        backdropFilter: blur === "none" ? "none" : "blur(6px) saturate(140%)",
-        WebkitBackdropFilter: blur === "none" ? "none" : "blur(6px) saturate(140%)",
-        borderBottom: showBorder ? "1px solid rgba(228, 228, 231, 0.45)" : "none",
+        backdropFilter: activeBlur,
+        WebkitBackdropFilter: activeBlur,
+        borderBottom: showBorder ? "1px solid rgba(226, 232, 240, 0.55)" : "none",
         boxShadow: "none",
       };
     }
@@ -123,22 +124,22 @@ export function Header({
         margin: "0.5rem 1rem 0 1rem",
         borderRadius: "12px",
         height: "52px",
-        backgroundColor: "rgba(255, 255, 255, 0.65)",
+        background: "linear-gradient(180deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.18) 100%)",
         backdropFilter: activeBlur,
         WebkitBackdropFilter: activeBlur,
-        border: "1px solid rgba(228, 228, 231, 0.65)",
-        boxShadow: "0 8px 24px -4px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
+        border: "1px solid rgba(226, 232, 240, 0.65)",
+        boxShadow: "0 8px 24px -4px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.45)",
       };
     }
 
-    // 默认 "glass"：精工高透液态微晶磨砂
+    // 默认高透明晶体模式 (crystal 或 glass): 彻底告别毛玻璃，呈现高透光、切面双层发丝高光与极简微边界
     return {
       ...baseStyles,
-      backgroundColor: "rgba(255, 255, 255, 0.52)",
+      background: "linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.14) 100%)",
       backdropFilter: activeBlur,
       WebkitBackdropFilter: activeBlur,
-      borderBottom: showBorder ? "1px solid rgba(228, 228, 231, 0.55)" : "none",
-      boxShadow: "inset 0 -1px 0 rgba(255, 255, 255, 0.65), 0 1px 3px rgba(0, 0, 0, 0.02)",
+      borderBottom: showBorder ? "1px solid rgba(226, 232, 240, 0.6)" : "none",
+      boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(255, 255, 255, 0.45), 0 1px 2px rgba(15, 23, 42, 0.015)",
     };
   };
 
@@ -212,7 +213,7 @@ export function Header({
 
       {/* 右侧：微透快捷药丸、状态胶囊、视图切换与账号菜单 */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        {/* 1. Cmd+K 快捷指令药丸 (GSAP 磁力吸附 + 微透晶体) */}
+        {/* 1. Cmd+K 快捷指令药丸 (GSAP 磁力吸附 + 高透水漾晶体，彻底消除毛玻璃模糊) */}
         <MagneticButton
           onClick={() => setCmdKOpen(true)}
           strength={0.24}
@@ -223,17 +224,15 @@ export function Header({
             gap: "0.5rem",
             padding: "0.3125rem 0.625rem",
             borderRadius: "9999px",
-            backgroundColor: "rgba(255, 255, 255, 0.55)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(228, 228, 231, 0.65)",
-            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.02)",
+            backgroundColor: "rgba(255, 255, 255, 0.35)",
+            border: "1px solid rgba(226, 232, 240, 0.75)",
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(15, 23, 42, 0.02)",
             color: "var(--zinc-700)",
             fontSize: "0.75rem",
             cursor: "pointer",
             transition: "border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease",
           }}
-          className="hover:bg-white/80 hover:border-zinc-300"
+          className="hover:bg-white/65 hover:border-zinc-300"
           title="按下 Cmd+K 搜索页面或执行快捷指令"
         >
           <IconCommand size={13} />
@@ -242,8 +241,8 @@ export function Header({
             style={{
               padding: "0.0625rem 0.25rem",
               borderRadius: "4px",
-              backgroundColor: "rgba(244, 244, 245, 0.75)",
-              border: "1px solid rgba(228, 228, 231, 0.8)",
+              backgroundColor: "rgba(241, 245, 249, 0.55)",
+              border: "1px solid rgba(226, 232, 240, 0.8)",
               fontSize: "0.6875rem",
               color: "var(--zinc-500)",
               fontFamily: "monospace",
@@ -260,16 +259,15 @@ export function Header({
           variant="signal"
         />
 
-        {/* 3. 视图切换药丸 (业务视图 / 平台管理视图 - 微透滑块底槽) */}
+        {/* 3. 视图切换药丸 (业务视图 / 平台管理视图 - 高透清澈底槽) */}
         <div
           style={{
             display: "inline-flex",
-            backgroundColor: "rgba(244, 244, 245, 0.65)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
+            backgroundColor: "rgba(241, 245, 249, 0.45)",
             padding: "2px",
             borderRadius: "6px",
-            border: "1px solid rgba(228, 228, 231, 0.65)",
+            border: "1px solid rgba(226, 232, 240, 0.7)",
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.8)",
           }}
         >
           <button
@@ -283,7 +281,7 @@ export function Header({
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
-              boxShadow: activeView === "business" ? "0 1px 2px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)" : "none",
+              boxShadow: activeView === "business" ? "0 1px 2px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95)" : "none",
               transition: "all 120ms ease",
             }}
           >
@@ -300,7 +298,7 @@ export function Header({
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
-              boxShadow: activeView === "platform" ? "0 1px 2px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)" : "none",
+              boxShadow: activeView === "platform" ? "0 1px 2px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95)" : "none",
               transition: "all 120ms ease",
             }}
           >
@@ -318,26 +316,27 @@ export function Header({
               alignItems: "center",
               gap: "0.5rem",
               borderRadius: "6px",
-              backgroundColor: userMenuOpen ? "rgba(255, 255, 255, 0.65)" : "transparent",
+              backgroundColor: userMenuOpen ? "rgba(255, 255, 255, 0.5)" : "transparent",
               border: "1px solid",
-              borderColor: userMenuOpen ? "rgba(228, 228, 231, 0.8)" : "transparent",
+              borderColor: userMenuOpen ? "rgba(226, 232, 240, 0.85)" : "transparent",
               cursor: "pointer",
               transition: "all 150ms ease",
             }}
-            className="hover:bg-white/60 hover:border-zinc-200"
+            className="hover:bg-white/50 hover:border-zinc-200"
           >
             <div
               style={{
                 width: "26px",
                 height: "26px",
                 borderRadius: "50%",
-                backgroundColor: "rgba(228, 228, 231, 0.8)",
+                backgroundColor: "rgba(226, 232, 240, 0.8)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "var(--zinc-700)",
                 fontSize: "0.75rem",
                 fontWeight: 600,
+                boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.8)",
               }}
             >
               {user?.displayName ? user.displayName.slice(0, 1) : "A"}
@@ -362,11 +361,9 @@ export function Header({
                 right: 0,
                 width: "220px",
                 borderRadius: "8px",
-                backgroundColor: "rgba(255, 255, 255, 0.94)",
-                backdropFilter: "blur(20px) saturate(200%)",
-                WebkitBackdropFilter: "blur(20px) saturate(200%)",
-                border: "1px solid rgba(228, 228, 231, 0.85)",
-                boxShadow: "var(--shadow-elevation-3)",
+                backgroundColor: "rgba(255, 255, 255, 0.98)",
+                border: "1px solid rgba(226, 232, 240, 0.9)",
+                boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 1)",
                 padding: "0.375rem",
                 zIndex: 100,
                 animation: "fadeIn 120ms ease",

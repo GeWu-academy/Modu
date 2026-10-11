@@ -236,7 +236,7 @@ export function MyPluginsView() {
                   {isEnabled && p.id === "plugin_skills" && (
                     <button
                       onClick={() => navigate("/skills")}
-                      className="btn-ghost btn-sm text-xs text-brand-600 hover:text-brand-800 font-semibold flex items-center gap-1"
+                      className="btn-ghost btn-sm text-xs text-zinc-900 hover:text-black font-semibold flex items-center gap-1"
                     >
                       <IconSparkles size={13} />
                       <span>打开 Skill</span>

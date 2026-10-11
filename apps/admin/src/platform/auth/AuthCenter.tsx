@@ -707,8 +707,8 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                         let fillBg = "var(--zinc-200)";
                         if (passwordStrength >= step) {
                           if (passwordStrength <= 1) fillBg = "var(--semantic-danger-fg)";
-                          else if (passwordStrength <= 2) fillBg = "var(--semantic-warning-fg)";
-                          else fillBg = "var(--brand-500)";
+                          else if (passwordStrength <= 2) fillBg = "var(--zinc-500)";
+                          else fillBg = "var(--semantic-success-fg)";
                         }
                         return (
                           <div

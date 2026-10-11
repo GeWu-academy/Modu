@@ -95,13 +95,19 @@ async function runTests() {
         const btnRect = activeBtn.getBoundingClientRect();
         const indRect = indicator.getBoundingClientRect();
         const asideRect = aside.getBoundingClientRect();
+        const navContainerRect = navContainer.getBoundingClientRect();
 
         return {
           asideWidth: Math.round(asideRect.width),
+          asideTop: asideRect.top,
+          asideScrollTop: aside.scrollTop,
+          navContainerTop: navContainerRect.top,
           activeText: activeBtn.textContent.trim(),
           btnTop: btnRect.top,
+          btnOffsetTop: activeBtn.offsetTop,
           btnHeight: btnRect.height,
           indTop: indRect.top,
+          indTransform: indicator.style.transform,
           indHeight: indRect.height,
           diffTop: Math.abs(indRect.top - btnRect.top),
           diffHeight: Math.abs(indRect.height - btnRect.height),
@@ -160,17 +166,49 @@ async function runTests() {
       `展开侧边栏后指示器位置发生偏移！偏差: ${reExpanded.diffTop}px (预期 <= 1.5px)`
     );
 
-    console.log('\n--- 6. 再次收起侧边栏验证稳定性 ---');
+    console.log('\n--- 6. 验证偏好与安全组（系统与企业设置）收起与展开对齐 ---');
+    const settingsBtn = page.locator('aside button').filter({ hasText: '系统与企业设置' });
+    await settingsBtn.click();
+    await page.waitForTimeout(400);
+    const settingsExpanded = await getAlignment();
+    console.log('系统设置展开态指标:', settingsExpanded);
+    assert(settingsExpanded.activeText.includes('系统与企业设置'), '未能激活系统与企业设置');
+    assert(settingsExpanded.diffTop <= 1.5, `系统设置展开态指示器偏移: ${settingsExpanded.diffTop}px`);
+
     await collapseBtn.click();
     await page.waitForTimeout(500);
-    const reCollapsed = await getAlignment();
-    console.log('再次收起后指标:', reCollapsed);
-    assert(
-      reCollapsed.diffTop <= 1.5,
-      `再次收起侧边栏后指示器位置发生偏移！偏差: ${reCollapsed.diffTop}px`
-    );
+    const settingsCollapsed = await getAlignment();
+    console.log('系统设置收起态指标:', settingsCollapsed);
+    assert(settingsCollapsed.diffTop <= 1.5, `系统设置收起态指示器偏移: ${settingsCollapsed.diffTop}px`);
 
-    console.log('\n所有 Playwright 侧边栏对齐测试通过！');
+    await collapseBtn.click();
+    await page.waitForTimeout(500);
+    const settingsReExpanded = await getAlignment();
+    console.log('系统设置重新展开态指标:', settingsReExpanded);
+    assert(settingsReExpanded.diffTop <= 1.5, `系统设置重新展开态指示器偏移: ${settingsReExpanded.diffTop}px`);
+
+    console.log('\n--- 7. 验证中间菜单项（我的插件）收起与展开对齐 ---');
+    const pluginsBtn = page.locator('aside button').filter({ hasText: '我的插件' });
+    await pluginsBtn.click();
+    await page.waitForTimeout(400);
+    const pluginsExpanded = await getAlignment();
+    console.log('我的插件展开态指标:', pluginsExpanded);
+    assert(pluginsExpanded.activeText.includes('我的插件'), '未能激活我的插件');
+    assert(pluginsExpanded.diffTop <= 1.5, `我的插件展开态指示器偏移: ${pluginsExpanded.diffTop}px`);
+
+    await collapseBtn.click();
+    await page.waitForTimeout(500);
+    const pluginsCollapsed = await getAlignment();
+    console.log('我的插件收起态指标:', pluginsCollapsed);
+    assert(pluginsCollapsed.diffTop <= 1.5, `我的插件收起态指示器偏移: ${pluginsCollapsed.diffTop}px`);
+
+    await collapseBtn.click();
+    await page.waitForTimeout(500);
+    const pluginsReExpanded = await getAlignment();
+    console.log('我的插件重新展开态指标:', pluginsReExpanded);
+    assert(pluginsReExpanded.diffTop <= 1.5, `我的插件重新展开态指示器偏移: ${pluginsReExpanded.diffTop}px`);
+
+    console.log('\n所有 Playwright 侧边栏对齐测试全部通过！');
   } finally {
     await browser.close();
     server.close();

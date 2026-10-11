@@ -171,13 +171,13 @@ html, body {
   cursor: not-allowed;
 }
 
-.btn-primary {
+.btn-primary, .btn-dark, .btn-amber {
   background: var(--btn-primary-bg);
   color: #FFFFFF;
   border-color: #0F172A;
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 1px 2px 0 rgba(15, 23, 42, 0.08);
 }
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled), .btn-dark:hover:not(:disabled), .btn-amber:hover:not(:disabled) {
   background: var(--btn-primary-hover-bg);
   border-color: #1E293B;
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 4px 0 rgba(15, 23, 42, 0.12);
@@ -195,41 +195,20 @@ html, body {
   color: var(--zinc-950);
 }
 
-.btn-amber {
-  background: var(--btn-amber-bg);
-  color: #FFFFFF;
-  border-color: #B45309;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.28), 0 1px 3px 0 rgba(217, 119, 6, 0.25);
-  font-weight: 500;
-}
-.btn-amber:hover:not(:disabled) {
-  background: var(--btn-amber-hover-bg);
-  border-color: #92400E;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.35), 0 2px 6px 0 rgba(217, 119, 6, 0.35);
-}
-.btn-amber:active:not(:disabled) {
-  transform: scale(0.985);
-  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.15);
-}
-
-.btn-frost-amber {
-  background: linear-gradient(180deg, rgba(254, 243, 199, 0.88) 0%, rgba(253, 230, 138, 0.70) 100%);
+.btn-frost-dark, .btn-frost-amber {
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.08) 0%, rgba(24, 24, 27, 0.04) 100%);
   backdrop-filter: blur(10px) saturate(150%);
   -webkit-backdrop-filter: blur(10px) saturate(150%);
-  color: #92400E;
-  border: 1px solid rgba(245, 158, 11, 0.50);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), 0 1px 2px 0 rgba(180, 83, 9, 0.04);
+  color: #0F172A;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), 0 1px 2px 0 rgba(15, 23, 42, 0.03);
   font-weight: 500;
 }
-.btn-frost-amber:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(254, 243, 199, 0.96) 0%, rgba(252, 211, 77, 0.85) 100%);
-  border-color: rgba(217, 119, 6, 0.65);
-  color: #78350F;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 2px 8px 0 rgba(217, 119, 6, 0.15);
-}
-.btn-frost-amber:active:not(:disabled) {
-  background: linear-gradient(180deg, rgba(253, 230, 138, 0.95) 0%, rgba(252, 211, 77, 0.90) 100%);
-  box-shadow: inset 0 1px 2px 0 rgba(180, 83, 9, 0.10);
+.btn-frost-dark:hover:not(:disabled), .btn-frost-amber:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.12) 0%, rgba(24, 24, 27, 0.08) 100%);
+  border-color: #0F172A;
+  color: #000000;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 2px 8px 0 rgba(15, 23, 42, 0.08);
 }
 
 .btn-frost-blue {
@@ -284,7 +263,7 @@ html, body {
 }
 
 /* =========================================================================
-   Inputs & Form Controls (告别沉闷蓝色，引入温润琥珀金焦点)
+   Inputs & Form Controls (告别沉闷蓝色，引入极简黑曜高质感焦点)
    ========================================================================= */
 .input-control {
   width: 100%;
@@ -297,14 +276,14 @@ html, body {
   padding: 0.5rem 0.75rem;
   transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
   outline: none;
-  caret-color: var(--accent-amber);
+  caret-color: #0F172A;
 }
 .input-control:hover:not(:disabled) {
   border-color: var(--zinc-400);
 }
 .input-control:focus {
-  border-color: var(--accent-amber);
-  box-shadow: var(--accent-amber-glow);
+  border-color: #0F172A;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08), 0 1px 2px 0 rgba(15, 23, 42, 0.04);
 }
 .input-control::placeholder {
   color: var(--zinc-400);
@@ -315,27 +294,27 @@ html, body {
   cursor: not-allowed;
 }
 
-/* 原生表单勾选框与单选框琥珀强调色 */
+/* 原生表单勾选框与单选框黑曜强调色 */
 input[type="checkbox"],
 input[type="radio"] {
-  accent-color: var(--accent-amber);
+  accent-color: #0F172A;
   cursor: pointer;
 }
 
 /* 下拉框与文本域高亮统一 */
 select.input-control:focus,
 textarea.input-control:focus {
-  border-color: var(--accent-amber);
-  box-shadow: var(--accent-amber-glow);
+  border-color: #0F172A;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08), 0 1px 2px 0 rgba(15, 23, 42, 0.04);
 }
 
-/* 激活标签与高亮药丸样式 (工匠级暖调交互反馈) */
+/* 激活标签与高亮药丸样式 (极简黑曜高级质感 · Linear / Vercel 风格) */
 .tab-pill-active {
-  background: rgba(254, 243, 199, 0.70) !important;
-  color: #78350F !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border: 1px solid #0F172A !important;
   font-weight: 600 !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(180, 83, 9, 0.04) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
 .input-label {

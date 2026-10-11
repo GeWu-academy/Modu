@@ -11,7 +11,8 @@ export type BadgeVariant =
   | "danger"
   | "info"
   | "neutral"
-  | "amber";
+  | "amber"
+  | "dark";
 
 export interface BadgeProps extends Omit<ShadcnBadgeProps, "variant"> {
   variant?: BadgeVariant;

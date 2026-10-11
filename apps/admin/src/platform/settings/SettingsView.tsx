@@ -71,7 +71,7 @@ export function SettingsView() {
           onClick={() => setActiveTab("profile")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "profile"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
@@ -83,7 +83,7 @@ export function SettingsView() {
           onClick={() => setActiveTab("company")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             activeTab === "company"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >

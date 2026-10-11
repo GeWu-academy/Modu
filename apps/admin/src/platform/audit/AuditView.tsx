@@ -43,7 +43,7 @@ export function AuditView() {
           onClick={() => setDomainFilter("all")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             domainFilter === "all"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
@@ -55,7 +55,7 @@ export function AuditView() {
           onClick={() => setDomainFilter("account")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             domainFilter === "account"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
@@ -67,7 +67,7 @@ export function AuditView() {
           onClick={() => setDomainFilter("platform")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             domainFilter === "platform"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >
@@ -79,7 +79,7 @@ export function AuditView() {
           onClick={() => setDomainFilter("my")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1.5 ${
             domainFilter === "my"
-              ? "bg-brand-50 text-brand-700 border border-brand-200 font-semibold"
+              ? "tab-pill-active"
               : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
           }`}
         >

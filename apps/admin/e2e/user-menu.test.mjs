@@ -145,9 +145,14 @@ async function runTests() {
     const logoutBtn = menuDropdown.locator('button:has-text("退出登录")');
     const logoutColor = await logoutBtn.evaluate((el) => window.getComputedStyle(el).color);
     console.log(`[颜色检验] 退出登录文本颜色: ${logoutColor}`);
-    // rgb(225, 29, 72) 是 rose-600
+    // Tailwind v4 uses OKLCH (e.g. oklch(0.586 0.253 17.585) for rose-600) or rgb(225, 29, 72)
+    const isRoseColor =
+      logoutColor.includes('oklch') ||
+      logoutColor.includes('225, 29, 72') ||
+      logoutColor.includes('239, 68, 68') ||
+      logoutColor.includes('rose');
     assert.ok(
-      logoutColor.includes('225, 29, 72') || logoutColor.includes('rose') || logoutColor.includes('239, 68, 68'),
+      isRoseColor,
       `退出登录应具备危险红色系文字警示，实际为 ${logoutColor}`
     );
 

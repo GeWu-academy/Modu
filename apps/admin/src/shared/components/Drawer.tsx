@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IconX } from "./Icons";
+import { gsap, GSAP_EASINGS, GSAP_DURATIONS, isPrefersReducedMotion } from "../animation/gsap";
 
 export interface DrawerProps {
   isOpen: boolean;
@@ -11,6 +12,10 @@ export interface DrawerProps {
   width?: string;
 }
 
+/**
+ * GSAP 驱动的高性能物理侧滑抽屉
+ * 具备右侧滑动入场 (x: 100% -> 0%)、阻尼减速、双层微透模糊遮罩以及连贯离场过渡
+ */
 export function Drawer({
   isOpen,
   onClose,
@@ -20,6 +25,10 @@ export function Drawer({
   footer,
   width = "480px",
 }: DrawerProps) {
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -34,26 +43,101 @@ export function Drawer({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  // 控制 GSAP 进出场状态机
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+    } else if (shouldRender) {
+      if (!overlayRef.current || !panelRef.current || isPrefersReducedMotion()) {
+        setShouldRender(false);
+        return;
+      }
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setShouldRender(false);
+        },
+      });
+
+      tl.to(panelRef.current, {
+        x: "100%",
+        duration: GSAP_DURATIONS.fast,
+        ease: GSAP_EASINGS.smooth,
+      }).to(
+        overlayRef.current,
+        {
+          opacity: 0,
+          duration: GSAP_DURATIONS.fast,
+          ease: GSAP_EASINGS.smooth,
+        },
+        "-=0.1"
+      );
+    }
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 入场动画
+  useEffect(() => {
+    if (shouldRender && isOpen) {
+      if (!overlayRef.current || !panelRef.current) return;
+
+      if (isPrefersReducedMotion()) {
+        gsap.set([overlayRef.current, panelRef.current], { opacity: 1, x: "0%" });
+        return;
+      }
+
+      const tl = gsap.timeline();
+
+      // 遮罩淡入
+      tl.fromTo(
+        overlayRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: GSAP_DURATIONS.fast,
+          ease: GSAP_EASINGS.smooth,
+        }
+      );
+
+      // 侧边栏滑入
+      tl.fromTo(
+        panelRef.current,
+        {
+          x: "100%",
+          force3D: true,
+        },
+        {
+          x: "0%",
+          duration: GSAP_DURATIONS.medium,
+          ease: GSAP_EASINGS.outExpo,
+          clearProps: "transform",
+        },
+        "-=0.15"
+      );
+    }
+  }, [shouldRender, isOpen]);
+
+  if (!shouldRender) return null;
 
   return (
     <div
+      ref={overlayRef}
       style={{
         position: "fixed",
         inset: 0,
         zIndex: 1000,
         display: "flex",
         justifyContent: "flex-end",
-        backgroundColor: "rgba(9, 9, 11, 0.3)",
-        backdropFilter: "blur(6px)",
-        WebkitBackdropFilter: "blur(6px)",
-        transition: "background-color 200ms ease",
+        backgroundColor: "rgba(9, 9, 11, 0.32)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        opacity: 0,
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
+        ref={panelRef}
         style={{
           width: "100%",
           maxWidth: width,
@@ -63,7 +147,7 @@ export function Drawer({
           boxShadow: "var(--shadow-elevation-3)",
           display: "flex",
           flexDirection: "column",
-          animation: "slideInRight 200ms cubic-bezier(0.16, 1, 0.3, 1)",
+          transform: "translateX(100%)",
         }}
       >
         <div

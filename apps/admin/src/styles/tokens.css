@@ -101,4 +101,29 @@
 
   /* 粒子光晕 */
   --particle-glow: rgba(20, 122, 102, 0.20);
+
+  /* =========================================================================
+     7. shadcn/ui Standard Theme Variables
+     ========================================================================= */
+  --background: #FAFAFA;
+  --foreground: #09090B;
+  --card: #FFFFFF;
+  --card-foreground: #09090B;
+  --popover: #FFFFFF;
+  --popover-foreground: #09090B;
+  --primary: #0D5C4D;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F4F4F5;
+  --secondary-foreground: #18181B;
+  --muted: #F4F4F5;
+  --muted-foreground: #71717A;
+  --accent: #F4F4F5;
+  --accent-foreground: #18181B;
+  --destructive: #BE123C;
+  --destructive-foreground: #FFFFFF;
+  --border: #E4E4E7;
+  --input: #E4E4E7;
+  --ring: #147A66;
+  --radius: 0.5rem;
 }
+

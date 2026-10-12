@@ -176,6 +176,67 @@ async function run() {
     console.log('收起态切回业务视图指标:', m7);
     assert.ok(m7.diffTop <= 1, `收起态切回业务视图后必须精确对齐，实际 ${m7.diffTop}`);
 
+    // 切回展开态
+    await page.getByRole('button', { name: '展开侧边栏' }).click();
+    await page.waitForTimeout(400);
+
+    console.log('\n--- 6. 验证在「我的插件」点击平台管理，自动切到「平台插件管理」并对齐 ---');
+    // 在业务视图点击「我的插件」
+    const myPluginsBtn = page.locator('aside').getByRole('button', { name: /我的插件/ });
+    await myPluginsBtn.click();
+    await page.waitForTimeout(400);
+
+    const m6_pre = await getMetrics(page);
+    console.log('业务视图激活我的插件指标:', m6_pre);
+    assert.equal(m6_pre.activeText.includes('我的插件'), true);
+    assert.ok(m6_pre.diffTop <= 1, `业务视图激活我的插件对齐误差必须 <= 1px，实际 ${m6_pre.diffTop}`);
+
+    // 点击平台管理
+    await platformBtn.click();
+    await page.waitForTimeout(600);
+
+    const m6_post = await getMetrics(page);
+    console.log('自动切到平台插件管理指标:', m6_post);
+    assert.equal(m6_post.activeText.includes('平台插件管理'), true, '应自动切换至平台插件管理');
+    assert.ok(m6_post.diffTop <= 1, `切换后平台插件管理对齐误差必须 <= 1px，实际 ${m6_post.diffTop}`);
+
+    console.log('\n--- 7. 验证在「平台插件管理」点击业务视图，自动切到「工作台」并对齐 ---');
+    await businessBtn.click();
+    await page.waitForTimeout(600);
+
+    const m7_post = await getMetrics(page);
+    console.log('从平台插件管理切回业务视图指标:', m7_post);
+    assert.equal(m7_post.activeText.includes('工作台'), true, '应自动重定向至工作台');
+    assert.ok(m7_post.diffTop <= 1, `重定向至工作台后指示器必须对齐，实际 ${m7_post.diffTop}`);
+
+    console.log('\n--- 8. 验证底部「系统与企业设置」在业务视图与平台管理切换时的对齐 ---');
+    const settingsBtn = page.locator('aside').getByRole('button', { name: /系统与企业设置/ });
+    await settingsBtn.click();
+    await page.waitForTimeout(400);
+
+    const m8_biz = await getMetrics(page);
+    console.log('业务视图设置项指标:', m8_biz);
+    assert.equal(m8_biz.activeText.includes('系统与企业设置'), true);
+    assert.ok(m8_biz.diffTop <= 1, `业务视图设置项对齐误差必须 <= 1px，实际 ${m8_biz.diffTop}`);
+
+    // 切换至平台管理
+    await platformBtn.click();
+    await page.waitForTimeout(600);
+
+    const m8_plat = await getMetrics(page);
+    console.log('平台管理视图设置项指标:', m8_plat);
+    assert.equal(m8_plat.activeText.includes('系统与企业设置'), true);
+    assert.ok(m8_plat.diffTop <= 1, `平台管理视图设置项对齐误差必须 <= 1px，实际 ${m8_plat.diffTop}`);
+
+    // 切回业务视图
+    await businessBtn.click();
+    await page.waitForTimeout(600);
+
+    const m8_biz_return = await getMetrics(page);
+    console.log('切回业务视图设置项指标:', m8_biz_return);
+    assert.equal(m8_biz_return.activeText.includes('系统与企业设置'), true);
+    assert.ok(m8_biz_return.diffTop <= 1, `切回业务视图设置项对齐误差必须 <= 1px，实际 ${m8_biz_return.diffTop}`);
+
     console.log('\n✅ 所有视图切换侧边栏指示器对齐测试全部通过！');
   } finally {
     await browser.close();

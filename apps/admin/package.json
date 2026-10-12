@@ -8,9 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node e2e/search-input.test.mjs && node e2e/sidebar-collapse.test.mjs && node e2e/user-menu.test.mjs && node e2e/dashboard-echarts.test.mjs",
+    "test": "node e2e/search-input.test.mjs && node e2e/sidebar-collapse.test.mjs && node e2e/sidebar-view-switch.test.mjs && node e2e/user-menu.test.mjs && node e2e/dashboard-echarts.test.mjs",
     "test:search": "node e2e/search-input.test.mjs",
     "test:sidebar": "node e2e/sidebar-collapse.test.mjs",
+    "test:view-switch": "node e2e/sidebar-view-switch.test.mjs",
     "test:user-menu": "node e2e/user-menu.test.mjs",
     "test:dashboard": "node e2e/dashboard-echarts.test.mjs"
   },

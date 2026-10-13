@@ -8,6 +8,11 @@ pnpm dev
 pnpm lint
 pnpm typecheck
 pnpm build
+pnpm test          # 运行全部 E2E 测试 (包含搜索框对齐、侧边栏折叠/视图切换与用户头像菜单)
+pnpm test:search   # Playwright 搜索框放大镜居中、展开与交互对齐测试
+pnpm test:sidebar  # Playwright 侧边栏折叠/展开对齐测试
+pnpm test:view-switch # Playwright 业务视图与平台管理切换侧边栏指示器对齐测试
+pnpm test:user-menu # Playwright 用户头像下拉菜单（个人信息与退出登录）重构测试
 ```
 
 也可在仓库根目录使用 `pnpm install:admin`、`pnpm dev:admin` 等快捷命令。

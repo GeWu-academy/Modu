@@ -6,6 +6,7 @@ import { CommandPalette } from "../shell/CommandPalette";
 
 import { PageTransition } from "../../shared/components/PageTransition";
 import { ModuleSkeletonRouter } from "../../shared/components/ModuleSkeletons";
+import { AiRemoteBoundary } from "../../modules/ai/AiRemoteBoundary";
 
 // 页面组件按需代码分割懒加载
 const AuthCenter = React.lazy(() => import("../../platform/auth/AuthCenter").then((m) => ({ default: m.AuthCenter })));
@@ -62,7 +63,7 @@ export function AppRouter() {
     else if (currentRoute === "/platform/plugins/install") content = <PluginInstallGuide />;
     else if (currentRoute === "/skills") content = <SkillsView />;
     else if (currentRoute === "/skills/import") content = <SkillImportView />;
-    else if (currentRoute.startsWith("/ai")) content = <AiRemoteView />;
+    else if (currentRoute.startsWith("/ai")) content = <AiRemoteBoundary><AiRemoteView /></AiRemoteBoundary>;
     else if (currentRoute === "/system/audit") content = <AuditView />;
     else if (currentRoute === "/settings") content = <SettingsView />;
 

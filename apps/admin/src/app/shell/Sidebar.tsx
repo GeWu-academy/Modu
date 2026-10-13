@@ -49,6 +49,12 @@ const MAIN_NAV: NavItem[] = [
     path: "/skills",
     icon: <IconSparkles size={16} />,
   },
+  {
+    id: "ai",
+    label: "AI 模块",
+    path: "/ai",
+    icon: <IconSparkles size={16} />,
+  },
 ];
 
 const PLATFORM_NAV: NavItem[] = [

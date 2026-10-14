@@ -11,15 +11,6 @@ export default defineConfig({
     federation({
       name: "admin",
       filename: "remoteEntry.js",
-      remotes: {
-        moduAi: {
-          type: "module",
-          name: "moduAi",
-          entry: "http://localhost:5001/remoteEntry.js",
-          entryGlobalName: "moduAi",
-          shareScope: "default",
-        },
-      },
       shared: {
         react: { singleton: true },
         "react-dom": { singleton: true },

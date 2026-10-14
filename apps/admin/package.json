@@ -16,6 +16,7 @@
     "test:dashboard": "node e2e/dashboard-echarts.test.mjs"
   },
   "dependencies": {
+    "@module-federation/runtime": "^2.9.2",
     "@radix-ui/react-dialog": "^1.2.0",
     "@radix-ui/react-slot": "^1.4.0",
     "class-variance-authority": "^0.7.1",

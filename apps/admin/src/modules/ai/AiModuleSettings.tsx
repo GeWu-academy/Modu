@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { writeAiRemoteConfig, type AiRemoteConfig } from "./remoteConfig";
+import { saveAiRemoteConfig, type AiRemoteConfig } from "./remoteConfig";
 
 interface AiModuleSettingsProps {
   config: AiRemoteConfig;
@@ -9,18 +9,29 @@ interface AiModuleSettingsProps {
 export function AiModuleSettings({ config, onSaved }: AiModuleSettingsProps) {
   const [remoteUrl, setRemoteUrl] = useState(config.remoteUrl);
   const [authToken, setAuthToken] = useState(config.authToken);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const save = () => {
+  const save = async () => {
+    setSaving(true);
+    setMessage(null);
     const next: AiRemoteConfig = { remoteUrl: remoteUrl.trim(), authToken: authToken.trim() };
-    writeAiRemoteConfig(next);
-    onSaved(next);
+    try {
+      await saveAiRemoteConfig(next);
+      onSaved(next);
+      setMessage("已保存");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "保存失败");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="max-w-[640px] rounded-xl border border-zinc-200 bg-white p-5">
       <h2 className="text-sm font-semibold text-zinc-900">Modu-AI 部署配置</h2>
       <p className="mt-1 text-xs text-zinc-500">
-        阶段 A：配置暂存于浏览器本地；阶段 B 将持久化到后端实例设置。
+        部署链接持久化到后端实例设置（PostgreSQL）；访问 Token 暂存本地，用于远程模块调用后端。
       </p>
       <label className="mt-4 block text-xs font-medium text-zinc-600">
         Modu-AI 部署链接（remoteEntry.js）
@@ -41,13 +52,17 @@ export function AiModuleSettings({ config, onSaved }: AiModuleSettingsProps) {
           placeholder="token（可选）"
         />
       </label>
-      <button
-        type="button"
-        className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white"
-        onClick={save}
-      >
-        保存并连接
-      </button>
+      <div className="mt-4 flex items-center gap-3">
+        <button
+          type="button"
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+          onClick={save}
+          disabled={saving}
+        >
+          {saving ? "保存中…" : "保存并连接"}
+        </button>
+        {message && <span className="text-xs text-zinc-500">{message}</span>}
+      </div>
     </div>
   );
 }

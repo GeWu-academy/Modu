@@ -1,18 +1,35 @@
-import { Suspense, lazy, useCallback, useMemo, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { AiRemoteBoundary } from "./AiRemoteBoundary";
 import { AiModuleSettings } from "./AiModuleSettings";
-import { readAiRemoteConfig, type AiRemoteConfig } from "./remoteConfig";
+import { fetchAiRemoteConfig, type AiRemoteConfig } from "./remoteConfig";
 import { loadModuAiRemote } from "./loadModuAiRemote";
 
 export function AiRemoteView() {
-  const [config, setConfig] = useState<AiRemoteConfig>(() => readAiRemoteConfig());
-  // attempt 变化时重建 lazy 组件，使被拒绝的远程 import 能重新发起请求
+  const [config, setConfig] = useState<AiRemoteConfig | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  // attempt 变化时重新拉取配置并重建懒加载组件（重试）
   const [attempt, setAttempt] = useState(0);
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
+  useEffect(() => {
+    let cancelled = false;
+    setConfig(null);
+    setLoadError(null);
+    fetchAiRemoteConfig()
+      .then((next) => {
+        if (!cancelled) setConfig(next);
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) setLoadError(error instanceof Error ? error.message : "读取配置失败");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [attempt]);
+
   const RemoteModuAi = useMemo(
-    () => lazy(() => loadModuAiRemote(config.remoteUrl)),
-    [config.remoteUrl, attempt],
+    () => (config?.remoteUrl ? lazy(() => loadModuAiRemote(config.remoteUrl)) : null),
+    [config?.remoteUrl, attempt],
   );
 
   return (
@@ -24,7 +41,11 @@ export function AiRemoteView() {
         </p>
       </header>
 
-      {config.remoteUrl ? (
+      {loadError ? (
+        <p className="text-sm text-red-600">读取 AI 模块设置失败：{loadError}</p>
+      ) : !config ? (
+        <p className="text-sm text-zinc-500">正在读取 AI 模块设置…</p>
+      ) : config.remoteUrl && RemoteModuAi ? (
         <AiRemoteBoundary resetKey={`${config.remoteUrl}#${attempt}`} onRetry={retry}>
           <Suspense fallback={<p className="text-sm text-zinc-500">正在加载 Modu-AI 远程模块…</p>}>
             <RemoteModuAi
@@ -41,13 +62,15 @@ export function AiRemoteView() {
         <p className="text-sm text-zinc-500">尚未配置 Modu-AI 部署链接，请在下方填写后保存。</p>
       )}
 
-      <AiModuleSettings
-        config={config}
-        onSaved={(next) => {
-          setConfig(next);
-          setAttempt((n) => n + 1);
-        }}
-      />
+      {config && (
+        <AiModuleSettings
+          config={config}
+          onSaved={(next) => {
+            setConfig(next);
+            setAttempt((n) => n + 1);
+          }}
+        />
+      )}
     </div>
   );
 }

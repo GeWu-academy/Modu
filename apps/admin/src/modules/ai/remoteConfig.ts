@@ -3,26 +3,41 @@ export interface AiRemoteConfig {
   authToken: string;
 }
 
-const STORAGE_KEY = "modu-ai.remote-config";
-const EMPTY: AiRemoteConfig = { remoteUrl: "", authToken: "" };
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
+const SETTINGS_PATH = "/v1/ai/module-settings";
+const AUTH_TOKEN_KEY = "modu-ai.auth-token";
 
-/**
- * 阶段 A：以浏览器本地存储作为配置来源的临时实现。
- * 阶段 B 将替换为读写 apps/api 的实例设置接口（保持本模块读写签名不变，便于切换）。
- */
-export function readAiRemoteConfig(): AiRemoteConfig {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return EMPTY;
-    }
-    const parsed = JSON.parse(raw) as Partial<AiRemoteConfig>;
-    return { remoteUrl: parsed.remoteUrl?.trim() ?? "", authToken: parsed.authToken ?? "" };
-  } catch {
-    return EMPTY;
+/** 从后端读取 AI 模块设置（实例级持久化）。 */
+export async function fetchAiRemoteConfig(): Promise<AiRemoteConfig> {
+  const response = await fetch(`${API_BASE}${SETTINGS_PATH}`);
+  if (!response.ok) {
+    throw new Error(`读取 AI 模块设置失败（HTTP ${response.status}）`);
   }
+  const data = (await response.json()) as { remoteUrl?: string };
+  return { remoteUrl: data.remoteUrl?.trim() ?? "", authToken: readAuthToken() };
 }
 
-export function writeAiRemoteConfig(config: AiRemoteConfig): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+/** 保存 AI 模块设置到后端。 */
+export async function saveAiRemoteConfig(config: AiRemoteConfig): Promise<void> {
+  const response = await fetch(`${API_BASE}${SETTINGS_PATH}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ remoteUrl: config.remoteUrl }),
+  });
+  if (!response.ok) {
+    throw new Error(`保存 AI 模块设置失败（HTTP ${response.status}）`);
+  }
+  writeAuthToken(config.authToken);
+}
+
+/**
+ * 访问 Token 暂存浏览器本地。
+ * 注：真正的签发/下发由平台认证负责（Phase C），届时改为后端下发。
+ */
+export function readAuthToken(): string {
+  return localStorage.getItem(AUTH_TOKEN_KEY) ?? "";
+}
+
+export function writeAuthToken(token: string): void {
+  localStorage.setItem(AUTH_TOKEN_KEY, token);
 }

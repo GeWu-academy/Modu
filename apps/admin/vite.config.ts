@@ -11,6 +11,9 @@ export default defineConfig({
     federation({
       name: "admin",
       filename: "remoteEntry.js",
+      // 关闭「动态远程类型提示」运行时插件：它指向 @module-federation/dts-plugin 的
+      // Node 端入口，会被 Vite 依赖预构建打包并拉起 playwright-core/fsevents 等原生依赖而报错。
+      dev: { disableDynamicRemoteTypeHints: true },
       shared: {
         react: { singleton: true },
         "react-dom": { singleton: true },
@@ -20,6 +23,14 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
     },
   },
   build: {

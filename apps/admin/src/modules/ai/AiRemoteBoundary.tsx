@@ -1,4 +1,4 @@
-{import React from "react";
+import React from "react";
 import { IconRefresh, IconSparkles } from "../../shared/components/Icons";
 
 interface AiRemoteBoundaryProps {

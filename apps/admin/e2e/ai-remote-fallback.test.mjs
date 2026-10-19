@@ -74,15 +74,16 @@ async function run() {
   const page = await context.newPage();
 
   try {
+    // AI 模块设置现由后端提供；模拟后端返回一个远程地址，才能进入“远程加载失败”分支
+    await context.route('**/api/v1/ai/module-settings', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ remoteUrl: 'http://localhost:5001/remoteEntry.js' }),
+      }),
+    );
+
     await page.goto(`http://localhost:${port}/`, { waitUntil: 'load' });
-    // 阶段 A 的配置来源为 localStorage，先写入一个远程地址，才能进入“远程加载失败”分支
-    await page.evaluate(() => {
-      window.localStorage.setItem(
-        'modu-ai.remote-config',
-        JSON.stringify({ remoteUrl: 'http://localhost:5001/remoteEntry.js', authToken: '' }),
-      );
-    });
-    await page.reload({ waitUntil: 'load' });
     await page.waitForSelector('aside[aria-label="侧边主导航栏"]');
     await page.waitForTimeout(400);
 

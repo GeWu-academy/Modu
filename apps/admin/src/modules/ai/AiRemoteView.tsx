@@ -13,7 +13,7 @@ export function AiRemoteView() {
 
   useEffect(() => {
     let cancelled = false;
-    setConfig(null);
+    // 重试/保存后重新拉取配置时保留当前配置，避免设置面板被卸载（丢失「测试链接」结果提示）
     setLoadError(null);
     fetchAiRemoteConfig()
       .then((next) => {
@@ -50,7 +50,6 @@ export function AiRemoteView() {
           <Suspense fallback={<p className="text-sm text-zinc-500">正在加载 Modu-AI 远程模块…</p>}>
             <RemoteModuAi
               context={{
-                token: config.authToken || undefined,
                 tenantId: "t_modu",
                 displayName: "平台管理员",
                 themeMode: "light",
@@ -59,7 +58,9 @@ export function AiRemoteView() {
           </Suspense>
         </AiRemoteBoundary>
       ) : (
-        <p className="text-sm text-zinc-500">尚未配置 Modu-AI 部署链接，请在下方填写后保存。</p>
+        <p className="text-sm text-zinc-500">
+          尚未配置 Modu-AI 部署链接，请在下方填写部署地址并点击「测试链接」。
+        </p>
       )}
 
       {config && (

@@ -50,7 +50,9 @@ async function launchChromium() {
     if (fs.existsSync(exePath)) {
       try {
         return await chromium.launch({ executablePath: exePath, headless: true });
-      } catch {}
+      } catch {
+        // try next
+      }
     }
   }
   return await chromium.launch({ headless: true });

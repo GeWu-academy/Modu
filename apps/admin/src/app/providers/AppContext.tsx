@@ -172,7 +172,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     try {
       const saved = localStorage.getItem("modu_admin_active_view");
       if (saved === "platform" || saved === "business") return saved;
-    } catch {}
+    } catch {
+      // 本地存储不可用时忽略
+    }
     return "business";
   });
 
@@ -180,7 +182,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setActiveView(view);
     try {
       localStorage.setItem("modu_admin_active_view", view);
-    } catch {}
+    } catch {
+      // 本地存储不可用时忽略
+    }
   }, []);
   const [isCmdKOpen, setCmdKOpen] = useState(false);
 

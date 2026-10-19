@@ -4,14 +4,27 @@ import (
 	"log"
 	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/GeWu-academy/Modu/apps/api/internal/infrastructure/database"
+	"github.com/GeWu-academy/Modu/apps/api/internal/modules/ai"
+	transporthttp "github.com/GeWu-academy/Modu/apps/api/internal/transport/http"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok"})
-	})
+	dsn := os.Getenv("API_DATABASE_URL")
+	if dsn == "" {
+		log.Fatal("API_DATABASE_URL is required")
+	}
+
+	db, err := database.Open(dsn)
+	if err != nil {
+		log.Fatalf("connect database: %v", err)
+	}
+	if err := database.Migrate(db); err != nil {
+		log.Fatalf("run migrations: %v", err)
+	}
+
+	settingsService := ai.NewService(ai.NewGormRepository(db))
+	router := transporthttp.NewRouter(settingsService, os.Getenv("API_ADMIN_TOKEN"))
 
 	port := os.Getenv("API_PORT")
 	if port == "" {

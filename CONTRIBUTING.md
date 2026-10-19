@@ -10,7 +10,7 @@
 ## Small-MVP task records
 
 Follow the workflow in [AGENTS.md](./AGENTS.md). Before substantive work, create
-`changes/YYYY-MM-DD-NN-short-topic/plan.md` and `result.md`. Record the goal,
+`changes/<date>/NN-short-topic/plan.md` (e.g. `changes/10-11/01-short-topic/plan.md`) and `result.md`. Record the goal,
 included/excluded scope, expected files, steps, and acceptance criteria in the plan;
 keep the result checklist, actual changes, and verification outcomes up to date.
 Follow-ups for the same goal reuse its directory. Record scope changes before

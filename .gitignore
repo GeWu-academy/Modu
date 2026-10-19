@@ -1,9 +1,13 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 
 # Build output
 dist/
 coverage/
+
+# Module Federation generated remote type definitions
+**/@mf-types/
 
 # Environment
 .env
@@ -22,3 +26,4 @@ apps/api/*.test
 # Local documentation: ignore all files and nested directories without exceptions.
 /docs/
 /changes/
+/.commandcode/

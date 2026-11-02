@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/GeWu-academy/Modu/apps/api/internal/infrastructure/database"
-	"github.com/GeWu-academy/Modu/apps/api/internal/modules/ai"
 	transporthttp "github.com/GeWu-academy/Modu/apps/api/internal/transport/http"
 )
 
@@ -23,8 +22,7 @@ func main() {
 		log.Fatalf("run migrations: %v", err)
 	}
 
-	settingsService := ai.NewService(ai.NewGormRepository(db))
-	router := transporthttp.NewRouter(settingsService, os.Getenv("API_ADMIN_TOKEN"))
+	router := transporthttp.NewRouter(os.Getenv("API_ADMIN_TOKEN"))
 
 	port := os.Getenv("API_PORT")
 	if port == "" {

@@ -12,50 +12,6 @@ paths:
       responses:
         "200":
           description: Service is healthy
-  /api/v1/ai/module-settings:
-    get:
-      operationId: getAiModuleSettings
-      summary: 读取 AI 模块设置
-      responses:
-        "200":
-          description: 当前设置
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AiModuleSettings"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-    put:
-      operationId: updateAiModuleSettings
-      summary: 更新 AI 模块设置
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - remoteUrl
-              properties:
-                remoteUrl:
-                  type: string
-                  description: Modu-AI 部署链接（remoteEntry.js）；空字符串表示清除
-                  example: https://ai.example.com/remoteEntry.js
-      responses:
-        "200":
-          description: 已保存
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AiModuleSettings"
-        "400":
-          description: 请求体或链接非法
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
 components:
   securitySchemes:
     adminToken:
@@ -63,16 +19,6 @@ components:
       scheme: bearer
       description: 过渡期静态管理 token（Phase C 替换为真实身份）
   schemas:
-    AiModuleSettings:
-      type: object
-      required:
-        - remoteUrl
-      properties:
-        remoteUrl:
-          type: string
-        updatedAt:
-          type: string
-          format: date-time
     Error:
       type: object
       required:

@@ -6,7 +6,6 @@ import { CommandPalette } from "../shell/CommandPalette";
 
 import { PageTransition } from "../../shared/components/PageTransition";
 import { ModuleSkeletonRouter } from "../../shared/components/ModuleSkeletons";
-import { AiRemoteBoundary } from "../../modules/ai/AiRemoteBoundary";
 
 // 页面组件按需代码分割懒加载
 const AuthCenter = React.lazy(() => import("../../platform/auth/AuthCenter").then((m) => ({ default: m.AuthCenter })));
@@ -17,7 +16,6 @@ const PlatformPluginsView = React.lazy(() => import("../../platform/plugin-manag
 const PluginInstallGuide = React.lazy(() => import("../../platform/plugin-management/PluginInstallGuide").then((m) => ({ default: m.PluginInstallGuide })));
 const SkillsView = React.lazy(() => import("../../modules/skills/SkillsView").then((m) => ({ default: m.SkillsView })));
 const SkillImportView = React.lazy(() => import("../../modules/skills/SkillImportView").then((m) => ({ default: m.SkillImportView })));
-const AiRemoteView = React.lazy(() => import("../../modules/ai/AiRemoteView").then((m) => ({ default: m.AiRemoteView })));
 const AuditView = React.lazy(() => import("../../platform/audit/AuditView").then((m) => ({ default: m.AuditView })));
 const SettingsView = React.lazy(() => import("../../platform/settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 
@@ -63,7 +61,6 @@ export function AppRouter() {
     else if (currentRoute === "/platform/plugins/install") content = <PluginInstallGuide />;
     else if (currentRoute === "/skills") content = <SkillsView />;
     else if (currentRoute === "/skills/import") content = <SkillImportView />;
-    else if (currentRoute.startsWith("/ai")) content = <AiRemoteBoundary><AiRemoteView /></AiRemoteBoundary>;
     else if (currentRoute === "/system/audit") content = <AuditView />;
     else if (currentRoute === "/settings") content = <SettingsView />;
 

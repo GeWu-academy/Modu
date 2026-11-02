@@ -8,16 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node e2e/search-input.test.mjs && node e2e/sidebar-collapse.test.mjs && node e2e/sidebar-view-switch.test.mjs && node e2e/user-menu.test.mjs && node e2e/dashboard-echarts.test.mjs && node e2e/ai-remote-fallback.test.mjs && node e2e/ai-module-settings.test.mjs",
+    "test": "node e2e/search-input.test.mjs && node e2e/sidebar-collapse.test.mjs && node e2e/sidebar-view-switch.test.mjs && node e2e/user-menu.test.mjs && node e2e/dashboard-echarts.test.mjs",
     "test:search": "node e2e/search-input.test.mjs",
     "test:sidebar": "node e2e/sidebar-collapse.test.mjs",
     "test:view-switch": "node e2e/sidebar-view-switch.test.mjs",
     "test:user-menu": "node e2e/user-menu.test.mjs",
-    "test:dashboard": "node e2e/dashboard-echarts.test.mjs",
-    "test:ai-settings": "node e2e/ai-module-settings.test.mjs"
+    "test:dashboard": "node e2e/dashboard-echarts.test.mjs"
   },
   "dependencies": {
-    "@module-federation/runtime": "^2.9.2",
     "@radix-ui/react-dialog": "^1.2.0",
     "@radix-ui/react-slot": "^1.4.0",
     "class-variance-authority": "^0.7.1",
@@ -33,7 +31,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@module-federation/vite": "^1.23.5",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

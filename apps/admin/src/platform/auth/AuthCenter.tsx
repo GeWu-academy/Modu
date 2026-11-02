@@ -4,7 +4,6 @@ import { useToast } from "../../shared/components/Toast";
 import {
   IconUser,
   IconMail,
-  IconPhone,
   IconLock,
   IconEye,
   IconEyeOff,
@@ -31,8 +30,6 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
-  const [areaCode, setAreaCode] = useState("+86");
   const [showPassword, setShowPassword] = useState(false);
 
   // 表单容器高度随当前表单内容平滑变化
@@ -59,27 +56,6 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
       }
     : null;
 
-  // 密码强度评估 (4段式)
-  const getPasswordStrength = (pwd: string) => {
-    if (!pwd) return 0;
-    let score = 0;
-    if (pwd.length >= 8) score++;
-    if (/[a-zA-Z]/.test(pwd)) score++;
-    if (/[0-9]/.test(pwd)) score++;
-    if (/[^a-zA-Z0-9]/.test(pwd)) score++;
-    return score;
-  };
-
-  const passwordStrength = getPasswordStrength(password);
-
-  const getStrengthText = (score: number) => {
-    if (score === 0) return "";
-    if (score <= 1) return "密码强度：弱 (建议增加长度与组合)";
-    if (score <= 2) return "密码强度：中等 (含字母与数字)";
-    if (score <= 3) return "密码强度：良好 (包含大小写与数字)";
-    return "密码强度：极强 (包含特殊字符)";
-  };
-
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -92,16 +68,12 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
 
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !email || !phone || !password) {
-      toast.warning("请填写完整的用户名、工作邮箱、手机号与密码");
+    if (!username || !email) {
+      toast.warning("请填写用户名与工作邮箱");
       return;
     }
     if (username.length < 3) {
       toast.error("用户名长度至少为 3 个字符");
-      return;
-    }
-    if (password.length < 8) {
-      toast.error("密码长度至少为 8 个字符");
       return;
     }
 
@@ -112,7 +84,6 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
       username,
       displayName: username,
       email,
-      phone: `${areaCode} ${phone}`,
       role: assignedRole,
       companyName: activeInvite ? undefined : trimmedCompany,
     });
@@ -277,7 +248,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               alignItems: "flex-start",
               justifyContent: "space-between",
               gap: "1rem",
-              marginBottom: "1.75rem",
+              marginBottom: mode === "login" ? "1.75rem" : "1.25rem",
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -417,7 +388,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                 /* ── 注册表单 ── */
                 <form
                   onSubmit={handleRegisterSubmit}
-                  style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+                  style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
                 >
                   {/* 公司名（仅非受邀） */}
                   {!activeInvite && (
@@ -502,100 +473,6 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                     </div>
                   </div>
 
-                  {/* 手机号 */}
-                  <div>
-                    <label style={labelStyle}>手机号码</label>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                      <select
-                        value={areaCode}
-                        onChange={(e) => setAreaCode(e.target.value)}
-                        className="input-control"
-                        style={{
-                          width: "104px",
-                          height: "46px",
-                          borderRadius: "10px",
-                          padding: "0 0.5rem",
-                          fontSize: "0.8125rem",
-                        }}
-                      >
-                        <option value="+86">+86 中国</option>
-                        <option value="+852">+852 港</option>
-                        <option value="+1">+1 美国</option>
-                        <option value="+65">+65 新加坡</option>
-                      </select>
-                      <div style={{ position: "relative", flex: 1 }}>
-                        <span style={iconLeft}>
-                          <IconPhone size={16} />
-                        </span>
-                        <input
-                          type="tel"
-                          required
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          placeholder="请输入手机号码"
-                          className="input-control"
-                          style={inputBase}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 密码 */}
-                  <div>
-                    <label style={labelStyle}>设置登录密码（至少 8 位）</label>
-                    <div style={inputWrap}>
-                      <span style={iconLeft}>
-                        <IconLock size={16} />
-                      </span>
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="8–32 位，含字母与数字"
-                        className="input-control"
-                        style={{ ...inputBase, paddingRight: "2.75rem" }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        style={passwordToggleStyle}
-                      >
-                        {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
-                      </button>
-                    </div>
-                    {password && (
-                      <div style={{ marginTop: "0.5rem" }}>
-                        <div style={{ display: "flex", gap: "4px", height: "4px" }}>
-                          {[1, 2, 3, 4].map((step) => {
-                            let fillBg = "var(--zinc-200)";
-                            if (passwordStrength >= step) {
-                              if (passwordStrength <= 1) fillBg = "var(--semantic-danger-fg)";
-                              else if (passwordStrength <= 2) fillBg = "var(--zinc-500)";
-                              else fillBg = "var(--semantic-success-fg)";
-                            }
-                            return (
-                              <div
-                                key={step}
-                                style={{
-                                  flex: 1,
-                                  backgroundColor: fillBg,
-                                  borderRadius: "2px",
-                                  transition: "background-color 200ms ease",
-                                }}
-                              />
-                            );
-                          })}
-                        </div>
-                        <div
-                          style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "4px" }}
-                        >
-                          {getStrengthText(passwordStrength)}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
                   {/* 注册按钮 */}
                   <button
                     type="submit"
@@ -623,7 +500,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               display: "flex",
               alignItems: "center",
               gap: "0.75rem",
-              margin: "1.5rem 0 1.25rem",
+              margin: mode === "login" ? "1.5rem 0 1.25rem" : "1.25rem 0 1rem",
             }}
           >
             <div style={{ flex: 1, height: "1px", backgroundColor: "var(--zinc-200)" }} />
@@ -668,7 +545,7 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
           {/* 协议说明 */}
           <div
             style={{
-              marginTop: "1.25rem",
+              marginTop: mode === "login" ? "1.25rem" : "1rem",
               fontSize: "0.6875rem",
               color: "var(--zinc-400)",
               textAlign: "center",

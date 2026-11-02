@@ -82,7 +82,7 @@ interface AppContextValue {
     username: string;
     displayName?: string;
     email: string;
-    phone: string;
+    phone?: string;
     role: string;
     companyName?: string;
   }) => void;
@@ -772,7 +772,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     username: string;
     displayName?: string;
     email: string;
-    phone: string;
+    phone?: string;
     role: string;
     companyName?: string;
   }) => {
@@ -781,7 +781,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       username: data.username,
       displayName: data.displayName || data.username,
       email: data.email,
-      phone: data.phone,
+      phone: data.phone ?? "",
       role: data.role,
       status: "active",
       createdAt: new Date().toISOString().replace("T", " ").substring(0, 16),

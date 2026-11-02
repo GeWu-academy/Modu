@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useApp } from "../../app/providers/AppContext";
-import { ParticleCanvas } from "../../shared/components/ParticleCanvas";
-import { TiltCard } from "../../shared/components/TiltCard";
 import { useToast } from "../../shared/components/Toast";
 import {
   IconUser,
@@ -14,11 +12,7 @@ import {
   IconGithub,
   IconBuilding,
   IconCheck,
-  IconShield,
-  IconZap,
-  IconSparkles,
 } from "../../shared/components/Icons";
-import { StatusIndicator } from "../../shared/components/StatusIndicator";
 
 interface AuthCenterProps {
   initialInviteToken?: string;
@@ -128,273 +122,85 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
     }, 600);
   };
 
+  // ── 共用样式常量 ──────────────────────────────────────────────────────────
+  const inputWrap: React.CSSProperties = { position: "relative" };
+
+  const iconLeft: React.CSSProperties = {
+    position: "absolute",
+    left: "0.875rem",
+    top: "50%",
+    transform: "translateY(-50%)",
+    color: "var(--zinc-400)",
+    display: "flex",
+    alignItems: "center",
+    pointerEvents: "none",
+  };
+
+  // 登录模式输入框略高，注册模式紧凑
+  const inputBase: React.CSSProperties = {
+    paddingLeft: "2.5rem",
+    borderRadius: "10px",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontSize: "0.8125rem",
+    fontWeight: 500,
+    color: "var(--zinc-700)",
+    marginBottom: "0.375rem",
+  };
+
   return (
     <div
       style={{
-        minHeight: "100vh",
+        /* height 固定 100vh，背景不随内容高度变化而位移 */
+        height: "100vh",
+        overflow: "hidden",
         display: "flex",
-        backgroundColor: "var(--canvas-bg)",
+        alignItems: "stretch",
+        justifyContent: "flex-end",
+        position: "relative",
+        backgroundImage: "url('/login-bg.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
       {/* =========================================================================
-          左侧：企业品牌与视觉背书画卷区 (占比 45%，纯白微扩散画布 + 42颗微粒)
+          右侧：悬浮白卡容器，自身支持纵向平滑滚动，并保证最小屏幕下不截断顶部
           ========================================================================= */}
       <div
         style={{
-          width: "45%",
-          minHeight: "100vh",
-          backgroundColor: "#FFFFFF",
-          borderRight: "1px solid var(--zinc-200)",
-          position: "relative",
-          overflow: "hidden",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "3.5rem 3rem",
-        }}
-      >
-        {/* 背景微漫射与 42 颗纯白冷翠微尘 Canvas */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "var(--gradient-white-ambient)",
-            pointerEvents: "none",
-          }}
-        />
-        <ParticleCanvas particleCount={42} interactive={true} enableLinks={true} />
-
-        {/* 顶部：品牌 Logo 与标语 */}
-        <div style={{ position: "relative", zIndex: 10 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.25rem" }}>
-            <img
-              src="/logo.webp"
-              alt="Modu Logo"
-              style={{
-                width: "44px",
-                height: "44px",
-                objectFit: "contain",
-                display: "block",
-              }}
-            />
-            <div>
-              <div style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--zinc-950)" }}>
-                Modu
-              </div>
-              <div style={{ fontSize: "0.8125rem", color: "var(--zinc-500)" }}>
-                企业级敏捷自托管 ERP 管理底座
-              </div>
-            </div>
-          </div>
-
-          <h2
-            style={{
-              fontSize: "1.75rem",
-              fontWeight: 700,
-              lineHeight: 1.3,
-              color: "var(--zinc-950)",
-              margin: "1.5rem 0 0.5rem 0",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {currentCompany.name?.trim() ? currentCompany.name.trim() : "Modu 企业管理底座"}
-          </h2>
-          <p style={{ fontSize: "0.9375rem", color: "var(--zinc-600)", margin: 0, maxWidth: "420px" }}>
-            为单企业量身定制的独立数据主权管理平台，告别多租户数据泄露风险与笨重预制流程。
-          </p>
-        </div>
-
-        {/* 中部：三大微透悬浮水晶晶片 (Translucent Glass Chips) */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 10,
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.875rem",
-            margin: "2.5rem 0",
-          }}
-        >
-          <TiltCard
-            variant="glass"
-            style={{
-              padding: "0.875rem 1rem",
-              borderRadius: "10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.875rem",
-              border: "1px solid rgba(228, 228, 231, 0.7)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "8px",
-                  backgroundColor: "var(--brand-50)",
-                  color: "var(--brand-600)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <IconShield size={18} />
-              </div>
-              <div>
-                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
-                  独享本地数据主权
-                </div>
-                <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
-                  单企业专属实例独立部署，绝无跨租户数据池穿透风险。
-                </div>
-              </div>
-            </div>
-          </TiltCard>
-
-          <TiltCard
-            variant="glass"
-            style={{
-              padding: "0.875rem 1rem",
-              borderRadius: "10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.875rem",
-              border: "1px solid rgba(228, 228, 231, 0.7)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "8px",
-                  backgroundColor: "var(--brand-50)",
-                  color: "var(--brand-600)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <IconZap size={18} />
-              </div>
-              <div>
-                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
-                  渐进式插件无缝热插拔
-                </div>
-                <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
-                  通用底座不预置死板行业表单，按需启用 CRM、合同与仓储模块。
-                </div>
-              </div>
-            </div>
-          </TiltCard>
-
-          <TiltCard
-            variant="glass"
-            style={{
-              padding: "0.875rem 1rem",
-              borderRadius: "10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.875rem",
-              border: "1px solid rgba(228, 228, 231, 0.7)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "8px",
-                  backgroundColor: "var(--brand-50)",
-                  color: "var(--brand-600)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <IconSparkles size={18} />
-              </div>
-              <div>
-                <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--zinc-900)" }}>
-                  零信任安全与分域审计
-                </div>
-                <div style={{ fontSize: "0.75rem", color: "var(--zinc-500)", marginTop: "2px" }}>
-                  账号维护、平台插件与本人业务分域审计，不可篡改。
-                </div>
-              </div>
-            </div>
-          </TiltCard>
-        </div>
-
-        {/* 底部：版本与节点状态 */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: "0.75rem",
-            color: "var(--zinc-400)",
-          }}
-        >
-          <span>{currentCompany.version} · Release Candidate</span>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.375rem",
-              padding: "0.2rem 0.5rem",
-              borderRadius: "9999px",
-              backgroundColor: "rgba(240, 253, 244, 0.8)",
-              border: "1px solid rgba(187, 247, 208, 0.9)",
-              color: "var(--brand-700)",
-              fontWeight: 500,
-            }}
-          >
-            <StatusIndicator variant="signal" />
-            <span>自托管节点正常运转</span>
-          </div>
-        </div>
-      </div>
-
-      {/* =========================================================================
-          右侧：核心认证与受邀表单卡片区 (占比 55%，居中 440px 黄金视宽)
-          ========================================================================= */}
-      <div
-        style={{
-          width: "55%",
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
           justifyContent: "center",
-          padding: "3rem 2rem",
-          backgroundColor: "#FAFAFA",
+          overflowY: "auto",
+          padding: "1.25rem 2rem",
+          marginRight: "7%",
+          flexShrink: 0,
         }}
       >
         <div
           style={{
-            width: "100%",
-            maxWidth: "440px",
+            width: "430px",
+            margin: "auto 0",
             backgroundColor: "#FFFFFF",
-            borderRadius: "14px",
-            border: "1px solid var(--zinc-200)",
-            boxShadow: "var(--shadow-elevation-2)",
-            padding: "2.25rem",
+            borderRadius: "20px",
+            border: "1px solid rgba(226, 232, 240, 0.5)",
+            boxShadow:
+              "0 24px 64px -12px rgba(15, 23, 42, 0.16), 0 8px 24px -4px rgba(15, 23, 42, 0.08)",
+            padding: mode === "login" ? "2rem 2.25rem" : "1.5rem 2rem",
           }}
         >
-          {/* 受邀模式：微透冷杉流光信任横幅 */}
+          {/* 受邀模式横幅 */}
           {activeInvite && (
             <div
               className="glass-spruce"
               style={{
-                padding: "0.875rem 1rem",
-                borderRadius: "8px",
-                marginBottom: "1.5rem",
+                padding: "0.625rem 0.875rem",
+                borderRadius: "10px",
+                marginBottom: mode === "login" ? "1.25rem" : "0.75rem",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -415,20 +221,14 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                   <IconBuilding size={14} />
                   <span>您已受邀加入当前企业</span>
                 </div>
-                <div
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "var(--zinc-600)",
-                    marginTop: "2px",
-                  }}
-                >
+                <div style={{ fontSize: "0.75rem", color: "var(--zinc-600)", marginTop: "2px" }}>
                   邀请人：{activeInvite.creatorName} · 预设：{activeInvite.presetRole}
                 </div>
               </div>
               <span
                 style={{
                   fontSize: "0.6875rem",
-                  padding: "0.125rem 0.5rem",
+                  padding: "0.2rem 0.625rem",
                   borderRadius: "9999px",
                   backgroundColor: "rgba(240, 253, 244, 0.9)",
                   border: "1px solid rgba(187, 247, 208, 0.9)",
@@ -442,28 +242,30 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
             </div>
           )}
 
-          {/* 切换 Tab：登录 / 注册 */}
+          {/* 标题区与模式切换 */}
           <div
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               justifyContent: "space-between",
-              marginBottom: "1.5rem",
+              marginBottom: mode === "login" ? "1.5rem" : "1rem",
             }}
           >
             <div>
               <h1
                 style={{
-                  fontSize: "1.375rem",
+                  fontSize: mode === "login" ? "1.625rem" : "1.45rem",
                   fontWeight: 700,
                   color: "var(--zinc-950)",
                   margin: 0,
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.2,
                 }}
               >
                 {mode === "login"
                   ? "欢迎回来"
                   : activeInvite
-                  ? "创建您的受邀账号"
+                  ? "创建受邀账号"
                   : "注册管理员账号"}
               </h1>
               <p
@@ -471,48 +273,47 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                   fontSize: "0.8125rem",
                   color: "var(--zinc-500)",
                   margin: "0.25rem 0 0 0",
+                  lineHeight: 1.4,
                 }}
               >
                 {mode === "login"
                   ? "请输入您的电子邮箱与密码进入控制台"
                   : activeInvite
-                  ? "完成四项基础资料即可加入本企业实例"
-                  : "设置管理员账号，并可指定所属公司名称（选填）"}
+                  ? "完成基础资料即可加入本企业实例"
+                  : "设置管理员账号，可指定所属公司名称"}
               </p>
             </div>
             <button
               onClick={() => setMode(mode === "login" ? "register" : "login")}
               className="btn-ghost btn-sm"
               style={{
-                fontSize: "0.75rem",
+                fontSize: "0.8125rem",
                 color: "var(--brand-600)",
                 fontWeight: 600,
+                flexShrink: 0,
+                marginTop: "2px",
+                whiteSpace: "nowrap",
               }}
             >
               {mode === "login"
                 ? activeInvite
-                  ? "受邀注册 ->"
-                  : "管理员注册 ->"
-                : "已有账号登录 ->"}
+                  ? "受邀注册 →"
+                  : "管理员注册 →"
+                : "已有账号 →"}
             </button>
           </div>
 
-          {/* 表单区域 */}
+          {/* ── 登录表单 ─────────────────────────────────── */}
           {mode === "login" ? (
-            /* 登录表单 (仅邮箱 + 密码) */
-            <form onSubmit={handleLoginSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <form
+              onSubmit={handleLoginSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
+            >
+              {/* 邮箱 */}
               <div>
-                <label className="input-label">工作邮箱</label>
-                <div style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: "0.75rem",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      color: "var(--zinc-400)",
-                    }}
-                  >
+                <label style={labelStyle}>工作邮箱</label>
+                <div style={inputWrap}>
+                  <span style={iconLeft}>
                     <IconMail size={16} />
                   </span>
                   <input
@@ -522,25 +323,16 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@company.com"
                     className="input-control"
-                    style={{ paddingLeft: "2.25rem" }}
+                    style={{ ...inputBase, height: "48px", fontSize: "0.9375rem" }}
                   />
                 </div>
               </div>
 
+              {/* 密码 */}
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <label className="input-label">登录密码</label>
-                </div>
-                <div style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: "0.75rem",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      color: "var(--zinc-400)",
-                    }}
-                  >
+                <label style={labelStyle}>登录密码</label>
+                <div style={inputWrap}>
+                  <span style={iconLeft}>
                     <IconLock size={16} />
                   </span>
                   <input
@@ -550,14 +342,14 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="请输入密码"
                     className="input-control"
-                    style={{ paddingLeft: "2.25rem", paddingRight: "2.25rem" }}
+                    style={{ ...inputBase, height: "48px", fontSize: "0.9375rem", paddingRight: "2.75rem" }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     style={{
                       position: "absolute",
-                      right: "0.75rem",
+                      right: "0.875rem",
                       top: "50%",
                       transform: "translateY(-50%)",
                       background: "none",
@@ -565,6 +357,8 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                       cursor: "pointer",
                       color: "var(--zinc-400)",
                       padding: 0,
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
                     {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
@@ -572,63 +366,55 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                 </div>
               </div>
 
+              {/* 登录按钮 */}
               <button
                 type="submit"
                 className="btn btn-primary"
-                style={{ width: "100%", marginTop: "0.5rem", height: "42px" }}
+                style={{
+                  width: "100%",
+                  height: "48px",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  borderRadius: "10px",
+                  marginTop: "0.125rem",
+                  letterSpacing: "0.01em",
+                }}
               >
                 立即登录
               </button>
             </form>
           ) : (
-            /* 注册表单 (管理员模式含企业名称，邀请模式直绑当前企业) */
-            <form onSubmit={handleRegisterSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+            /* ── 注册表单：高紧凑优化，彻底消除溢出并适配完整单屏 ── */
+            <form
+              onSubmit={handleRegisterSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}
+            >
+              {/* 公司名（仅非受邀） */}
               {!activeInvite && (
                 <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <label className="input-label">所属公司 / 企业名称</label>
-                    <span style={{ fontSize: "0.75rem", color: "var(--zinc-400)" }}>选填，留空则不展示</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }}>
+                    <label style={{ ...labelStyle, marginBottom: 0, fontSize: "0.75rem" }}>所属公司 / 企业名称</label>
+                    <span style={{ fontSize: "0.6875rem", color: "var(--zinc-400)" }}>选填</span>
                   </div>
-                  <div style={{ position: "relative" }}>
-                    <span
-                      style={{
-                        position: "absolute",
-                        left: "0.75rem",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        color: "var(--zinc-400)",
-                      }}
-                    >
-                      <IconBuilding size={16} />
-                    </span>
+                  <div style={inputWrap}>
+                    <span style={iconLeft}><IconBuilding size={14} /></span>
                     <input
                       type="text"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       placeholder="例如：智汇未来科技有限公司（选填）"
                       className="input-control"
-                      style={{ paddingLeft: "2.25rem" }}
+                      style={{ ...inputBase, height: "38px", fontSize: "0.8125rem" }}
                     />
                   </div>
-                  <p style={{ fontSize: "0.6875rem", color: "var(--zinc-500)", margin: "0.25rem 0 0 0" }}>
-                    初始注册设置。若填写将在系统顶栏与受邀界面展示；若未填写则不展示当前公司名。
-                  </p>
                 </div>
               )}
+
+              {/* 用户名 */}
               <div>
-                <label className="input-label">用户名 (3-32位展示标识)</label>
-                <div style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: "0.75rem",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      color: "var(--zinc-400)",
-                    }}
-                  >
-                    <IconUser size={16} />
-                  </span>
+                <label style={{ ...labelStyle, marginBottom: "0.25rem", fontSize: "0.75rem" }}>用户名（3–32 位展示标识）</label>
+                <div style={inputWrap}>
+                  <span style={iconLeft}><IconUser size={14} /></span>
                   <input
                     type="text"
                     required
@@ -636,38 +422,21 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="请输入用户名，如 zhangsan"
                     className="input-control"
-                    style={{ paddingLeft: "2.25rem" }}
+                    style={{ ...inputBase, height: "38px", fontSize: "0.8125rem" }}
                   />
                   {username.length >= 3 && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "0.75rem",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        color: "var(--brand-600)",
-                      }}
-                    >
-                      <IconCheck size={16} />
+                    <span style={{ position: "absolute", right: "0.875rem", top: "50%", transform: "translateY(-50%)", color: "var(--brand-600)", display: "flex", alignItems: "center" }}>
+                      <IconCheck size={14} />
                     </span>
                   )}
                 </div>
               </div>
 
+              {/* 工作邮箱 */}
               <div>
-                <label className="input-label">工作邮箱</label>
-                <div style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: "0.75rem",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      color: "var(--zinc-400)",
-                    }}
-                  >
-                    <IconMail size={16} />
-                  </span>
+                <label style={{ ...labelStyle, marginBottom: "0.25rem", fontSize: "0.75rem" }}>工作邮箱</label>
+                <div style={inputWrap}>
+                  <span style={iconLeft}><IconMail size={14} /></span>
                   <input
                     type="email"
                     required
@@ -675,37 +444,28 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@company.com"
                     className="input-control"
-                    style={{ paddingLeft: "2.25rem" }}
+                    style={{ ...inputBase, height: "38px", fontSize: "0.8125rem" }}
                   />
                 </div>
               </div>
 
+              {/* 手机号 */}
               <div>
-                <label className="input-label">手机号码</label>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
+                <label style={{ ...labelStyle, marginBottom: "0.25rem", fontSize: "0.75rem" }}>手机号码</label>
+                <div style={{ display: "flex", gap: "0.375rem" }}>
                   <select
                     value={areaCode}
                     onChange={(e) => setAreaCode(e.target.value)}
                     className="input-control"
-                    style={{ width: "90px", padding: "0.5rem 0.5rem" }}
+                    style={{ width: "88px", height: "38px", borderRadius: "10px", padding: "0 0.375rem", fontSize: "0.75rem" }}
                   >
                     <option value="+86">+86 中国</option>
-                    <option value="+852">+852 中国香港</option>
+                    <option value="+852">+852 港</option>
                     <option value="+1">+1 美国</option>
                     <option value="+65">+65 新加坡</option>
                   </select>
                   <div style={{ position: "relative", flex: 1 }}>
-                    <span
-                      style={{
-                        position: "absolute",
-                        left: "0.75rem",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        color: "var(--zinc-400)",
-                      }}
-                    >
-                      <IconPhone size={16} />
-                    </span>
+                    <span style={iconLeft}><IconPhone size={14} /></span>
                     <input
                       type="tel"
                       required
@@ -713,34 +473,25 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="请输入手机号码"
                       className="input-control"
-                      style={{ paddingLeft: "2.25rem" }}
+                      style={{ ...inputBase, height: "38px", fontSize: "0.8125rem" }}
                     />
                   </div>
                 </div>
               </div>
 
+              {/* 密码 */}
               <div>
-                <label className="input-label">设置登录密码 (至少8位)</label>
-                <div style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: "0.75rem",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      color: "var(--zinc-400)",
-                    }}
-                  >
-                    <IconLock size={16} />
-                  </span>
+                <label style={{ ...labelStyle, marginBottom: "0.25rem", fontSize: "0.75rem" }}>设置登录密码（至少 8 位）</label>
+                <div style={inputWrap}>
+                  <span style={iconLeft}><IconLock size={14} /></span>
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="8-32位字符，需含字母数字"
+                    placeholder="8–32 位，含字母与数字"
                     className="input-control"
-                    style={{ paddingLeft: "2.25rem", paddingRight: "2.25rem" }}
+                    style={{ ...inputBase, height: "38px", fontSize: "0.8125rem", paddingRight: "2.5rem" }}
                   />
                   <button
                     type="button"
@@ -755,15 +506,15 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                       cursor: "pointer",
                       color: "var(--zinc-400)",
                       padding: 0,
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
-                    {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                    {showPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
                   </button>
                 </div>
-
-                {/* 动态 4 段式密码强度指示条 */}
                 {password && (
-                  <div style={{ marginTop: "0.5rem" }}>
+                  <div style={{ marginTop: "0.375rem" }}>
                     <div style={{ display: "flex", gap: "4px", height: "3px" }}>
                       {[1, 2, 3, 4].map((step) => {
                         let fillBg = "var(--zinc-200)";
@@ -772,43 +523,42 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
                           else if (passwordStrength <= 2) fillBg = "var(--zinc-500)";
                           else fillBg = "var(--semantic-success-fg)";
                         }
-                        return (
-                          <div
-                            key={step}
-                            style={{
-                              flex: 1,
-                              backgroundColor: fillBg,
-                              borderRadius: "2px",
-                              transition: "background-color 200ms ease",
-                            }}
-                          />
-                        );
+                        return <div key={step} style={{ flex: 1, backgroundColor: fillBg, borderRadius: "2px", transition: "background-color 200ms ease" }} />;
                       })}
                     </div>
-                    <div style={{ fontSize: "0.6875rem", color: "var(--zinc-500)", marginTop: "4px" }}>
+                    <div style={{ fontSize: "0.6875rem", color: "var(--zinc-500)", marginTop: "2px" }}>
                       {getStrengthText(passwordStrength)}
                     </div>
                   </div>
                 )}
               </div>
 
+              {/* 注册按钮 */}
               <button
                 type="submit"
                 className="btn btn-primary"
-                style={{ width: "100%", marginTop: "0.5rem", height: "42px" }}
+                style={{
+                  width: "100%",
+                  height: "40px",
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  borderRadius: "10px",
+                  letterSpacing: "0.01em",
+                  marginTop: "0.125rem",
+                }}
               >
                 {activeInvite ? "立即注册并加入企业" : "立即创建管理员账号"}
               </button>
             </form>
           )}
 
-          {/* 分割线与 OAuth 快捷登录 */}
+          {/* 分割线与 OAuth */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: "0.75rem",
-              margin: "1.5rem 0 1rem 0",
+              margin: mode === "login" ? "1.75rem 0 1.25rem" : "0.875rem 0 0.75rem",
             }}
           >
             <div style={{ flex: 1, height: "1px", backgroundColor: "var(--zinc-200)" }} />
@@ -816,12 +566,17 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
             <div style={{ flex: 1, height: "1px", backgroundColor: "var(--zinc-200)" }} />
           </div>
 
-          <div style={{ display: "flex", gap: "0.75rem" }}>
+          <div style={{ display: "flex", gap: "0.625rem" }}>
             <button
               onClick={() => handleOAuthClick("google")}
               type="button"
               className="btn btn-secondary"
-              style={{ flex: 1, height: "38px" }}
+              style={{
+                flex: 1,
+                height: mode === "login" ? "46px" : "38px",
+                borderRadius: "10px",
+                fontSize: mode === "login" ? "0.9375rem" : "0.8125rem",
+              }}
             >
               <IconGoogle size={16} />
               <span>Google</span>
@@ -832,7 +587,9 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
               className="btn"
               style={{
                 flex: 1,
-                height: "38px",
+                height: mode === "login" ? "46px" : "38px",
+                borderRadius: "10px",
+                fontSize: mode === "login" ? "0.9375rem" : "0.8125rem",
                 backgroundColor: "var(--zinc-950)",
                 color: "#FFFFFF",
                 border: "1px solid var(--zinc-950)",
@@ -843,13 +600,14 @@ export function AuthCenter({ initialInviteToken }: AuthCenterProps) {
             </button>
           </div>
 
+          {/* 协议说明 */}
           <div
             style={{
-              marginTop: "1.5rem",
-              fontSize: "0.75rem",
+              marginTop: mode === "login" ? "1.75rem" : "0.875rem",
+              fontSize: "0.6875rem",
               color: "var(--zinc-400)",
               textAlign: "center",
-              lineHeight: 1.4,
+              lineHeight: 1.5,
             }}
           >
             进入系统即代表您已同意《企业自托管平台安全准则》与《分域数据审计协议》。

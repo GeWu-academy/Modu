@@ -1,7 +1,7 @@
 {
   "name": "your-erp",
   "private": true,
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@12.16.1",
   "scripts": {
     "dev": "pnpm dev:web",
     "build": "pnpm build:web",

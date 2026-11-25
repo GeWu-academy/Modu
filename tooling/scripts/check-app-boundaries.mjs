@@ -84,9 +84,11 @@ export function checkAppBoundaries(repository) {
         for (const targets of Object.values(options.paths ?? {})) {
           for (const target of targets) checkPath(configPath, resolve(base, target));
         }
+        for (const rootDir of options.rootDirs ?? []) checkPath(configPath, resolve(root, rootDir));
         for (const parent of [config.extends ?? []].flat()) checkImport(configPath, parent);
         for (const reference of config.references ?? []) checkPath(configPath, resolve(root, reference.path));
         for (const include of config.include ?? []) checkPath(configPath, resolve(root, include));
+        for (const file of config.files ?? []) checkPath(configPath, resolve(root, file));
       }
     }
     for (const path of files(root)) {

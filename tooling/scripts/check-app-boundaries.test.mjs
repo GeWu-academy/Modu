@@ -71,6 +71,35 @@ test('rejects symlinked source from another app', t => {
   assert.match(checkAppBoundaries(root)[0], /path leaves admin/);
 });
 
+test('rejects explicit TypeScript files outside the application', t => {
+  const { root, write } = fixture(t);
+  write('apps/web/shared.ts', 'export const value = 42;');
+  write('apps/admin/tsconfig.json', { files: ['../web/shared.ts'] });
+  assert.deepEqual(checkAppBoundaries(root), [
+    `${join('apps', 'admin', 'tsconfig.json')}: path leaves admin: ${join('..', 'web', 'shared.ts')}`,
+  ]);
+});
+
+test('rejects TypeScript virtual root directories outside the application', t => {
+  const { root, write } = fixture(t);
+  write('apps/admin/tsconfig.json', {
+    compilerOptions: { rootDirs: ['src', '../web'] },
+  });
+  assert.deepEqual(checkAppBoundaries(root), [
+    `${join('apps', 'admin', 'tsconfig.json')}: path leaves admin: ${join('..', 'web')}`,
+  ]);
+});
+
+test('allows explicit TypeScript files and virtual roots inside the application', t => {
+  const { root, write } = fixture(t);
+  write('apps/admin/src/main.ts', 'export const value = 42;');
+  write('apps/admin/tsconfig.json', {
+    files: ['src/main.ts'],
+    compilerOptions: { rootDirs: ['src', 'generated'] },
+  });
+  assert.deepEqual(checkAppBoundaries(root), []);
+});
+
 test('ignores generated output and installed dependencies', t => {
   const { root, write } = fixture(t);
   for (const directory of ['node_modules', '.next', 'dist', '.expo']) {
